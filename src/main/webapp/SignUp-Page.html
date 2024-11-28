@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Sign Up">
+    <meta name="description" content="">
+    <title>SignUp Page</title>
+    <link rel="stylesheet" href="css/nicepage.css" media="screen">
+    <link rel="stylesheet" href="css/SignUp-Page.css" media="screen">
+    <script class="u-script" type="text/javascript" src="css/js/jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="css/js/nicepage.js" defer=""></script>
+     <meta name="generator" content="Nicepage 7.0.3, nicepage.com">
+    <meta name="referrer" content="origin">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Agbalumo:400">
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": ""
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="SignUp Page">
+    <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/">
+</head>
+<body data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="en">
+    <section class="u-align-center u-clearfix u-image u-section-1" id="carousel_3266" data-image-width="1200" data-image-height="568">
+      <div class="u-clearfix u-sheet u-sheet-1">
+<h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1">Sign Up</h2><span class="u-file-icon u-icon u-icon-rectangle u-text-white u-icon-1" data-href="Login-Page.html"><img src="css/images/2099238-a0c89031.png" alt=""></span>            <div class="u-form u-radius-20 u-white u-form-1">
+                <form id="signup-form" action="#" style="padding: 23px;">
+                    <h4 class="u-align-center u-text u-text-2">Get started with Eiffel Corp</h4>
+                 
+                    <div class="u-form-group u-form-name">
+                        <label for="first-name" class="u-label">First Name</label>
+                        <input type="text" id="first-name" name="first_name" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-group">
+                        <label for="last-name" class="u-label">Last Name</label>
+                        <input type="text" id="last-name" name="last_name" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-group">
+                        <label for="cin" class="u-label">CIN</label>
+                        <input type="text" id="cin" name="cin" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-group">
+                        <label for="email" class="u-label">Email</label>
+                        <input type="email" id="email" name="email" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-group">
+                        <label for="password" class="u-label">Password</label>
+                        <input type="password" id="password" name="password" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-group">
+                        <label for="address" class="u-label">Address</label>
+                        <input type="text" id="address" name="address" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-group">
+                        <label for="birth-date" class="u-label">Birth Date</label>
+                        <input type="date" id="birth-date" name="birth_date" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-group">
+                        <label for="phone-number" class="u-label">Phone Number</label>
+                        <input type="text" id="phone-number" name="phone_number" class="u-input u-input-rectangle u-radius-10" required>
+                    </div>
+                    <div class="u-form-agree u-form-group">
+                        <input type="checkbox" id="agree" name="agree" class="u-agree-checkbox" required>
+                        <label for="agree" class="u-label">I accept the <a href="#">Terms of Service</a></label>
+                    </div>
+                    <button type="submit" onclick="handleSubmit(event)" class="u-active-custom-color-1 u-border-5 u-border-active-custom-color-1 u-border-hover-custom-color-1 u-border-palette-4-base u-btn u-btn-round u-btn-submit u-button-style u-hover-custom-color-1 u-palette-4-base u-radius-10 u-btn-1">
+    Sign Up
+</button>
+                    <!--  <div class="u-form-group u-form-submit">
+
+                    </div>-->
+                    <div id="response-message" class="u-form-send-message"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+<script>
+    console.log("JavaScript is loaded.");
+</script>
+
+     <script>
+    function handleSubmit(event) {
+        console.log("Submit button clicked.");
+        event.preventDefault(); // Prevent default form submission
+
+        const userData = {
+            first_name: document.getElementById('first-name').value.trim(),
+            last_name: document.getElementById('last-name').value.trim(),
+            cin: document.getElementById('cin').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            password: document.getElementById('password').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            birth_date: new Date(document.getElementById('birth-date').value.trim())
+            .toISOString()
+            .split('T')[0],
+            phoneNumber: document.getElementById('phone-number').value.trim()
+        };
+
+        console.log("User data collected:", userData);
+
+        // Send data to the server
+        fetch("http://localhost:8080/UserWebService/api/users", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(response => {
+            console.log("Fetch response:", response);
+            if (!response.ok) {
+                throw new Error("Failed to register user.");
+            }
+            return response.text();
+        })
+        .then(message => {
+            console.log("Success message:", message);
+            document.getElementById('response-message').innerText = message;
+            
+            window.location.href = "Login-Page.html";
+        })
+        .catch(error => {
+            console.error("Error during fetch:", error);
+            document.getElementById('response-message').innerText = "Error: " + error.message;
+        });
+    }
+</script>
+<footer class="u-align-center u-clearfix u-container-align-center u-custom-color-1 u-footer u-footer" id="sec-5467"><div class="u-clearfix u-sheet u-sheet-1">
+        <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
+      </div></footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+      <p class="u-text">
+        <span>This site was created with the </span>
+        <a class="u-link" href="https://nicepage.com/" target="_blank" rel="nofollow">
+          <span>Nicepage</span>
+        </a>
+      </p>
+    </section>
+  
+</body></html>

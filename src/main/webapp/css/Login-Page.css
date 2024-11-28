@@ -1,0 +1,97 @@
+ .u-section-1 {
+  background-image: url("images/pngtree-classic-blue-flat-background-simple-minimalist-design-vector-art-picture-image_2092127.jpg");
+  background-position: 50% 50%;
+}
+
+.u-section-1 .u-sheet-1 {
+  min-height: 744px;
+}
+
+.u-section-1 .u-text-1 {
+  font-family: Agbalumo;
+  font-size: 4.5rem;
+  margin: 52px auto 0;
+}
+
+.u-section-1 .u-icon-1 {
+  width: 64px;
+  height: 64px;
+  margin: -109px auto 0 31px;
+}
+
+.u-section-1 .u-form-1 {
+  height: 577px;
+  background-image: none;
+  box-shadow: 5px 5px 20px 0 rgba(0,0,0,0.4);
+  width: 533px;
+  margin: 77px auto 0;
+}
+
+.u-section-1 .u-text-2 {
+  margin-left: 0;
+}
+
+.u-section-1 .u-form-group-4 {
+  margin-left: 0;
+}
+
+.u-section-1 .u-btn-1 {
+  border-style: solid;
+  letter-spacing: 0px;
+  background-image: none;
+  width: 100%;
+  font-size: 1.25rem;
+  font-weight: 400;
+  text-transform: none;
+  padding-left: 0;
+  padding-right: 0;
+  font-family: "ADLaM Display";
+}
+
+.u-section-1 .u-btn-2 {
+  --radius: 50px;
+  border-style: solid;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 1px;
+  font-family: "ADLaM Display";
+  font-weight: 700;
+  margin: 31px auto 60px;
+  padding: 12px 63px 12px 61px;
+}
+
+@media (max-width: 1199px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 613px;
+  }
+}
+
+@media (max-width: 991px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 470px;
+  }
+}
+
+@media (max-width: 767px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 353px;
+  }
+
+  .u-section-1 .u-text-1 {
+    font-size: 2.75rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 222px;
+  }
+
+  .u-section-1 .u-text-1 {
+    font-size: 2.125rem;
+  }
+
+  .u-section-1 .u-form-1 {
+    width: 340px;
+  }
+}

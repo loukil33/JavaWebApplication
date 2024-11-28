@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User Web Services</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea, button {
+            padding: 8px;
+            width: 300px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #response {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Test User Web Services</h1>
+
+    <!-- Get User by ID -->
+    <div class="form-control">
+        <label for="getUserId">Get User by ID</label>
+        <input type="number" id="getUserId" placeholder="Enter User ID">
+        <button onclick="getUser()">Get User</button>
+    </div>
+
+    <!-- Add New User -->
+    <div class="form-control">
+        <label>Add New User</label>
+        <button onclick="showAddUserForm()">Add User</button>
+    </div>
+    <div id="addUserForm" style="display:none;">
+        <label for="newUserJson">User JSON (for adding user)</label>
+        <textarea id="newUserJson" rows="6" cols="40">{
+    "id": 3,
+    "cin": 12345679,
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "janedoe@example.com",
+    "password": "password123",
+    "address": "456 Another Street",
+    "birth_date": "1992-05-15",
+    "image_profile": "profile2.jpg",
+    "role": "STUDENT",
+    "phoneNumber": 987654321
+}</textarea>
+        <button onclick="addUser()">Submit</button>
+    </div>
+
+    <!-- Update User -->
+    <div class="form-control">
+        <label for="updateUserId">Update User by ID</label>
+        <input type="number" id="updateUserId" placeholder="Enter User ID to update">
+        <textarea id="updateUserJson" rows="6" cols="40">{
+    "first_name": "UpdatedFirstName",
+    "email": "updatedemail@example.com"
+}</textarea>
+        <button onclick="updateUser()">Update User</button>
+    </div>
+
+    <!-- Delete User -->
+    <div class="form-control">
+        <label for="deleteUserId">Delete User by ID</label>
+        <input type="number" id="deleteUserId" placeholder="Enter User ID to delete">
+        <button onclick="deleteUser()">Delete User</button>
+    </div>
+
+    <!-- Display API Response -->
+    <div id="response">Response will appear here</div>
+
+    <script>
+        const baseUrl = "http://localhost:8080/UserWebService/api/users";
+
+        // Function to Get User by ID
+        function getUser() {
+            const userId = document.getElementById('getUserId').value;
+            fetch(`${baseUrl}/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerText = JSON.stringify(data, null, 4);
+                })
+                .catch(error => {
+                    document.getElementById('response').innerText = 'Error: ' + error.message;
+                });
+        }
+
+        // Function to Show Add User Form
+        function showAddUserForm() {
+            document.getElementById('addUserForm').style.display = 'block';
+        }
+
+        // Function to Add User
+        function addUser() {
+            const userJson = document.getElementById('newUserJson').value;
+            fetch(baseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: userJson
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('response').innerText = data;
+                })
+                .catch(error => {
+                    document.getElementById('response').innerText = 'Error: ' + error.message;
+                });
+        }
+
+        // Function to Update User
+        function updateUser() {
+            const userId = document.getElementById('updateUserId').value;
+            const userJson = document.getElementById('updateUserJson').value;
+            fetch(`${baseUrl}/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: userJson
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('response').innerText = data;
+                })
+                .catch(error => {
+                    document.getElementById('response').innerText = 'Error: ' + error.message;
+                });
+        }
+
+        // Function to Delete User
+        function deleteUser() {
+            const userId = document.getElementById('deleteUserId').value;
+            fetch(`${baseUrl}/${userId}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('response').innerText = data;
+                })
+                .catch(error => {
+                    document.getElementById('response').innerText = 'Error: ' + error.message;
+                });
+        }
+    </script>
+</body>
+</html>
