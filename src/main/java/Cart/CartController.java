@@ -37,17 +37,34 @@ public class CartController {
         return "Item removed from cart";
     }
     
+    @GET
+    @Path("/items")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCartItems() {
+        return Response.ok(cart.getItems()).build();
+    }
+    
     @POST
     @Path("/checkout")
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkout() {
         BankService bankService = new BankService();
-        String clientSecret = bankService.createPaymentIntent(10.0); // Fixed amount for $10 test
+        String clientSecret = bankService.createPaymentIntent(20.00); // Default price for testing
         if (clientSecret != null) {
             return Response.ok(Map.of("clientSecret", clientSecret)).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Payment failed").build();
     }
+
+    @GET
+    @Path("/history")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPaymentHistory() {
+        BankService bankService = new BankService();
+        return Response.ok(bankService.getPaymentHistory()).build();
+    }
+
+
 
 
    
