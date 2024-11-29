@@ -15,13 +15,15 @@ public class Bike {
 	    private boolean isForSale;
 	    private double salePrice;
 	    private boolean alreadyRented;
+	    
+	    
+	
 		@Override
 		public String toString() {
-			return "bike [id=" + id + ", model=" + model + ", brand=" + brand + ", condition=" + condition + ", color="
+			return "Bike [id=" + id + ", model=" + model + ", brand=" + brand + ", condition=" + condition + ", color="
 					+ color + ", isAvailable=" + isAvailable + ", images=" + images + ", rentalPrice=" + rentalPrice
 					+ ", notes=" + notes + ", isForSale=" + isForSale + ", salePrice=" + salePrice + ", alreadyRented="
-					+ alreadyRented + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-					+ super.toString() + "]";
+					+ alreadyRented + "]";
 		}
 		public int getId() {
 			return id;
