@@ -5,6 +5,7 @@ import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.ws.rs.*;
@@ -35,17 +36,19 @@ public class CartController {
         cart.removeItemFromCart(bikeId);
         return "Item removed from cart";
     }
-
-    /*
+    
     @POST
     @Path("/checkout")
-    public String checkout() {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkout() {
         BankService bankService = new BankService();
-        String paymentStatus = bankService.processPayment(0, cart.getTotalPrice()); // Passing 0 as the dummy user ID
-        if ("succeeded".equals(paymentStatus)) {
-            cart.checkoutCart();
-            return "Payment successful and cart cleared";
+        String clientSecret = bankService.createPaymentIntent(10.0); // Fixed amount for $10 test
+        if (clientSecret != null) {
+            return Response.ok(Map.of("clientSecret", clientSecret)).build();
         }
-        return "Payment failed";
-    }*/
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Payment failed").build();
+    }
+
+
+   
 }

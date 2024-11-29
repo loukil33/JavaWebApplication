@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Payment Test</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .payment-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+        .payment-form h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .payment-form .form-group {
+            margin-bottom: 15px;
+        }
+        .payment-form .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .payment-form .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .payment-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6772e5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .payment-form button:hover {
+            background-color: #5469d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-form">
+        <h1>Test Payment</h1>
+        <form id="payment-form">
+            <div id="card-element" class="form-group">
+                <!-- Stripe Card Element will be injected here -->
+            </div>
+            <button id="submit-button">Pay $10</button>
+        </form>
+    </div>
+
+    <script>
+        // Initialize Stripe
+        const stripe = Stripe("pk_test_51MfRIsHcaMLPP7A1CiVHTe3wo69caUJgl4GbfkBL83Ih7wler9uw1CV5Di08BfPEqhgXsJNjCEb54COPS8zbOVUd005emg9WN9"); // Replace with your public key
+        const elements = stripe.elements();
+
+        // Create a Card Element
+        const cardElement = elements.create("card");
+        cardElement.mount("#card-element");
+
+        // Handle form submission
+        const form = document.getElementById("payment-form");
+        const submitButton = document.getElementById("submit-button");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            submitButton.disabled = true; // Disable button to prevent multiple clicks
+
+            // Create a Payment Intent on the server
+            try {
+                const response = await fetch("http://localhost:8081/UserWebService/api/cart/checkout", {
+                    method: "POST",
+                });
+
+                const { clientSecret } = await response.json();
+
+                // Confirm Card Payment
+                const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                    },
+                });
+
+                if (error) {
+                    alert("Payment failed: " + error.message);
+                } else if (paymentIntent && paymentIntent.status === "succeeded") {
+                    alert("Payment successful!");
+                }
+            } catch (err) {
+                console.error("Error processing payment:", err);
+                alert("An error occurred. Please try again.");
+            } finally {
+                submitButton.disabled = false; // Re-enable the button
+            }
+        });
+    </script>
+</body>
+</html>
