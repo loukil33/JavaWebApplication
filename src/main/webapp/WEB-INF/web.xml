@@ -8,6 +8,7 @@
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>Users</param-value>
+            <param-value>Cart</param-value>
         </init-param>
         <init-param>
             <param-name>jersey.config.server.provider.scanning.recursive</param-name>
