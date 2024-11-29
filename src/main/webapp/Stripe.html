@@ -13,56 +13,67 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f4f4f9;
+            background-color: #f8f9fa;
         }
         .payment-form {
             background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 480px;
             width: 100%;
         }
         .payment-form h1 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 24px;
+            color: #333;
         }
         .payment-form .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .payment-form .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
-        .payment-form .form-group input {
-            width: 100%;
+        #card-element {
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
         }
         .payment-form button {
             width: 100%;
-            padding: 10px;
-            background-color: #6772e5;
+            padding: 12px;
+            background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
         }
         .payment-form button:hover {
-            background-color: #5469d4;
+            background-color: #0056b3;
+        }
+        .payment-errors {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="payment-form">
-        <h1>Test Payment</h1>
+        <h1>Pay $20</h1>
         <form id="payment-form">
-            <div id="card-element" class="form-group">
-                <!-- Stripe Card Element will be injected here -->
+            <div class="form-group">
+                <label for="card-element">Card Details</label>
+                <div id="card-element">
+                    <!-- Stripe Card Element will be injected here -->
+                </div>
             </div>
-            <button id="submit-button">Pay $10</button>
+            <button id="submit-button">Pay Now</button>
+            <div id="payment-errors" class="payment-errors" role="alert"></div>
         </form>
     </div>
 
@@ -72,19 +83,33 @@
         const elements = stripe.elements();
 
         // Create a Card Element
-        const cardElement = elements.create("card");
+        const cardElement = elements.create("card", {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#32325d',
+                    fontFamily: 'Arial, sans-serif',
+                    '::placeholder': {
+                        color: '#a0aec0',
+                    },
+                },
+                invalid: {
+                    color: '#fa755a',
+                },
+            },
+        });
         cardElement.mount("#card-element");
 
         // Handle form submission
         const form = document.getElementById("payment-form");
         const submitButton = document.getElementById("submit-button");
+        const paymentErrors = document.getElementById("payment-errors");
 
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
 
             submitButton.disabled = true; // Disable button to prevent multiple clicks
 
-            // Create a Payment Intent on the server
             try {
                 const response = await fetch("http://localhost:8081/UserWebService/api/cart/checkout", {
                     method: "POST",
@@ -100,13 +125,14 @@
                 });
 
                 if (error) {
-                    alert("Payment failed: " + error.message);
+                    paymentErrors.textContent = "Payment failed: " + error.message;
                 } else if (paymentIntent && paymentIntent.status === "succeeded") {
                     alert("Payment successful!");
+                    window.location.href = "http://localhost:8081/UserWebService/"; // Redirect on success
                 }
             } catch (err) {
                 console.error("Error processing payment:", err);
-                alert("An error occurred. Please try again.");
+                paymentErrors.textContent = "An error occurred. Please try again.";
             } finally {
                 submitButton.disabled = false; // Re-enable the button
             }
