@@ -3,6 +3,7 @@ package Users;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,24 @@ import javax.ws.rs.Produces;
 @Path("/users")
 public class UserController {
 	private static List<User> users = new ArrayList<>(); // In-memory list to store users
+	   // Static block to initialize with a default user
+    static {
+        User defaultUser = new User(
+            1,                  // id
+            12345678,           // cin
+            "John",             // first_name
+            "Doe",              // last_name
+            "john.doe@example.com", // email
+            "securepassword",   // password
+            "123 Main Street",  // address
+            LocalDate.of(1990, 1, 1), // birth_date
+            "profile.jpg",      // image_profile
+            RoleType.ADMIN,     // role
+            1234567890          // PhoneNumber
+        );
+
+        users.add(defaultUser); // Add the default user to the list
+    }
 	private static int idCounter = 1; // Initialize counter for id, starts from 1
     // Add a new user
     @POST

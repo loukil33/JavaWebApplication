@@ -11,7 +11,24 @@ import javax.ws.rs.core.Response;
 @Path("/bikes")
 public class BikeService {
 	private static List<Bike> bikes = new ArrayList<>();
+    // Static block to add a bike to the list
+    static {
+        Bike bike = new Bike();
+        bike.setId(1);
+        bike.setModel("Roadster");
+        bike.setBrand("Giant");
+        bike.setCondition("New");
+        bike.setColor("Red");
+        bike.setAvailable(true);
+        bike.setImages(List.of("roadster1.jpg", "roadster2.jpg"));
+        bike.setRentalPrice(15.5);
+        bike.setNotes(List.of("Smooth ride", "Good for long distances"));
+        bike.setForSale(true);
+        bike.setSalePrice(200.0);
+        bike.setAlreadyRented(false);
 
+        bikes.add(bike); // Add the bike to the list
+    }
     // Add a new bike to the system
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -53,7 +70,9 @@ public class BikeService {
         }
         return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
     }
-
+    @GET
+    @Path("/get")
+    @Produces(MediaType.APPLICATION_JSON)
     // Get the list of all bikes (static method for use in other services)
     public static List<Bike> getBikes() {
         return bikes;
