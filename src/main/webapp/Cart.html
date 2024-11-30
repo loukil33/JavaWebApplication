@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Shop - Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .cart-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .cart-item {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .cart-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .cart-item button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cart-item button:hover {
+            background-color: #b52b37;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Cart</h1>
+    <div class="cart-list" id="cart-list">
+        <!-- Cart items will be dynamically loaded here -->
+    </div>
+    <h3>Total: €<span id="total-price">0.00</span></h3>
+    <button onclick="finalizePayment()" style="padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Finalize Payment
+    </button>
+    <button onclick="window.location.href='BuyIndex.html'" style="margin-left: 10px; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Back to Bikes
+    </button>
+
+    <script>
+    const userId = 1; // Static user ID for testing, replace it with dynamic user ID if needed
+
+ // Add item to cart with userId
+ async function addToCart(id, model, price, image) {
+     if (!price || price <= 0) {
+         alert("Invalid bike price. Please provide a valid price.");
+         return;
+     }
+
+     if (cartItems.some(item => item.id === id)) {
+         alert('This bike is already in your cart.');
+         return;
+     }
+
+     try {
+         const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ id, model, salePrice: price, image })
+         });
+
+         const message = await response.text();
+         alert(message);
+         cartItems.push({ id, model, salePrice: price, image }); // Add to local cart
+     } catch (error) {
+         console.error('Error adding to cart:', error);
+         alert('Failed to add to cart. Please try again.');
+     }
+ }
+
+//Remove item from cart
+async function removeFromCart(id) {
+    try {
+        const response = await fetch(`http://localhost:8081/UserWebService/api/cart/remove/${id}?userId=${userId}`, {
+            method: "DELETE"
+        });
+        const data = await response.json(); // Get the response which includes updated cart items and total price
+        alert('Item removed from cart');
+        
+        // Dynamically update the cart with the response
+        loadCart(data); // Pass the response data to loadCart to refresh the cart
+
+    } catch (error) {
+        console.error('Error removing from cart:', error);
+        alert('Failed to remove from cart. Please try again.');
+    }
+}
+
+// Update the loadCart function to accept the data parameter
+async function loadCart(data = null) {
+    const cartList = document.getElementById('cart-list');
+    const totalPriceEl = document.getElementById('total-price');
+    cartList.innerHTML = ""; // Clear the cart display
+
+    try {
+        if (!data) {
+            // Fetch cart items if no data is passed (for initial load or page reload)
+            const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+            data = await response.json();
+        }
+
+        if (data.cartItems.length === 0) {
+            cartList.innerHTML = `<p>Your cart is empty. Add items to your cart.</p>`;
+            totalPriceEl.textContent = "0.00"; // Set total to 0 when the cart is empty
+            return;
+        }
+
+        // Dynamically display the cart items
+        data.cartItems.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
+            cartItem.innerHTML = `
+                <img src="${item.image}" alt="${item.model}">
+                <h3>${item.model}</h3>
+                <p>Price: €${item.salePrice}</p>
+                <button onclick="removeFromCart(${item.id})">Remove</button>
+            `;
+            cartList.appendChild(cartItem);
+        });
+
+        // Update total price dynamically
+        totalPriceEl.textContent = data.totalPrice.toFixed(2); // Ensure the total is calculated from the backend
+
+    } catch (error) {
+        console.error('Error loading cart:', error);
+        cartList.innerHTML = `<p>Failed to load cart items. Please try again later.</p>`;
+    }
+}
+
+
+        loadCart();
+    </script>
+</body>
+</html>

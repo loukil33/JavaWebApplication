@@ -1,72 +1,58 @@
 package Cart;
 
 public class BikeForSale {
-	
-	 	private int id;
-	    private String name;
-	    private String description;
-	    private double price;
-	    private boolean isAvailable;
-	    // Constructor
-	    public BikeForSale(int id, String name, String description, double price, boolean isAvailable) {
-	        this.id = id;
-	        this.name = name;
-	        this.description = description;
-	        this.price = price;
-	        this.isAvailable = isAvailable;
-	    }
+    private int id;
+    private String model;
+    private String brand;
+    private String color;
+    private double salePrice; // This is the field for the bike's sale price
+    private String image; // Image URL or path for the bike
 
-	    // Getters and setters
-	    public int getId() {
-	        return id;
-	    }
+    // No-argument constructor (required for deserialization)
+    public BikeForSale() {
+    }
 
-	    public void setId(int id) {
-	        this.id = id;
-	    }
+    // Parameterized constructor
+    public BikeForSale(int id, String model, double salePrice, String image) {
+        this.id = id;
+        this.model = model;
+        this.salePrice = salePrice;
+        this.image = image;
+    }
+    
 
-	    public String getName() {
-	        return name;
-	    }
+    public double getSalePrice() {
+        return salePrice;
+    }
 
-	    public void setName(String name) {
-	        this.name = name;
-	    }
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
 
-	    public String getDescription() {
-	        return description;
-	    }
+    public String getImage() {
+        return image;
+    }
 
-	    public void setDescription(String description) {
-	        this.description = description;
-	    }
+    public void setImage(String image) {
+        this.image = image;
+    }
+    
+    // Getters and setters
+    public int getId() {
+        return id;
+    }
 
-	    public double getPrice() {
-	        return price;
-	    }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	    public void setPrice(double price) {
-	        this.price = price;
-	    }
+    public String getModel() {
+        return model;
+    }
 
-	    public boolean isAvailable() {
-	        return isAvailable;
-	    }
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-	    public void setAvailable(boolean available) {
-	        isAvailable = available;
-	    }
-
-	    // Override toString for debugging or logging
-	    @Override
-	    public String toString() {
-	        return "BikeForSale{" +
-	                "id=" + id +
-	                ", name='" + name + '\'' +
-	                ", description='" + description + '\'' +
-	                ", price=" + price +
-	                ", isAvailable=" + isAvailable +
-	                '}';
-	    }
-
+ 
 }

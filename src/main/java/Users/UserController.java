@@ -20,6 +20,7 @@ import javax.ws.rs.Produces;
 public class UserController {
 	private static List<User> users = new ArrayList<>(); // In-memory list to store users
 	private static int idCounter = 1; // Initialize counter for id, starts from 1
+	private static int currentUserId = 1;
     // Add a new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
