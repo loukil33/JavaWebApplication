@@ -63,7 +63,7 @@
     <section class="u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-xl u-container-align-center-xs u-palette-1-light-3 u-section-2" id="bike-carousel">
    	 	<div class="u-clearfix u-sheet u-sheet-1">
         	<h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1">
-            Rent your own bicycle
+            Add a Bike to rent
         	</h2>
         	<div class="u-expanded-width u-list u-list-1" id="bike-list">
             <!-- Les annonces de bikes seront ajoutées ici dynamiquement -->
@@ -71,44 +71,6 @@
     	</div>
 	</section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        const bikeList = document.getElementById('bike-list'); // Conteneur où les annonces seront ajoutées
-
-        try {
-            // Appel de l'API pour récupérer les bikes
-            const response = await fetch('http://localhost:8081/UserWebService/api/bikes');
-            const bikes = await response.json();
-
-            // Boucle pour afficher chaque bike
-            bikes.forEach(bike => {
-                const bikeItem = document.createElement('div');
-                bikeItem.className = 'u-container-align-center u-list-item u-radius u-repeater-item u-shape-round u-white';
-                bikeItem.setAttribute('data-animation-name', 'customAnimationIn');
-                bikeItem.setAttribute('data-animation-duration', '1500');
-                bikeItem.setAttribute('data-animation-delay', '200');
-
-                bikeItem.innerHTML = `
-                    <div class="u-container-layout u-similar-container u-valign-top">
-                        <img src="${bike.images[0]}" alt="Bike image" class="u-expanded-width u-image u-image-round u-radius" data-image-width="800" data-image-height="600">
-                        <h5 class="u-align-center u-text">${bike.model} (${bike.brand})</h5>
-                        <h4 class="u-align-center u-text u-text-palette-1-base">${bike.rentalPrice}€/h</h4>
-                        <p class="u-align-center u-text">Condition: ${bike.condition}</p>
-                        <p class="u-align-center u-text">Color: ${bike.color}</p>
-                        <p class="u-align-center u-text">For Sale: ${bike.isForSale ? `€${bike.salePrice}` : 'No'}</p>
-                        <a href="#" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black">
-                            Learn More
-                        </a>
-                    </div>
-                `;
-                bikeList.appendChild(bikeItem);
-            });
-        } catch (error) {
-            console.error('Error fetching bikes:', error);
-            bikeList.innerHTML = '<p>Failed to load bike advertisements.</p>';
-        }
-    });
-</script>
 
     
     <script>

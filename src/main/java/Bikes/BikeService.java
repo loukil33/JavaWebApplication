@@ -1,4 +1,6 @@
 package Bikes;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.*;
+import java.nio.file.*;
 
 
 @Path("/bikes")
@@ -31,11 +35,34 @@ public class BikeService {
     }
     // Add a new bike to the system
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addBike(Bike bike) {
-        bikes.add(bike);
-        return Response.ok("Bike added successfully").build();
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response addBike(@FormDataParam("model") String model,
+                            @FormDataParam("brand") String brand,
+                            @FormDataParam("condition") String condition,
+                            @FormDataParam("color") String color,
+                            @FormDataParam("rentalPrice") double rentalPrice,
+                            @FormDataParam("isForSale") boolean isForSale,
+                            @FormDataParam("images") List<FormDataBodyPart> images) {
+        try {
+            // Save images to /webapp/css/images
+            String uploadPath = "/path/to/webapp/css/images";
+            for (FormDataBodyPart image : images) {
+                InputStream fileStream = image.getValueAs(InputStream.class);
+                String fileName = image.getContentDisposition().getFileName();
+                Files.copy(fileStream, Paths.get(uploadPath, fileName), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Save bike details to the database
+            Bike newBike = new Bike(model, brand, condition, color, rentalPrice, false, imagesFileNames);
+            bikeService.addBike(newBike);
+
+            return Response.ok("Bike added successfully!").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to add bike").build();
+        }
     }
+
 
     // Update details of an existing bike
     @PUT
