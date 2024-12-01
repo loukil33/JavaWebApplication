@@ -25,7 +25,7 @@ public class BankService {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("amount", (int) (amount * 100));
-            params.put("currency", "usd");
+            params.put("currency", "eur");
             params.put("payment_method_types", List.of("card"));
 
             PaymentIntent paymentIntent = PaymentIntent.create(params);
@@ -66,6 +66,7 @@ public class BankService {
         paymentHistory.add(record);
     }
 
+    /*
     public List<PaymentRecord> getPaymentHistory() {
         // Add an example record for debugging
         if (paymentHistory.isEmpty()) {
@@ -78,4 +79,5 @@ public class BankService {
         }
         return paymentHistory;
     }
+    */
 }

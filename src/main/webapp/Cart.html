@@ -52,9 +52,10 @@
         <!-- Cart items will be dynamically loaded here -->
     </div>
     <h3>Total: €<span id="total-price">0.00</span></h3>
-    <button onclick="finalizePayment()" style="padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-        Finalize Payment
-    </button>
+	<button onclick="window.location.href='Stripe.html'" 
+	        style="padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+	    Finalize Payment
+	</button>
     <button onclick="window.location.href='BuyIndex.html'" style="margin-left: 10px; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
         Back to Bikes
     </button>
@@ -144,8 +145,8 @@ async function loadCart(data = null) {
         totalPriceEl.textContent = data.totalPrice.toFixed(2); // Ensure the total is calculated from the backend
 
     } catch (error) {
-        console.error('Error loading cart:', error);
-        cartList.innerHTML = `<p>Failed to load cart items. Please try again later.</p>`;
+        console.error('Panier vide:', error);
+        cartList.innerHTML = `<p>Panne d’inspiration ?</p>`;
     }
 }
 

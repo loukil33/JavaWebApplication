@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stripe Payment Test</title>
+    <title>Stripe Payment</title>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
         body {
@@ -27,6 +27,7 @@
             margin-bottom: 15px;
             font-size: 24px;
             color: #333;
+            text-align: center;
         }
         .payment-form .form-group {
             margin-bottom: 20px;
@@ -64,7 +65,7 @@
 </head>
 <body>
     <div class="payment-form">
-        <h1>Pay $20</h1>
+        <h1 id="payment-amount">Calculating total...</h1>
         <form id="payment-form">
             <div class="form-group">
                 <label for="card-element">Card Details</label>
@@ -78,8 +79,28 @@
     </div>
 
     <script>
+        const userId = 1; // Static user ID for testing, replace it with dynamic user ID if needed.
+
+        // Fetch the total price from the backend and display it
+        async function fetchTotalPrice() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+
+                // Update the payment amount dynamically
+                const totalPrice = data.totalPrice.toFixed(2);
+                document.getElementById("payment-amount").textContent = `Pay €${totalPrice}`;
+            } catch (error) {
+                console.error("Error fetching total price:", error);
+                document.getElementById("payment-amount").textContent = "Error calculating total.";
+            }
+        }
+
+        // Call the function to fetch and display the total price
+        fetchTotalPrice();
+
         // Initialize Stripe
-        const stripe = Stripe("pk_test_51MfRIsHcaMLPP7A1CiVHTe3wo69caUJgl4GbfkBL83Ih7wler9uw1CV5Di08BfPEqhgXsJNjCEb54COPS8zbOVUd005emg9WN9"); // Replace with your public key
+        const stripe = Stripe("pk_test_51MfRIsHcaMLPP7A1CiVHTe3wo69caUJgl4GbfkBL83Ih7wler9uw1CV5Di08BfPEqhgXsJNjCEb54COPS8zbOVUd005emg9WN9");
         const elements = stripe.elements();
 
         // Create a Card Element
@@ -107,11 +128,10 @@
 
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
-
-            submitButton.disabled = true; // Disable button to prevent multiple clicks
+            submitButton.disabled = true;
 
             try {
-                const response = await fetch("http://localhost:8081/UserWebService/api/cart/checkout", {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/checkout?userId=${userId}`, {
                     method: "POST",
                 });
 
@@ -128,13 +148,13 @@
                     paymentErrors.textContent = "Payment failed: " + error.message;
                 } else if (paymentIntent && paymentIntent.status === "succeeded") {
                     alert("Payment successful!");
-                    window.location.href = "http://localhost:8081/UserWebService/History.html"; // Redirect on success
+                    window.location.href = "http://localhost:8081/UserWebService/BuyIndex.html"; // Redirect on success
                 }
             } catch (err) {
                 console.error("Error processing payment:", err);
                 paymentErrors.textContent = "An error occurred. Please try again.";
             } finally {
-                submitButton.disabled = false; // Re-enable the button
+                submitButton.disabled = false;
             }
         });
     </script>

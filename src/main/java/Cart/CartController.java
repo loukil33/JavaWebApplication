@@ -98,19 +98,30 @@ public class CartController {
 	        }
 	    }
 
-    
-    @POST
-    @Path("/checkout")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response checkout() {
-        BankService bankService = new BankService();
-        String clientSecret = bankService.createPaymentIntent(20.00); // Default price for testing
-        if (clientSecret != null) {
-            return Response.ok(Map.of("clientSecret", clientSecret)).build();
-        }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Payment failed").build();
-    }
+   
+	    @POST
+	    @Path("/checkout")
+	    @Produces(MediaType.APPLICATION_JSON)
+	    public Response checkout(@QueryParam("userId") int userId) {
+	        Cart cart = getCartForUser(userId);
+	        if (cart == null || cart.getTotalPrice() <= 0) {
+	            return Response.status(Response.Status.BAD_REQUEST).entity("Cart is empty or invalid.").build();
+	        }
 
+	        BankService bankService = new BankService();
+	        String clientSecret = bankService.createPaymentIntent(cart.getTotalPrice()); // Pass the total price
+
+	        if (clientSecret != null) {
+	            // Clear the cart after generating the payment intent
+	            cart.checkoutCart(); // This clears all items and resets the total price
+	            return Response.ok(Map.of("clientSecret", clientSecret)).build();
+	        }
+
+	        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Payment failed").build();
+	    }
+
+
+    /*
     @GET
     @Path("/history")
     @Produces(MediaType.APPLICATION_JSON)
@@ -118,6 +129,7 @@ public class CartController {
         BankService bankService = new BankService();
         return Response.ok(bankService.getPaymentHistory()).build();
     }
+    */
 
 
 }

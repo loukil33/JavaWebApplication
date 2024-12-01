@@ -50,4 +50,10 @@ public class Cart implements Serializable {
     public int getUserId() {
         return userId;
     }
+    
+    public void checkoutCart() {
+        items.clear();
+        totalPrice = 0.0;
+    }
+
 }
