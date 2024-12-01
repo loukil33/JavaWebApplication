@@ -112,20 +112,24 @@
             justify-content: space-between;
         }
 
-        .summary .btn {
-            width: 100%;
-            padding: 12px;
-            background: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
+	.summary .btn {
+	    width: 100%;
+	    padding: 12px;
+	    background: #478ac9;
+	    color: #fff;
+	    border: 2px solid #478ac9; /* Ensure the border matches the background color initially */
+	    border-radius: 5px;
+	    font-size: 1rem;
+	    cursor: pointer;
+	    transition: background 0.3s, color 0.3s, border 0.3s; /* Smooth transitions */
+	}
+	
+	.summary .btn:hover {
+	    background: #fff;
+	    color: #000;
+	    border: 2px solid #478ac9; /* Keeps the contour */
+	}
 
-        .summary .btn:hover {
-            background: #218838;
-        }
 
         .back-to-shop a {
             text-decoration: none;
