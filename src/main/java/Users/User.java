@@ -3,15 +3,14 @@ package Users;
 import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
+
+import Annonces.Annonce;
+import Annonces.Note;
 
 public class User implements Serializable{
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", cin=" + cin + ", first_name=" + first_name + ", last_name=" + last_name
-				+ ", email=" + email + ", password=" + password + ", address=" + address + ", birth_date=" + birth_date
-				+ ", image_profile=" + image_profile + ", role=" + role + ", PhoneNumber=" + PhoneNumber + "]";
-	}
+	
 	private int id;
 	private int cin;
 	private String first_name;
@@ -23,14 +22,17 @@ public class User implements Serializable{
 	private String image_profile;
 	private RoleType role;
 	private int PhoneNumber;
+	private List<Annonce> annonces;
+	private List<Note> notes;
 	
 	public User() {
 	
 		
 	}
-	public User(int id, int cin, String first_name, String last_name, String email, String password, String address,
-			LocalDate birth_date, String image_profile, RoleType role, int phoneNumber) {
 	
+	public User(int id, int cin, String first_name, String last_name, String email, String password, String address,
+			LocalDate birth_date, String image_profile, RoleType role, int phoneNumber, List<Annonce> annonces,List<Note> notes) {
+		
 		this.id = id;
 		this.cin = cin;
 		this.first_name = first_name;
@@ -42,7 +44,10 @@ public class User implements Serializable{
 		this.image_profile = image_profile;
 		this.role = role;
 		this.PhoneNumber = phoneNumber;
+		this.annonces = annonces;
+		this.notes = notes;
 	}
+
 	public int getId() {
 		return id;
 	}
@@ -110,6 +115,32 @@ public class User implements Serializable{
 		PhoneNumber = phoneNumber;
 	}
 	
+	public List<Annonce> getAnnonces() {
+		return annonces;
+	}
+
+	public void setAnnonces(List<Annonce> annonces) {
+		this.annonces = annonces;
+	}
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", cin=" + cin + ", first_name=" + first_name + ", last_name=" + last_name
+				+ ", email=" + email + ", password=" + password + ", address=" + address + ", birth_date=" + birth_date
+				+ ", image_profile=" + image_profile + ", role=" + role + ", PhoneNumber=" + PhoneNumber + ", annonces="
+				+ annonces + ", notes=" + notes + "]";
+	}
+
+	
+
 	
 	
 }
