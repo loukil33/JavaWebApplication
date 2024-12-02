@@ -10,21 +10,6 @@ public class Bike {
 	    private String color;
 	    private boolean isAvailable;
 	    private List<String> images;
-	    private double rentalPrice;
-	    private List<String> notes;
-	    private boolean isForSale;
-	    private double salePrice;
-	    private boolean alreadyRented;
-	    
-	    
-	
-		@Override
-		public String toString() {
-			return "Bike [id=" + id + ", model=" + model + ", brand=" + brand + ", condition=" + condition + ", color="
-					+ color + ", isAvailable=" + isAvailable + ", images=" + images + ", rentalPrice=" + rentalPrice
-					+ ", notes=" + notes + ", isForSale=" + isForSale + ", salePrice=" + salePrice + ", alreadyRented="
-					+ alreadyRented + "]";
-		}
 		public int getId() {
 			return id;
 		}
@@ -67,37 +52,26 @@ public class Bike {
 		public void setImages(List<String> images) {
 			this.images = images;
 		}
-		public double getRentalPrice() {
-			return rentalPrice;
+		public Bike(int id, String model, String brand, String condition, String color, boolean isAvailable,
+				List<String> images) {
+			this.id = id;
+			this.model = model;
+			this.brand = brand;
+			this.condition = condition;
+			this.color = color;
+			this.isAvailable = isAvailable;
+			this.images = images;
 		}
-		public void setRentalPrice(double rentalPrice) {
-			this.rentalPrice = rentalPrice;
-		}
-		public List<String> getNotes() {
-			return notes;
-		}
-		public void setNotes(List<String> notes) {
-			this.notes = notes;
-		}
-		public boolean isForSale() {
-			return isForSale;
-		}
-		public void setForSale(boolean isForSale) {
-			this.isForSale = isForSale;
-		}
-		public double getSalePrice() {
-			return salePrice;
-		}
-		public void setSalePrice(double salePrice) {
-			this.salePrice = salePrice;
-		}
-		public boolean isAlreadyRented() {
-			return alreadyRented;
-		}
-		public void setAlreadyRented(boolean alreadyRented) {
-			this.alreadyRented = alreadyRented;
+		@Override
+		public String toString() {
+			return "Bike [id=" + id + ", model=" + model + ", brand=" + brand + ", condition=" + condition + ", color="
+					+ color + ", isAvailable=" + isAvailable + ", images=" + images + "]";
 		}
 	    
+	    
+	    
+	
+	
 	    
 	    
 
