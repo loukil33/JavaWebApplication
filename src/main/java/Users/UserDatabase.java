@@ -6,7 +6,8 @@ import java.util.List;
 
 import Annonces.Annonce;
 import Annonces.Note;
-
+import Bikes.Bike;
+import static Bikes.bikesDB.bikes;
 public class UserDatabase {
 	 public static List<User> users = new ArrayList<>();
 	 static {
@@ -23,7 +24,8 @@ public class UserDatabase {
 	            RoleType.EMPLOYEE, // Role
 	            123456789, // Phone Number
 	            new ArrayList<Annonce>(), // Annonces
-	            new ArrayList<Note>() // Notes
+	            new ArrayList<Note>(),
+	            bikes// Notes
 	        );
 
 	        users.add(defaultUser);
