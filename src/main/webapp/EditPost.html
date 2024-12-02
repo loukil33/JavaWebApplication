@@ -146,7 +146,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
        <h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1200" data-animation-delay="0">Create your own Post </h2>
         <div class="u-expanded-width u-list u-list-1">
           <div class="u-repeater u-repeater-1">
-           <form id="rental-post-form">
+           <form id="rental-post-update-form">
     <!-- Error message display -->
     <div id="error-message" class="error" style="display: none;"></div>
 
@@ -190,127 +190,120 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
       </div>
     </section>
     <script>
-    document.getElementById('rental-post-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+    document.addEventListener("DOMContentLoaded", function () {
+        // Retrieve post details from sessionStorage
+        const postDataJson = sessionStorage.getItem("selectedPost");
 
-        // Retrieve form values
-        const title = document.getElementById('title').value.trim();
-        const description = document.getElementById('description').value.trim();
-        const duration = parseInt(document.getElementById('duration').value, 10);
-        const rentPrice = parseFloat(document.getElementById('rentPrice').value);
-        const startTime = document.getElementById('start_time').value;
-        const endTime = document.getElementById('end_time').value;
-        const rentDuration = parseInt(document.getElementById('rentDuration').value, 10);
-        const startDate = new Date().toISOString().split('T')[0]; // System date
-
-        const userDataJson = sessionStorage.getItem("userData");
-        let userData = null;
-
-        try {
-            userData = JSON.parse(userDataJson);
-        } catch (error) {
-            console.error("Error parsing user data:", error);
-            alert("User is not logged in. Please log in first.");
+        if (!postDataJson) {
+            alert("No post selected. Redirecting to the home page.");
+            window.location.href = "Annonces.html";
             return;
         }
 
-        if (!userData || !userData.id) {
-            alert("User is not logged in. Please log in first.");
-            return;
-        }
+        const postData = JSON.parse(postDataJson);
 
-        const userId = userData.id;
-        // Validate duration
-        if (duration > 30) {
-            displayError("Post duration cannot exceed 30 days.");
-            return;
-        }
+        // Populate the form with existing post details
+        document.getElementById("title").value = postData.title;
+        document.getElementById("description").value = postData.description;
+        document.getElementById("duration").value = postData.duration;
+        document.getElementById("rentPrice").value = postData.rentPrice;
+        document.getElementById("start_time").value = postData.start_time;
+        document.getElementById("end_time").value = postData.end_time;
+        document.getElementById("rentDuration").value = postData.rentDuration;
 
-        // Validate start and end times
-        const startTimeObj = new Date(`1970-01-01T${startTime}:00`);
-        const endTimeObj = new Date(`1970-01-01T${endTime}:00`);
+        // Handle form submission
+        document.getElementById("rental-post-update-form").addEventListener("submit", function (event) {
+            event.preventDefault();
 
-        if (endTimeObj <= startTimeObj) {
-            displayError("End Time must be later than Start Time.");
-            return;
-        }
+            // Get form values
+            const updatedData = {
+                id: postData.id, // Keep the post ID for the update
+                title: document.getElementById("title").value.trim(),
+                description: document.getElementById("description").value.trim(),
+                duration: parseInt(document.getElementById("duration").value, 10),
+                rentPrice: parseFloat(document.getElementById("rentPrice").value),
+                start_time: document.getElementById("start_time").value,
+                end_time: document.getElementById("end_time").value,
+                rentDuration: parseInt(document.getElementById("rentDuration").value, 10)
+            };
 
-        // Validate rent duration
-        const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60); // Difference in hours
-        if (rentDuration > maxRentDuration) {
-            displayError(`Rent Duration cannot exceed ${maxRentDuration.toFixed(2)} hours.`);
-            return;
-        }
-     // Get the user ID from sessionStorage
-        
-        // Prepare rental data
-        const rentalData = {
-            title,
-            description,
-            duration,
-            rentPrice,
-            start_time: startTime,
-            end_time: endTime,
-            rentDuration,
-            startDate
-        };
-        console.log("Rental Data to Submit:", rentalData);
-
-
-        // Submit to the backend API
-        fetch( `http://localhost:8081/UserWebService/api/rentals?userId=${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(rentalData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to create rental post");
+            // Validate duration
+            if (updatedData.duration > 30) {
+                alert("Post duration cannot exceed 30 days.");
+                return;
             }
-            return response.text();
-        })
-        .then(message => {
-        	 alert(message);
-        	    clearError();
 
-        	    // Ensure 'annonces' is initialized and is an array
-        	    if (!Array.isArray(userData.annonces)) {
-        	        userData.annonces = []; // Initialize as an empty array if undefined
-        	    }
+            // Validate start and end times
+            const startTimeObj = new Date(`1970-01-01T${updatedData.start_time}:00`);
+            const endTimeObj = new Date(`1970-01-01T${updatedData.end_time}:00`);
+            if (endTimeObj <= startTimeObj) {
+                alert("End Time must be later than Start Time.");
+                return;
+            }
 
-        	    // Add rental to sessionStorage
-        	    userData.annonces.push(rentalData); // Append the rental to the user's annonces
-        	    sessionStorage.setItem("userData", JSON.stringify(userData));
+            // Validate rent duration
+            const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60); // in hours
+            if (updatedData.rentDuration > maxRentDuration) {
+                alert(`Rent Duration cannot exceed ${maxRentDuration.toFixed(2)} hours.`);
+                return;
+            }
 
-        	    // Redirect to the annonces page
-        	    window.location.href = "Annonces.html";
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            displayError("Error: " + error.message);
+            // Get the user data from sessionStorage
+            const userDataJson = sessionStorage.getItem("userData");
+            let userData = null;
+
+            try {
+                userData = JSON.parse(userDataJson);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+                alert("User is not logged in. Please log in first.");
+                return;
+            }
+
+            if (!userData || !userData.id) {
+                alert("User is not logged in. Please log in first.");
+                return;
+            }
+
+            const userId = userData.id;
+
+            // Submit the updated post data to the backend
+            fetch( ` http://localhost:8081/UserWebService/api/rentals/${postData.id} ` , {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to update rental post");
+                    }
+                    return response.text();
+                })
+                .then(message => {
+                    alert(message);
+
+                    // Update session data with the modified post
+                    userData.annonces = userData.annonces.map(annonce => {
+                        if (annonce.id === postData.id) {
+                            return updatedData; // Replace the old post with updated post
+                        }
+                        return annonce;
+                    });
+
+                    // Save updated user data to sessionStorage
+                    sessionStorage.setItem("userData", JSON.stringify(userData));
+
+                    // Redirect to the annonces page
+                    window.location.href = "Annonces.html";
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error updating post: " + error.message);
+                });
         });
     });
-   
-    function clearError() {
-        const errorElement = document.getElementById('error-message');
-        errorElement.style.display = 'none';
-        errorElement.innerText = '';
-    }
-  
-    function displayError(message) {
-        const popup = document.getElementById('error-popup');
-        const popupMessage = document.getElementById('popup-message');
-
-        popupMessage.textContent = message; // Set the error message
-        popup.style.display = 'block'; // Show the popup
-    }
-
-    function closeErrorPopup() {
-        const popup = document.getElementById('error-popup');
-        popup.style.display = 'none'; // Hide the popup
-    }
 
 </script>
     <script>

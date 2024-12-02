@@ -67,6 +67,8 @@ public class Annonce {
 		this.id = id;
 	}
 
+	
+
 	public List<Note> getNotes() {
 		return notes;
 	}
@@ -76,7 +78,6 @@ public class Annonce {
 		this.notes = notes;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Annonce [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
@@ -85,7 +86,6 @@ public class Annonce {
 
 
 
-	
 
 	
 

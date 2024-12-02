@@ -15,10 +15,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import static Users.UserDatabase.users;
 
 @Path("/users")
 public class UserController {
-	private static List<User> users = new ArrayList<>(); // In-memory list to store users
+	
 	private static int idCounter = 1; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
@@ -48,6 +49,26 @@ public class UserController {
                 .build();
     
     }
+    @GET
+    @Path("/{id}/annonces")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserAnnonces(@PathParam("id") int id) {
+        // Find the user by ID
+        Optional<User> user = users.stream()
+                                   .filter(u -> u.getId() == id)
+                                   .findFirst();
+
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + id)
+                           .build();
+        }
+
+        // Return the list of annonces
+        return Response.ok(user.get().getAnnonces())
+                       .build();
+    }
+
 
     // Get all users (for testing purposes)
     @GET

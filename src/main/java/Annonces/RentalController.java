@@ -17,7 +17,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
+import static Users.UserDatabase.users;
 @Path("/rentals")
 public class RentalController {
 	private static List<Rental> rentalList = new ArrayList<>(); // In-memory list to store rentals
@@ -27,13 +27,32 @@ public class RentalController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response addRental(Rental rental) {
-        rental.setId(currentId++); // Assign a unique ID
-        rentalList.add(rental);
+    public Response addRental(Rental rental, @QueryParam("userId") int userId) {
+        // Find the user by userId
+        Optional<User> userOptional = users.stream()
+                                           .filter(user -> user.getId() == userId)
+                                           .findFirst();
+
+        if (userOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + userId)
+                           .build();
+        }
+
+        // Associate rental with the user
+        User user = userOptional.get();
+        if (user.getAnnonces() == null) {
+            user.setAnnonces(new ArrayList<>());
+        }
+
+        rental.setId(currentId++); // Generate a unique rental ID
+        user.getAnnonces().add(rental); // Add the rental to the user's annonces list
+
         return Response.status(Response.Status.CREATED)
-                .entity("Rental created successfully with ID: " + rental.getId())
-                .build();
+                       .entity("Rental added successfully for user: " + user.getFirst_name())
+                       .build();
     }
+
 
     // **2. Get All Rentals**
     @GET
