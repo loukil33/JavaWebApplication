@@ -68,7 +68,25 @@ public class UserController {
         return Response.ok(user.get().getAnnonces())
                        .build();
     }
+    @GET
+    @Path("/{id}/bikes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserBikes(@PathParam("id") int id) {
+        // Find the user by ID
+        Optional<User> user = users.stream()
+                                   .filter(u -> u.getId() == id)
+                                   .findFirst();
 
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + id)
+                           .build();
+        }
+
+        // Return the list of annonces
+        return Response.ok(user.get().getBikes())
+                       .build();
+    }
 
     // Get all users (for testing purposes)
     @GET
