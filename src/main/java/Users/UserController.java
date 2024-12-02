@@ -3,7 +3,6 @@ package Users;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,28 +15,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import static Users.UserDatabase.users;
 
 @Path("/users")
 public class UserController {
-	private static List<User> users = new ArrayList<>(); // In-memory list to store users
-	   // Static block to initialize with a default user
-    static {
-        User defaultUser = new User(
-            1,                  // id
-            12345678,           // cin
-            "John",             // first_name
-            "Doe",              // last_name
-            "john.doe@example.com", // email
-            "securepassword",   // password
-            "123 Main Street",  // address
-            LocalDate.of(1990, 1, 1), // birth_date
-            "profile.jpg",      // image_profile
-            RoleType.ADMIN,     // role
-            1234567890          // PhoneNumber
-        );
-
-        users.add(defaultUser); // Add the default user to the list
-    }
+	
 	private static int idCounter = 1; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
@@ -67,6 +49,26 @@ public class UserController {
                 .build();
     
     }
+    @GET
+    @Path("/{id}/annonces")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserAnnonces(@PathParam("id") int id) {
+        // Find the user by ID
+        Optional<User> user = users.stream()
+                                   .filter(u -> u.getId() == id)
+                                   .findFirst();
+
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + id)
+                           .build();
+        }
+
+        // Return the list of annonces
+        return Response.ok(user.get().getAnnonces())
+                       .build();
+    }
+
 
     // Get all users (for testing purposes)
     @GET
