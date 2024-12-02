@@ -40,6 +40,8 @@ public class Bike {
 		public void setColor(String color) {
 			this.color = color;
 		}
+
+		
 		public boolean isAvailable() {
 			return isAvailable;
 		}
@@ -61,6 +63,18 @@ public class Bike {
 			this.color = color;
 			this.isAvailable = isAvailable;
 			this.images = images;
+		}
+		
+		public Bike(String model, String brand, String condition, String color, boolean isAvailable) {
+			this.model = model;
+			this.brand = brand;
+			this.condition = condition;
+			this.color = color;
+			this.isAvailable = isAvailable;
+		}
+		
+		
+		public Bike() {
 		}
 		@Override
 		public String toString() {
