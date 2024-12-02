@@ -93,8 +93,11 @@ public class RentalController {
         if (updatedRental.getRentPrice() > 0) {
             rental.setRentPrice(updatedRental.getRentPrice());
         }
-        if (updatedRental.getRentDate() != null) {
-            rental.setRentDate(updatedRental.getRentDate());
+        if (updatedRental.getStart_time() != null) {
+            rental.setStart_time(updatedRental.getStart_time());
+        }
+        if (updatedRental.getEnd_time() != null) {
+            rental.setEnd_time(updatedRental.getEnd_time());
         }
         if (updatedRental.getRentDuration() > 0) {
             rental.setRentDuration(updatedRental.getRentDuration());

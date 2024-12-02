@@ -13,7 +13,45 @@
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=ADLaM+Display:400">
     
-    
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            /*max-width: 600px;*/
+            width: 1200px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #0290e6;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0417b2;
+        }
+    </style>
     
     <style>
     .u-nav {
@@ -98,14 +136,51 @@ c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816
 c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span> -->
                 <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
 </div></div></header>
+    <div id="error-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background-color: #f44336; color: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+    <span id="popup-message"></span>
+    <button onclick="closeErrorPopup()" style="margin-top: 10px; padding: 10px; border: none; background-color: white; color: #f44336; border-radius: 5px; cursor: pointer;">Close</button>
+</div>
     
     <section class="u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-xl u-container-align-center-xs u-palette-1-light-3 u-section-2" id="carousel_0d8e">
-       
-
       <div class="u-clearfix u-sheet u-sheet-1">
-     
+       <h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1200" data-animation-delay="0">Create your own Post </h2>
         <div class="u-expanded-width u-list u-list-1">
           <div class="u-repeater u-repeater-1">
+           <form id="rental-post-form">
+    <!-- Error message display -->
+    <div id="error-message" class="error" style="display: none;"></div>
+
+    <!-- Title -->
+    <label for="title">Title</label>
+    <input type="text" id="title" name="title" placeholder="Enter title" required>
+
+    <!-- Description -->
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4" placeholder="Enter description" required></textarea>
+
+    <!-- Duration -->
+    <label for="duration">Post Duration (in days, max 30)</label>
+    <input type="number" id="duration" name="duration" placeholder="Enter duration in days" required min="1" max="30">
+
+    <!-- Rent Price -->
+    <label for="rentPrice">Rent Price</label>
+    <input type="number" id="rentPrice" name="rentPrice" placeholder="Enter rent price" step="0.01" required>
+
+    <!-- Start Time -->
+    <label for="start_time">Start Time</label>
+    <input type="time" id="start_time" name="start_time" required>
+
+    <!-- End Time -->
+    <label for="end_time">End Time</label>
+    <input type="time" id="end_time" name="end_time" required>
+
+    <!-- Rent Duration -->
+    <label for="rentDuration">Rent Duration (in hours)</label>
+    <input type="number" id="rentDuration" name="rentDuration" placeholder="Enter rent duration in hours" required min="1">
+
+    <!-- Submit Button -->
+    <button type="submit">Create Rental Post</button>
+</form>
             
             
             
@@ -114,7 +189,101 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         </div>
       </div>
     </section>
-    
+    <script>
+    document.getElementById('rental-post-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Retrieve form values
+        const title = document.getElementById('title').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const duration = parseInt(document.getElementById('duration').value, 10);
+        const rentPrice = parseFloat(document.getElementById('rentPrice').value);
+        const startTime = document.getElementById('start_time').value;
+        const endTime = document.getElementById('end_time').value;
+        const rentDuration = parseInt(document.getElementById('rentDuration').value, 10);
+        const startDate = new Date().toISOString().split('T')[0]; // System date
+
+        // Validate duration
+        if (duration > 30) {
+            displayError("Post duration cannot exceed 30 days.");
+            return;
+        }
+
+        // Validate start and end times
+        const startTimeObj = new Date(`1970-01-01T${startTime}:00`);
+        const endTimeObj = new Date(`1970-01-01T${endTime}:00`);
+
+        if (endTimeObj <= startTimeObj) {
+            displayError("End Time must be later than Start Time.");
+            return;
+        }
+
+        // Validate rent duration
+        const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60); // Difference in hours
+        if (rentDuration > maxRentDuration) {
+            displayError(`Rent Duration cannot exceed ${maxRentDuration.toFixed(2)} hours.`);
+            return;
+        }
+
+        // Prepare rental data
+        const rentalData = {
+            title,
+            description,
+            duration,
+            rentPrice,
+            start_time: startTime,
+            end_time: endTime,
+            rentDuration,
+            startDate
+        };
+
+        console.log("Rental Data to Submit:", rentalData);
+
+        // Submit to the backend API
+        fetch("http://localhost:8081/UserWebService/api/rentals", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(rentalData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to create rental post");
+            }
+            return response.text();
+        })
+        .then(message => {
+            alert(message);
+            //document.getElementById('rental-post-form').reset(); // Reset form
+            clearError();
+            window.location.href = "Annonces.html"; 
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            displayError("Error: " + error.message);
+        });
+    });
+    function clearError() {
+        const errorElement = document.getElementById('error-message');
+        errorElement.style.display = 'none';
+        errorElement.innerText = '';
+    }
+  
+    function displayError(message) {
+        const popup = document.getElementById('error-popup');
+        const popupMessage = document.getElementById('popup-message');
+
+        popupMessage.textContent = message; // Set the error message
+        popup.style.display = 'block'; // Show the popup
+    }
+
+    function closeErrorPopup() {
+        const popup = document.getElementById('error-popup');
+        popup.style.display = 'none'; // Hide the popup
+    }
+
+</script>
     <script>
    
     document.addEventListener('DOMContentLoaded', () => {

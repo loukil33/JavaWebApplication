@@ -2,13 +2,14 @@ package Annonces;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import Users.User;
 public class Rental extends Annonce{
 
 	private double rentPrice;
-    private Time start_time;
-    private Time end_time;
+    private LocalTime start_time;
+    private LocalTime end_time;
     private int rentDuration;
     private List<User> waitingList;
     private User CurrentWinner;
@@ -17,7 +18,7 @@ public class Rental extends Annonce{
     	
     }
 	public Rental(int id,String title, String description, LocalDate startDate, int duration,List<Note> notes, double rentPrice,
-			Time start_time,Time end_time, int rentDuration,List<User> waitingList,User CurrentWinner) {
+			LocalTime start_time,LocalTime end_time, int rentDuration,List<User> waitingList,User CurrentWinner) {
 		super(id,title, description, startDate, duration,notes);
 		this.rentPrice = rentPrice;
 		this.start_time = start_time;
@@ -37,16 +38,16 @@ public class Rental extends Annonce{
 
 	
 
-	public Time getStart_time() {
+	public LocalTime getStart_time() {
 		return start_time;
 	}
-	public void setStart_time(Time start_time) {
+	public void setStart_time(LocalTime start_time) {
 		this.start_time = start_time;
 	}
-	public Time getEnd_time() {
+	public LocalTime getEnd_time() {
 		return end_time;
 	}
-	public void setEnd_time(Time end_time) {
+	public void setEnd_time(LocalTime end_time) {
 		this.end_time = end_time;
 	}
 	public int getRentDuration() {
