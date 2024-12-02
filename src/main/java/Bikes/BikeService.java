@@ -4,65 +4,69 @@ package Bikes;
 import javax.servlet.http.Part;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
-import java.io.File;
+import java.util.Base64;
+import java.io.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static Bikes.bikesDB.bikes;
 
 @Path("/bikes")
 public class BikeService {
 
 
-    private static int currentId = 1; // Auto-increment ID counter
-    private List<Bike> bikes = new ArrayList<>();
-    
-    private static final String IMAGE_UPLOAD_DIR = "/css/images";
+    private static int currentId = 4; // Auto-increment ID counter
 
-
-
-    // Create (Add a new bike with image upload)
     @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addBike(@FormDataParam("model") String model,
-                            @FormDataParam("brand") String brand,
-                            @FormDataParam("condition") String condition,
-                            @FormDataParam("color") String color,
-                            @FormDataParam("images") List<Part> imageParts) {
-
-        // Validate inputs
-        if (model == null || brand == null || condition == null || color == null) {
+    public Response addBike(Bike bike) {
+        // Validate the bike object (ensure all required fields are present)
+        if (bike.getModel() == null || bike.getBrand() == null || bike.getCondition() == null || bike.getColor() == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
         }
 
-        // Handle image uploads
-        List<String> imagePaths = new ArrayList<>();
-        if (imageParts != null) {
-            for (Part imagePart : imageParts) {
-                String fileName = getFileName(imagePart);
-                try {
-                    File uploadDir = new File(IMAGE_UPLOAD_DIR);
-                    if (!uploadDir.exists()) {
-                        uploadDir.mkdirs(); // Create the directory if it doesn't exist
-                    }
-                    File file = new File(uploadDir, fileName);
-                    imagePart.write(file.getAbsolutePath());
-                    imagePaths.add("css/images/" + fileName); // Save relative path
-                } catch (IOException e) {
-                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to upload images").build();
-                }
+        // Handle the image data (if provided)
+        if (bike.getImages() != null && !bike.getImages().isEmpty()) {
+            String imageBase64 = bike.getImages().get(0);  // Assuming one image for simplicity
+
+            // Check if the image data has the prefix and remove it
+            if (imageBase64.startsWith("data:image")) {
+                imageBase64 = imageBase64.split(",")[1];  // Remove the prefix (data:image/jpeg;base64,)
             }
+
+            try {
+                byte[] imageBytes = Base64.getDecoder().decode(imageBase64);  // Decode the Base64 string
+
+                // Save the image to a file (adjust file path as needed)
+                String fileName = "uploaded_image.jpg";  // You can generate dynamic names if needed
+                String filePath = "/css/images/" + fileName;
+                File outputFile = new File(filePath);
+                try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                    fos.write(imageBytes);  // Write the image bytes to the file
+                }
+
+                // Update the bike object with the correct image path
+                bike.setImages(List.of("css/images/" + fileName));  // Set relative image path
+            } catch (IllegalArgumentException e) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Base64 image data").build();
+            } catch (IOException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to upload image").build();
+            }
+        } else {
+            // If no image is provided, use a default image
+            bike.setImages(List.of("/css/images/imagevelo.jpg"));
         }
 
-        // Create and add bike
-        Bike bike = new Bike(currentId++, model, brand, condition, color, true, imagePaths);
-        bikes.add(bike);
+        // Add the bike to your data store (list, database, etc.)
+        bike.setId(currentId++);  // Increment ID
+        bike.setAvailable(true);
+;        bikes.add(bike);  // Assuming 'bikes' is a list
 
-        return Response.status(Response.Status.CREATED).entity(bike).build();
+        return Response.status(Response.Status.CREATED).entity(bike).build(); // Respond with the created bike object
     }
+
+    
 
     // Read (Get all bikes)
     @GET
