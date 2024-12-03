@@ -276,9 +276,9 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         	    clearError();
 
         	    // Ensure 'annonces' is initialized and is an array
-        	    if (!Array.isArray(userData.annonces)) {
+        	   if (!Array.isArray(userData.annonces)) {
         	        userData.annonces = []; // Initialize as an empty array if undefined
-        	    }
+        	    } 
 
         	    // Add rental to sessionStorage
         	    userData.annonces.push(rentalData); // Append the rental to the user's annonces
