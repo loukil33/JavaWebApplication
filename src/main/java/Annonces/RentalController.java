@@ -18,6 +18,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import static Users.UserDatabase.users;
+import static Annonces.AnnonceDB.annoncesList;
+
 @Path("/rentals")
 public class RentalController {
 	private static List<Rental> rentalList = new ArrayList<>(); // In-memory list to store rentals
@@ -45,8 +47,14 @@ public class RentalController {
             user.setAnnonces(new ArrayList<>());
         }
 
+        
         rental.setId(currentId++); // Generate a unique rental ID
+        annoncesList.add(rental);
+        rentalList.add(rental);
         user.getAnnonces().add(rental); // Add the rental to the user's annonces list
+        System.out.println("Rental added with ID: " + rental.getId());
+        System.out.println("User's Annonces List: " + user.getAnnonces());
+
 
         return Response.status(Response.Status.CREATED)
                        .entity("Rental added successfully for user: " + user.getFirst_name())

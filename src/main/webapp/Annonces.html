@@ -176,8 +176,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
     `;
 }
 
-const annonceHTML = `
-    <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
+const annonceHTML = `<div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
         <div class="u-container-layout u-similar-container u-container-layout-1">
         <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
             <h5 class="u-align-center u-text u-text-3" style="font-size: 36px; margin-bottom: 10px;">${annonce.title}</h5>
@@ -196,6 +195,8 @@ const annonceHTML = `
     }
 
     function viewAnnonceDetails(postId) {
+        let selectedPost = null; // Use let instead of const
+
         // Find the selected post from the user's annonces
         const userDataJson = sessionStorage.getItem("userData");
         if (!userDataJson) {
@@ -204,18 +205,46 @@ const annonceHTML = `
         }
 
         const userData = JSON.parse(userDataJson);
-        const selectedPost = userData.annonces.find(annonce => annonce.id === postId);
+        console.log("Rebuilt Annonces:", userData.annonces);
+        console.log("id:", postId);
 
-        if (!selectedPost) {
-            alert("Post not found.");
-            return;
+        if (userData) {
+            const userId = userData.id; // Retrieve user ID from session data
+
+            // Fetch annonces for the user
+            fetch(`http://localhost:8081/UserWebService/api/users/${userId}/annonces`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch annonces.");
+                    }
+                    return response.json();
+                })
+                .then(annonces => {
+                    // Rebuild the user's annonces list from the API response
+                    userData.annonces = annonces;
+
+                    // Find the selected post
+                    selectedPost = userData.annonces.find(annonce => annonce.id === postId);
+
+                    if (!selectedPost) {
+                        alert("Post not found.");
+                        return;
+                    }
+
+                    // Save the selected post details in sessionStorage
+                    sessionStorage.setItem("selectedPost", JSON.stringify(selectedPost));
+
+                    // Redirect to the edit post page
+                    window.location.href = "EditPost.html";
+                })
+                .catch(error => {
+                    console.error("Error fetching annonces:", error);
+                    document.getElementById('annonces-container').innerHTML = `
+                        <p style="color: red;">Unable to load your posts. Please try again later.</p>`;
+                });
+        } else {
+            console.error("No user data found in session.");
         }
-
-        // Save the selected post details in sessionStorage
-        sessionStorage.setItem("selectedPost", JSON.stringify(selectedPost));
-
-        // Redirect to the edit post page
-        window.location.href = "EditPost.html";
     }
 
 
