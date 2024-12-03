@@ -15,10 +15,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
+import static Annonces.AnnonceDB.annoncesList;
 @Path("/annonces")
 public class AnnonceController {
-	private static List<Annonce> annoncesList = new ArrayList<>(); // In-memory list to store annonces
     private static int currentId = 1; // Auto-increment ID
 
     // **1. Create Annonce**

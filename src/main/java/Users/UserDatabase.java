@@ -16,7 +16,7 @@ public class UserDatabase {
 	            12345678, // CIN
 	            "John", // First Name
 	            "Doe", // Last Name
-	            "admin@gmail.com", // Email
+	            "admin", // Email
 	            "123", // Password
 	            "123 Main St", // Address
 	            LocalDate.of(1990, 1, 1), // Birth Date

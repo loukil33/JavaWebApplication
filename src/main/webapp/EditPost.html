@@ -268,7 +268,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             const userId = userData.id;
 
             // Submit the updated post data to the backend
-            fetch( ` http://localhost:8081/UserWebService/api/rentals/${postData.id} ` , {
+            fetch( `http://localhost:8081/UserWebService/api/rentals/${postData.id} ` , {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

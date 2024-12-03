@@ -186,7 +186,7 @@ const annonceHTML = `
             <blockquote class="u-align-center u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">
                 Post ends in ${annonce.duration} days
             </blockquote>
-                <a href="#" onclick="viewAnnonceDetails(${annonce.id})" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Edit Post</a>
+                <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Edit Post</a>
         </div>
     </div>`;
 
@@ -204,6 +204,11 @@ const annonceHTML = `
         }
 
         const userData = JSON.parse(userDataJson);
+        console.log("Rebuilt Annonces:", userData.annonces);
+        console.log("id:", postId);
+        userData.annonces.forEach(annonce => {
+            console.log("Annonce ID in list:", annonce.id);
+        });
         const selectedPost = userData.annonces.find(annonce => annonce.id === postId);
 
         if (!selectedPost) {

@@ -75,7 +75,7 @@ public class Rental extends Annonce{
 	}
 	@Override
 	public String toString() {
-		return "Rental [rentPrice=" + rentPrice + ", start_time=" + start_time + ", end_time=" + end_time
+		return super.toString() +"Rental [rentPrice=" + rentPrice + ", start_time=" + start_time + ", end_time=" + end_time
 				+ ", rentDuration=" + rentDuration + ", waitingList=" + waitingList + ", CurrentWinner=" + CurrentWinner
 				+ "]";
 	}
