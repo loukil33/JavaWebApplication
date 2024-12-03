@@ -103,8 +103,8 @@
             }
 
             // Check image file size (if provided)
-            if (image && image.size > 2 * 1024 * 1024) { // 2MB limit
-                alert("Image file size must be less than 2MB.");
+            if (image && image.size > 10 * 1024 * 1024) { // 10MB limit
+                alert("Image file size must be less than 10MB.");
                 return false;
             }
 
@@ -117,7 +117,15 @@
             event.preventDefault(); // Prevent default form submission
 
             console.log("Submit button clicked.");
-            
+            const userDataJson = sessionStorage.getItem("userData");
+            let userData = null;
+
+            try {
+                userData = JSON.parse(userDataJson); // Parse user data from session
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+                return;
+            }
             // Collect form data
             const form = document.getElementById('add-bike-form');
             const formData = new FormData(form);
@@ -160,6 +168,9 @@
             .then(message => {
                 console.log("Success message:", message);
                 alert('Bike added successfully!');
+                
+                userData.bikes.push(data); 
+        	    sessionStorage.setItem("userData", JSON.stringify(userData));
                 form.reset();
                 window.location.href = "MyBikes.html";
             })

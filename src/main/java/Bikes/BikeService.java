@@ -15,56 +15,59 @@ import static Bikes.bikesDB.bikes;
 public class BikeService {
 
 
-    private static int currentId = 4; // Auto-increment ID counter
+	private static int currentId = 4; // Auto-increment ID counter
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addBike(Bike bike) {
-        // Validate the bike object (ensure all required fields are present)
-        if (bike.getModel() == null || bike.getBrand() == null || bike.getCondition() == null || bike.getColor() == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
-        }
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addBike(Bike bike) {
+	    if (bike.getModel() == null || bike.getBrand() == null || bike.getCondition() == null || bike.getColor() == null) {
+	        return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
+	    }
 
-        // Handle the image data (if provided)
-        if (bike.getImages() != null && !bike.getImages().isEmpty()) {
-            String imageBase64 = bike.getImages().get(0);  // Assuming one image for simplicity
+	    if (bike.getImages() != null && !bike.getImages().isEmpty()) {
+	        String imageBase64 = bike.getImages().get(0);
 
-            // Check if the image data has the prefix and remove it
-            if (imageBase64.startsWith("data:image")) {
-                imageBase64 = imageBase64.split(",")[1];  // Remove the prefix (data:image/jpeg;base64,)
-            }
+	        if (imageBase64.startsWith("data:image")) {
+	            imageBase64 = imageBase64.split(",")[1]; // Remove the prefix
+	        }
 
-            try {
-                byte[] imageBytes = Base64.getDecoder().decode(imageBase64);  // Decode the Base64 string
+	        try {
+	            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
 
-                // Save the image to a file (adjust file path as needed)
-                String fileName = "uploaded_image.jpg";  // You can generate dynamic names if needed
-                String filePath = "/css/images/" + fileName;
-                File outputFile = new File(filePath);
-                try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-                    fos.write(imageBytes);  // Write the image bytes to the file
-                }
 
-                // Update the bike object with the correct image path
-                bike.setImages(List.of("css/images/" + fileName));  // Set relative image path
-            } catch (IllegalArgumentException e) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Base64 image data").build();
-            } catch (IOException e) {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to upload image").build();
-            }
-        } else {
-            // If no image is provided, use a default image
-            bike.setImages(List.of("/css/images/imagevelo.jpg"));
-        }
+	            String fileName = "bike_" + currentId + ".jpg";
+	            String filePath = "E:/github/JavaWebApplication/src/main/webapp/css/images/" + fileName;
 
-        // Add the bike to your data store (list, database, etc.)
-        bike.setId(currentId++);  // Increment ID
-        bike.setAvailable(true);
-;        bikes.add(bike);  // Assuming 'bikes' is a list
 
-        return Response.status(Response.Status.CREATED).entity(bike).build(); // Respond with the created bike object
-    }
+	            File outputFile = new File(filePath);
+	            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+	                fos.write(imageBytes);
+	                System.out.println("Image saved at: " + outputFile.getAbsolutePath());
+	            }
+
+	            bike.setImages(List.of("http://localhost:8081/UserWebService/css/images/" + fileName));
+	        } catch (IllegalArgumentException e) {
+	            e.printStackTrace();
+	            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Base64 image data").build();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	                           .entity("Failed to write image file: " + e.getMessage())
+	                           .build();
+	        }
+	    } else {
+	        bike.setImages(null);
+	    }
+
+	    bike.setId(currentId++);
+	    bike.setAvailable(true);
+	    bikes.add(bike);
+
+	    return Response.status(Response.Status.CREATED).entity(bike).build();
+	}
+
+
 
     
 
@@ -98,12 +101,17 @@ public class BikeService {
         return "Bike not found"; // Return a message if no bike matches the ID
     }
 
-    // Update (Update bike details)
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateBike(@PathParam("id") int id, Bike updatedBike) {
+        // Validate the updated bike fields
+        if (updatedBike.getModel() == null || updatedBike.getBrand() == null || updatedBike.getCondition() == null || updatedBike.getColor() == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Required fields are missing.").build();
+        }
+
+        // Find the bike by ID
         Bike existingBike = findBikeById(id);
         if (existingBike != null) {
             // Update bike details
@@ -112,21 +120,51 @@ public class BikeService {
             existingBike.setCondition(updatedBike.getCondition());
             existingBike.setColor(updatedBike.getColor());
             existingBike.setAvailable(updatedBike.isAvailable());
-            existingBike.setImages(updatedBike.getImages());
-            return Response.ok(existingBike).build();
+
+            // Handle image update (check if new images are provided)
+            if (updatedBike.getImages() != null && !updatedBike.getImages().isEmpty()) {
+                existingBike.setImages(updatedBike.getImages()); // Update images if provided
+            }
+
+            // Persist the updated bike (if necessary)
+            // Example: update the bike list or save to database
+            // bikes.set(bikes.indexOf(existingBike), existingBike); // If using a list
+
+            return Response.ok(existingBike).build(); // Return updated bike details
         } else {
-            return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build(); // Bike not found
         }
     }
+
 
     // Delete (Delete a bike by ID)
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteBike(@PathParam("id") int id) {
-        boolean isDeleted = bikes.removeIf(bike -> bike.getId() == id);
-        if (isDeleted) {
-            return Response.ok("Bike deleted successfully").build();
+        // Find the bike by ID
+        Bike bikeToDelete = findBikeById(id);
+        if (bikeToDelete != null) {
+            // Remove the image file associated with the bike
+            if (bikeToDelete.getImages() != null && !bikeToDelete.getImages().isEmpty()) {
+                String imagePath = bikeToDelete.getImages().get(0).replace("http://localhost:8081/UserWebService/css/images/", "");
+                File imageFile = new File("E:/github/JavaWebApplication/src/main/webapp/css/images/" + imagePath);
+
+                if (imageFile.exists()) {
+                    boolean imageDeleted = imageFile.delete();  // Delete the image file
+                    if (!imageDeleted) {
+                        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to delete the image file").build();
+                    }
+                }
+            }
+
+            // Remove the bike from the list (or database)
+            boolean isDeleted = bikes.removeIf(bike -> bike.getId() == id);
+            if (isDeleted) {
+                return Response.ok("Bike and its image deleted successfully").build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
+            }
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
         }
