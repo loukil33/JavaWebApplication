@@ -7,7 +7,7 @@
     <title>Bike Shop - Payment</title>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        body {
+   body {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -238,11 +238,23 @@
     <script>
         const userId = 1;
 
-        // Function to load order summary
+        // Fetch and display the total price
+        async function fetchTotalPrice() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+                const totalPrice = data.totalPrice.toFixed(2);
+                document.getElementById("total-price").textContent = `€${totalPrice}`;
+            } catch (error) {
+                console.error("Error fetching total price:", error);
+                document.getElementById("total-price").textContent = "Error calculating total.";
+            }
+        }
+
+        // Load order summary
         async function loadOrderSummary() {
             const orderSummaryContainer = document.getElementById('order-summary');
             const subtotalEl = document.getElementById('subtotal');
-            const totalPriceEl = document.getElementById('total-price');
             const itemCountEl = document.getElementById('item-count');
 
             try {
@@ -250,27 +262,21 @@
                 const data = await response.json();
                 const { cartItems, totalPrice } = data;
 
-                if (cartItems.length === 0) {
+                if (!cartItems || cartItems.length === 0) {
                     orderSummaryContainer.innerHTML = '<p>Your cart is empty.</p>';
                     subtotalEl.textContent = "€0.00";
-                    totalPriceEl.textContent = "€0.00";
                     itemCountEl.textContent = "0 items";
                     return;
                 }
 
-                orderSummaryContainer.innerHTML = "";
-                cartItems.forEach(item => {
-                    const itemRow = `
-                        <div class="row item">
-                            <div><span>${item.model}</span></div>
-                            <div><b>€${item.salePrice.toFixed(2)}</b></div>
-                        </div>
-                    `;
-                    orderSummaryContainer.innerHTML += itemRow;
-                });
+                orderSummaryContainer.innerHTML = cartItems.map(item => `
+                    <div class="row item">
+                        <div><span>${item.model}</span></div>
+                        <div><b>€${item.salePrice.toFixed(2)}</b></div>
+                    </div>
+                `).join('');
 
                 subtotalEl.textContent = `€${totalPrice.toFixed(2)}`;
-                totalPriceEl.textContent = `€${totalPrice.toFixed(2)}`;
                 itemCountEl.textContent = `${cartItems.length} items`;
             } catch (error) {
                 console.error('Error loading order summary:', error);
@@ -278,26 +284,9 @@
             }
         }
 
-        // Function to fetch total price for payment
-        async function fetchTotalPrice() {
-            try {
-                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
-                const data = await response.json();
-                const totalPrice = data.totalPrice.toFixed(2);
-                document.getElementById("payment-amount").textContent = `Pay €${totalPrice}`;
-            } catch (error) {
-                console.error("Error fetching total price:", error);
-                document.getElementById("payment-amount").textContent = "Error calculating total.";
-            }
-        }
-
-        fetchTotalPrice();
-
         // Initialize Stripe
         const stripe = Stripe("pk_test_51MfRIsHcaMLPP7A1CiVHTe3wo69caUJgl4GbfkBL83Ih7wler9uw1CV5Di08BfPEqhgXsJNjCEb54COPS8zbOVUd005emg9WN9");
         const elements = stripe.elements();
-
-        // Create an instance of the card Element.
         const card = elements.create('card');
         card.mount('#card-element');
 
@@ -306,30 +295,38 @@
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const { token, error } = await stripe.createToken(card);
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
 
-            if (error) {
-                document.getElementById('payment-errors').textContent = error.message;
-            } else {
-                document.getElementById('payment-errors').textContent = '';
-                // Send token to server for payment processing
-                const response = await fetch('YOUR_SERVER_ENDPOINT', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ token: token.id, amount: totalPrice })
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/checkout?userId=${userId}`, {
+                    method: 'POST'
                 });
 
-                const paymentResult = await response.json();
-                if (paymentResult.success) {
-                    alert("Payment successful!");
+                const { clientSecret } = await response.json();
+
+                const { error } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: card
+                    }
+                });
+
+                if (error) {
+                    document.getElementById('payment-errors').textContent = error.message;
                 } else {
-                    alert("Payment failed. Please try again.");
+                    alert("Payment successful!");
+                    window.location.href = "BuyIndex.html";
                 }
+            } catch (error) {
+                console.error("Error processing payment:", error);
+                document.getElementById('payment-errors').textContent = "An error occurred. Please try again.";
+            } finally {
+                submitButton.disabled = false;
             }
         });
 
+        // Initialize on page load
+        fetchTotalPrice();
         loadOrderSummary();
     </script>
 </body>
