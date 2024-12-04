@@ -22,7 +22,7 @@ import static Users.UserDatabase.users;
 @Path("/users")
 public class UserController {
 	
-	private static int idCounter = 1; // Initialize counter for id, starts from 1
+	private static int idCounter = 2; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -66,10 +66,18 @@ public class UserController {
                            .build();
         }
 
+        // Check if the user has no annonces and return an empty list
+        List<Annonce> annonces = user.get().getAnnonces();
+        if (annonces == null || annonces.isEmpty()) {
+            return Response.ok(new ArrayList<>()) // Return an empty list
+                           .build();
+        }
+
         // Return the list of annonces
-        return Response.ok(user.get().getAnnonces())
+        return Response.ok(annonces)
                        .build();
     }
+
     @GET
     @Path("/{id}/bikes")
     @Produces(MediaType.APPLICATION_JSON)

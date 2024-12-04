@@ -85,6 +85,33 @@ form#rental-post-update-form {
     margin-top: 0;
     
 }
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Space between logo and navigation links */
+    align-items: center; /* Vertically center the items */
+    padding: 10px 20px;
+}
+
+/* Adjust the logo if necessary */
+.u-logo {
+    margin-right: 20px; /* Adjust space between the logo and the nav */
+    margin-left: -10px; /* Move the logo slightly to the left */
+}
+.u-nav {
+    display: flex; /* Keep the nav links in a row */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Ensure the logo image does not collapse */
+.u-logo-image {
+    max-height: 100px; /* Adjust the height for better scaling */
+    max-width: auto; /* Ensure the aspect ratio is maintained */
+    object-fit: contain; /* Fit the image within its container */
+    margin-top: 45px;
+}
+
     </style>
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
@@ -99,31 +126,32 @@ form#rental-post-update-form {
   <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="en">
   <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
   <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
-<a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
-<img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
-</a>
-<nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
-<div class="menu-collapse" style="font-size: 1.125rem; letter-spacing: 0px;">
-<a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
-<svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
-<svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
-</g></svg>
-</a>
-</div>
-<div class="u-custom-menu u-nav-container">
-<div class="u-menu-close"></div>
-<ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a>
-</li><li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a>
-</li><li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a>
-</li><li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a>
-</li></ul>
-</div>
 
+<nav class="navbar">
+    <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+    <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1" alt="Université Gustave Eiffel Logo" style="width: auto; height: auto;">
+</a>
+
+    <ul class="u-nav u-unstyled u-nav-1">
+        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
+        <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
+        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a></li>
+        <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
+        <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
+        <li class="u-nav-item" id="logout-link" style="display: none;">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+                Logout
+            </button>
+        </li>
+        <li class="u-nav-item" style="margin-left: 80px;">
+        <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+             Login
+            </button>
+            </li>
+    </ul>
+    <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
 </nav>
-<button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
-    Login
-</button>
+
 <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
 <!-- <span class="u-icon u-icon-rectangle u-text-custom-color-1 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55" style="" id="user-icon" width="80px" height="80px"><use xlink:href="#svg-21d7"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-21d7" style="enable-background:new 0 0 55 55;"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
 c0.058,0.049,0.121,0.089,0.179,0.137c0.474,0.393,0.965,0.766,1.465,1.127c0.162,0.117,0.324,0.234,0.489,0.348
@@ -186,7 +214,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
     <input type="number" id="rentDuration" name="rentDuration" placeholder="Enter rent duration in hours" required min="1">
 
     <!-- Submit Button -->
-    <button type="submit">Create Rental Post</button>
+    <button type="submit">Edit Rental Post</button>
 </form>
             
             
@@ -333,6 +361,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
 
             // Safely access and update DOM elements
             const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-link');
             const profileLink = document.getElementById('profile-link');
             const postsLink = document.getElementById('posts-link');
             const bikesLink = document.getElementById('Bikes-link');
@@ -340,6 +369,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             const welcomeMessage = document.getElementById('welcome-message');
 
             if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
             if (profileLink) profileLink.style.display = 'block';
             if (postsLink) postsLink.style.display = 'block';
             if (bikesLink) bikesLink.style.display = 'block';
@@ -353,6 +383,16 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         const loginButton = document.getElementById('login-btn');
         if (loginButton) {
             loginButton.addEventListener('click', () => {
+                window.location.href = "Login-Page.html";
+            });
+        }
+        const logoutButton = document.getElementById('logout-btn');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                
+                sessionStorage.clear();
+                localStorage.clear();   
+                
                 window.location.href = "Login-Page.html";
             });
         }

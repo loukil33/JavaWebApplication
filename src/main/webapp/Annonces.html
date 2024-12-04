@@ -40,16 +40,16 @@
 }
 .navbar {
     display: flex;
-    justify-content: space-between; /* Space between logo and navigation */
+    justify-content: space-between; /* Space between logo and navigation links */
     align-items: center; /* Vertically center the items */
     padding: 10px 20px;
 }
 
 /* Adjust the logo if necessary */
 .u-logo {
-    margin-right: 20px; /* Add space between the logo and the navigation links */
+    margin-right: 20px; /* Adjust space between the logo and the nav */
+    margin-left: -10px; /* Move the logo slightly to the left */
 }
-
 .u-nav {
     display: flex; /* Keep the nav links in a row */
     list-style: none;
@@ -59,8 +59,10 @@
 
 /* Ensure the logo image does not collapse */
 .u-logo-image {
-    max-height: 200px; /* Adjust height as needed */
-    max-width: 100%; /* Maintain the aspect ratio */
+    max-height: 100px; /* Adjust the height for better scaling */
+    max-width: auto; /* Ensure the aspect ratio is maintained */
+    object-fit: contain; /* Fit the image within its container */
+    margin-top: 45px;
 }
 
     </style>
@@ -80,20 +82,25 @@
 
 
 <nav class="navbar">
-    <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
-        <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
-    </a>
+   <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+    <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1" alt="Université Gustave Eiffel Logo" style="width: auto; height: auto;">
+</a>
     <ul class="u-nav u-unstyled u-nav-1">
-        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px;">Home</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
         <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
         <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a></li>
         <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
         <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
         <li class="u-nav-item" id="logout-link" style="display: none;">
-            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-2" style="padding: 10px 20px;">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
                 Logout
             </button>
         </li>
+        <li class="u-nav-item" style="margin-left: 80px;">
+        <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+             Login
+            </button>
+            </li>
     </ul>
     <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
 </nav>
@@ -117,9 +124,7 @@
 </div>
 
 </nav>-->
-<button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
-    Login
-</button>
+
 <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
 <!-- <span class="u-icon u-icon-rectangle u-text-custom-color-1 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55" style="" id="user-icon" width="80px" height="80px"><use xlink:href="#svg-21d7"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-21d7" style="enable-background:new 0 0 55 55;"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
 c0.058,0.049,0.121,0.089,0.179,0.137c0.474,0.393,0.965,0.766,1.465,1.127c0.162,0.117,0.324,0.234,0.489,0.348

@@ -41,16 +41,16 @@
 /* Flexbox container for logo and navigation */
 .navbar {
     display: flex;
-    justify-content: space-between; /* Space between logo and navigation */
+    justify-content: space-between; /* Space between logo and navigation links */
     align-items: center; /* Vertically center the items */
     padding: 10px 20px;
 }
 
 /* Adjust the logo if necessary */
 .u-logo {
-    margin-right: 20px; /* Add space between the logo and the navigation links */
+    margin-right: 20px; /* Adjust space between the logo and the nav */
+    margin-left: -10px; /* Move the logo slightly to the left */
 }
-
 .u-nav {
     display: flex; /* Keep the nav links in a row */
     list-style: none;
@@ -60,8 +60,10 @@
 
 /* Ensure the logo image does not collapse */
 .u-logo-image {
-    max-height: 200px; /* Adjust height as needed */
-    max-width: 100%; /* Maintain the aspect ratio */
+    max-height: 100px; /* Adjust the height for better scaling */
+    max-width: auto; /* Ensure the aspect ratio is maintained */
+    object-fit: contain; /* Fit the image within its container */
+    margin-top: 45px;
 }
 
 
@@ -82,20 +84,26 @@
 
 
 <nav class="navbar">
-    <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
-        <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
-    </a>
+     <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+    <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1" alt="Université Gustave Eiffel Logo" style="width: auto; height: auto;">
+</a>
     <ul class="u-nav u-unstyled u-nav-1">
-        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px;">Home</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
         <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
         <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a></li>
         <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
         <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
         <li class="u-nav-item" id="logout-link" style="display: none;">
-            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-2" style="padding: 10px 20px;">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
                 Logout
             </button>
+            
         </li>
+        <li class="u-nav-item" style="margin-left: 80px;">
+        <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+             Login
+            </button>
+            </li>
     </ul>
     <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
 </nav>
@@ -125,9 +133,7 @@
 </div>
 
 </nav> -->
-<button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
-    Login
-</button>
+
 
 
 <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
@@ -248,55 +254,69 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         }
         
         annonces.forEach(annonce => {
-            let additionalInfo = "";
-            fetch(`http://localhost:8081/UserWebService/api/users/${annonce.userid}`
-    		)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch username.");
-            }
-            return response.json();
-        })
-        .then(user => {
-            // Rebuild the user's annonces list from the API response
-        	const username = user.last_name;
-        	if ("rentPrice" in annonce) {
-                additionalInfo = `
-                    <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
-                    <p class="u-align-center u-text u-text-5">
-                        <span class="u-file-icon u-icon u-icon-1">
-                            <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
-                        </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
-                    </p>`;
-            }
+        	const userDataJson = sessionStorage.getItem("userData");
+            let userData = null;
 
-            const annonceHTML = `
-                <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
-                    <div class="u-container-layout u-similar-container u-container-layout-1">
-                        <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
-                        <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
-                        <p class="u-align-center u-text u-text-4">${annonce.description}</p>
-                        ${additionalInfo}
-                        <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Posted By ${username} ends in ${annonce.duration} days</blockquote>
-                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                        <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Edit Post</a>
-                            <a href="#" onclick="deleteAnnonce(${annonce.id})" 
-                               class="u-active-white u-align-center u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-border-hover-custom-color-3 u-btn u-btn-round u-button-style u-custom-color-3 u-custom-item u-hover-white u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-2" style="margin: 2px; margin-left: 5px padding: 10px 5px;">
-                                <span class="u-file-icon u-icon u-text-custom-color-2 u-icon-2">
-                                    <img src="css/images/484611-0e0eab99.png" alt="" style="width: 16px; height: 16px;">
-                                </span>&nbsp;Delete
-                            </a>
+            try {
+                userData = JSON.parse(userDataJson);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+            }
+        	if(userData){
+        		
+        		if (annonce.userid === userData.id) {
+            		//container.innerHTML = '<p>No posts found.</p>';
+                    return;
+                }
+        		let additionalInfo = "";
+                fetch(`http://localhost:8081/UserWebService/api/users/${annonce.userid}`
+        		)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch username.");
+                }
+                return response.json();
+            })
+            .then(user => {
+                // Rebuild the user's annonces list from the API response
+            	const username = user.last_name;
+            	if ("rentPrice" in annonce) {
+                    additionalInfo = `
+                        <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                        <p class="u-align-center u-text u-text-5">
+                            <span class="u-file-icon u-icon u-icon-1">
+                                <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
+                            </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
+                        </p>`;
+                }
+
+                const annonceHTML = `
+                    <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
+                        <div class="u-container-layout u-similar-container u-container-layout-1">
+                            <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
+                            <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
+                            <p class="u-align-center u-text u-text-4">${annonce.description}</p>
+                            ${additionalInfo}
+                            <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Posted By ${username} ends in ${annonce.duration} days</blockquote>
+                            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                            <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Rent Bike</a>
+                                
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
 
-            container.innerHTML += annonceHTML;
-        })
-        .catch(error => {
-            console.error("Error fetching username:", error);
-           
-        });
+                container.innerHTML += annonceHTML;
+            })
+            .catch(error => {
+                console.error("Error fetching username:", error);
+               
+            });
+                
+        	}
+        	
+        	
+        	
             // Check if the annonce has rental-specific properties
             
         });
