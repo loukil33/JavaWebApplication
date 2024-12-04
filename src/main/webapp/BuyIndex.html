@@ -9,11 +9,13 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
         .bike-list {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
         }
+
         .bike-card {
             border: 1px solid #ddd;
             border-radius: 10px;
@@ -22,12 +24,14 @@
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
         .bike-card img {
             width: 100%;
             height: 120px;
             object-fit: cover;
             border-radius: 5px;
         }
+
         .bike-card button {
             margin-top: 10px;
             padding: 10px;
@@ -38,23 +42,75 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         .bike-card button:hover {
             background-color: #0056b3;
+        }
+
+        .cart-button-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .cart-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-button:hover {
+            background-color: #218838;
+        }
+
+        .cart-icon {
+            margin-right: 10px;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 5px;
+            font-size: 12px;
+            min-width: 20px;
+            min-height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .badge.hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <h1>Available Bikes</h1>
-	<button onclick="checkCartBeforeNavigation()" style="margin-bottom: 20px; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-	    Check Cart
-	</button>
+    <div class="cart-button-container">
+        <button class="cart-button" onclick="checkCartBeforeNavigation()">
+            <span class="cart-icon">🛒</span> Check Cart
+        </button>
+        <div id="cart-badge" class="badge hidden">0</div>
+    </div>
     <div class="bike-list" id="bike-list">
         <!-- Bikes will be dynamically loaded here -->
     </div>
 
     <script>
         let cartItems = []; // To track items in the cart
-         
+        const userId = 1; // Static user ID for testing; Replace with actual user ID.
+
         // Fetch and display bikes
         async function loadBikes() {
             const bikeList = document.getElementById('bike-list');
@@ -79,55 +135,73 @@
             }
         }
 
-     //Static user ID for testing; Replace with actual user ID
-        const userId = 1; 
+        // Add bike to the cart
+        async function addToCart(id, model, price, image) {
+            if (!price || price <= 0) {
+                alert("Invalid bike price. Please provide a valid price.");
+                return;
+            }
 
-     // Add bike to the cart
-     async function addToCart(id, model, price, image) {
-         // Check for a valid price before adding to the cart
-         if (!price || price <= 0) {
-             alert("Invalid bike price. Please provide a valid price.");
-             return;
-         }
+            if (cartItems.some(item => item.id === id)) {
+                alert('This bike is already in your cart.');
+                return;
+            }
 
-         if (cartItems.some(item => item.id === id)) {
-             alert('This bike is already in your cart.');
-             return;
-         }
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id, model, salePrice: price, image })
+                });
+                const message = await response.text();
+                alert(message);
+                updateCartBadge();
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                alert('Failed to add to cart. Please try again.');
+            }
+        }
 
-         try {
-             const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
-                 method: "POST",
-                 headers: { "Content-Type": "application/json" },
-                 body: JSON.stringify({ id, model, salePrice: price, image })
-             });
-             const message = await response.text();
-             alert(message);
-         } catch (error) {
-             console.error('Error adding to cart:', error);
-             alert('Failed to add to cart. Please try again.');
-         }
-     }
-     
-     async function checkCartBeforeNavigation() {
-    	    try {
-    	        const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
-    	        const data = await response.json();
+        // Check cart before navigation
+        async function checkCartBeforeNavigation() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
 
-    	        if (data.cartItems.length === 0) {
-    	            alert(data.message || "Your cart is empty. Please add items before proceeding to the cart.");
-    	        } else {
-    	            window.location.href = 'BuyCart.html';
-    	        }
-    	    } catch (error) {
-    	        console.error("Error checking cart:", error);
-    	        alert("Failed to check the cart. Please try again.");
-    	    }
-    	}
+                if (data.cartItems.length === 0) {
+                    alert(data.message || "Your cart is empty. Please add items before proceeding to the cart.");
+                } else {
+                    window.location.href = 'BuyCart.html';
+                }
+            } catch (error) {
+                console.error("Error checking cart:", error);
+                alert("Failed to check the cart. Please try again.");
+            }
+        }
 
+        // Update the cart badge
+        async function updateCartBadge() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
 
-        // Load bikes on page load
+                const badge = document.getElementById('cart-badge');
+                const itemCount = data.cartItems.length;
+
+                if (itemCount > 0) {
+                    badge.textContent = itemCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Error updating cart badge:", error);
+            }
+        }
+
+        // Load bikes and update cart badge on page load
         loadBikes();
+        updateCartBadge();
     </script>
 </body>
 </html>
