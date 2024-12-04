@@ -93,19 +93,4 @@ public class BankService {
         paymentHistory.add(record);
     }
 
-
-    /*
-    public List<PaymentRecord> getPaymentHistory() {
-        // Add an example record for debugging
-        if (paymentHistory.isEmpty()) {
-            paymentHistory.add(new PaymentRecord(
-                    "Sample Bike",
-                    20.00,
-                    LocalDateTime.now(),
-                    "pi_dummy_id_12345"
-            ));
-        }
-        return paymentHistory;
-    }
-    */
 }

@@ -73,6 +73,18 @@ public class Bike {
 			this.isAvailable = isAvailable;
 		}
 		
+
+	    // Constructor for easier initialization
+	    public Bike(int id, String model, String brand, String condition, String color, boolean isAvailable,
+	                List<String> images, double rentalPrice, boolean isForSale, double salePrice) {
+	        this.id = id;
+	        this.model = model;
+	        this.brand = brand;
+	        this.condition = condition;
+	        this.color = color;
+	        this.isAvailable = isAvailable;
+	        this.images = images;
+	    }
 		
 		public Bike() {
 		}
@@ -89,43 +101,6 @@ public class Bike {
 	    
 	    
 
-    // Constructor for easier initialization
-    public Bike(int id, String model, String brand, String condition, String color, boolean isAvailable,
-                List<String> images, double rentalPrice, boolean isForSale, double salePrice) {
-        this.id = id;
-        this.model = model;
-        this.brand = brand;
-        this.condition = condition;
-        this.color = color;
-        this.isAvailable = isAvailable;
-        this.images = images;
-        this.rentalPrice = rentalPrice;
-        this.isForSale = isForSale;
-        this.salePrice = salePrice;
-    }
 
-    // Getters and setters
-    public int getId() {
-        return id;
-    }
 
-    public String getModel() {
-        return model;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public boolean isForSale() {
-        return isForSale;
-    }
-
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
 }

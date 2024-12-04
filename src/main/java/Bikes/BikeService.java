@@ -8,6 +8,7 @@ import java.util.Base64;
 import java.io.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static Bikes.bikesDB.bikes;
 
@@ -69,14 +70,24 @@ public class BikeService {
 
 
 
-    
-
+   
     // Read (Get all bikes)
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllBikes() {
-        return Response.ok(bikes).build();
-    }
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllBikes() {
+	    // Create and populate the list of bikes
+	    List<Bike> bikes = new ArrayList<>();
+	    bikes.add(new Bike(1, "Mountain Bike", "BrandX", "New", "Red", true,
+	            Arrays.asList("css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg"), 15.0, true, 200.0));
+	    bikes.add(new Bike(2, "Road Bike", "BrandY", "Used", "Blue", true,
+	            Arrays.asList("css/images/045a512fa8b766a2ae47858d53d6c19587e91ab1.jpg"), 10.0, true, 150.0));
+	    bikes.add(new Bike(3, "Amine Bike", "BrandZ", "Used", "Blue", true,
+	            Arrays.asList("css/images/045a512fa8b766a2ae47858d53d6c19587e91ab1.jpg"), 10.0, true, 300.0));
+
+	    // Return the response with the list of bikes
+	    return Response.ok(bikes).build();
+	}
+
 
     // Read (Get a bike by ID)
     @GET
