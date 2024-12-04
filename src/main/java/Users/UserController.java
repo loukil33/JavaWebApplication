@@ -3,6 +3,8 @@ package Users;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import Annonces.Annonce;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -116,6 +118,44 @@ public class UserController {
                        .build();
     }
 
+    @DELETE
+    @Path("/{userId}/annonces/{annonceId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response deleteUserAnnonce(@PathParam("userId") int userId, @PathParam("annonceId") int annonceId) {
+        // Find the user by userId
+        Optional<User> userOptional = users.stream()
+                                           .filter(user -> user.getId() == userId)
+                                           .findFirst();
+
+        if (userOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + userId)
+                           .build();
+        }
+
+        User user = userOptional.get();
+
+        if (user.getAnnonces() == null || user.getAnnonces().isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("No annonces found for user ID: " + userId)
+                           .build();
+        }
+
+        // Find and remove the annonce
+        Optional<Annonce> annonceOptional = user.getAnnonces().stream()
+                                                .filter(annonce -> annonce.getId() == annonceId)
+                                                .findFirst();
+
+        if (annonceOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("Annonce not found for ID: " + annonceId)
+                           .build();
+        }
+
+        user.getAnnonces().remove(annonceOptional.get());
+
+        return Response.ok("Annonce deleted successfully for user ID: " + userId).build();
+    }
 
    
 

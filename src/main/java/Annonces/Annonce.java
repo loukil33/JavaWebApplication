@@ -3,6 +3,8 @@ package Annonces;
 import java.time.LocalDate;
 import java.util.List;
 
+import Users.User;
+
 public class Annonce {
 	
 	private int id;
@@ -10,19 +12,21 @@ public class Annonce {
 	private String description;
 	private LocalDate startDate;
     private int duration;
+    private int userid;
     private List<Note> notes;
     
     public Annonce() {
        
     }
 
-	public Annonce(int id, String title, String description, LocalDate startDate, int duration, List<Note> notes) {
+	public Annonce(int id, String title, String description, LocalDate startDate, int duration,int user, List<Note> notes) {
 		
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.startDate = startDate;
 		this.duration = duration;
+		this.userid = userid;
 		this.notes = notes;
 	}
 
@@ -78,13 +82,22 @@ public class Annonce {
 		this.notes = notes;
 	}
 
+	
+	
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+
 	@Override
 	public String toString() {
 		return "Annonce [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
-				+ ", duration=" + duration + ", notes=" + notes + "]";
+				+ ", duration=" + duration + ", userid=" + userid + ", notes=" + notes + "]";
 	}
-
-
 
 
 	

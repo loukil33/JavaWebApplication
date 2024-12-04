@@ -155,6 +155,7 @@ public class RentalController {
         }
 
         rentalList.remove(existingRental.get());
+        annoncesList.remove(existingRental.get());
         return Response.ok("Rental deleted successfully.").build();
     }
 

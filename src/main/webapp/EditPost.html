@@ -77,7 +77,14 @@
     display: none;
 }
 
+h2.u-text-1 {
+    margin-bottom: 0;
+}
 
+form#rental-post-update-form {
+    margin-top: 0;
+    
+}
     </style>
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
@@ -268,42 +275,44 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             const userId = userData.id;
 
             // Submit the updated post data to the backend
-            fetch( `http://localhost:8081/UserWebService/api/rentals/${postData.id} ` , {
+            fetch(` http://localhost:8081/UserWebService/api/rentals/${postData.id} `, 
+            		{
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(updatedData)
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to update rental post");
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to update rental post");
+                }
+                return response.text();
+            })
+            .then(message => {
+                alert(message);
+
+                // Update session data with the modified post
+                userData.annonces = userData.annonces.map(annonce => {
+                    if (annonce.id === postData.id) {
+                        return updatedData; // Replace the old post with updated post
                     }
-                    return response.text();
-                })
-                .then(message => {
-                    alert(message);
-
-                    // Update session data with the modified post
-                    userData.annonces = userData.annonces.map(annonce => {
-                        if (annonce.id === postData.id) {
-                            return updatedData; // Replace the old post with updated post
-                        }
-                        return annonce;
-                    });
-
-                    // Save updated user data to sessionStorage
-                    sessionStorage.setItem("userData", JSON.stringify(userData));
-
-                    // Redirect to the annonces page
-                    window.location.href = "Annonces.html";
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("Error updating post: " + error.message);
+                    return annonce;
                 });
-        });
-    });
+
+                // Save updated user data to sessionStorage
+                sessionStorage.setItem("userData", JSON.stringify(userData));
+
+                // Redirect to the annonces page
+                window.location.href = "Annonces.html";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error updating post: " + error.message);
+            });
+        }); // Closing for the "submit" event listener
+    }); // Closing for the "DOMContentLoaded" event listener
+
 
 </script>
     <script>

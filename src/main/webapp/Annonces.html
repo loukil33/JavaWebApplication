@@ -38,7 +38,30 @@
 .hidden {
     display: none;
 }
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Space between logo and navigation */
+    align-items: center; /* Vertically center the items */
+    padding: 10px 20px;
+}
 
+/* Adjust the logo if necessary */
+.u-logo {
+    margin-right: 20px; /* Add space between the logo and the navigation links */
+}
+
+.u-nav {
+    display: flex; /* Keep the nav links in a row */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Ensure the logo image does not collapse */
+.u-logo-image {
+    max-height: 200px; /* Adjust height as needed */
+    max-width: 100%; /* Maintain the aspect ratio */
+}
 
     </style>
     <script type="application/ld+json">{
@@ -54,9 +77,27 @@
   <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="en">
   <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
   <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
-<a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
-<img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
-</a>
+
+
+<nav class="navbar">
+    <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+        <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
+    </a>
+    <ul class="u-nav u-unstyled u-nav-1">
+        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px;">Home</a></li>
+        <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
+        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a></li>
+        <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
+        <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
+        <li class="u-nav-item" id="logout-link" style="display: none;">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-2" style="padding: 10px 20px;">
+                Logout
+            </button>
+        </li>
+    </ul>
+    <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
+</nav>
+<!--  
 <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
 <div class="menu-collapse" style="font-size: 1.125rem; letter-spacing: 0px;">
 <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
@@ -75,7 +116,7 @@
 </li></ul>
 </div>
 
-</nav>
+</nav>-->
 <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
     Login
 </button>
@@ -96,13 +137,13 @@ c0-0.867-0.318-1.708-0.887-2.369v-4.667c0.052-0.52,0.236-3.448-1.883-5.864C34.52
 s-7.024,1.065-8.867,3.168c-2.119,2.416-1.935,5.346-1.883,5.864v4.667c-0.568,0.661-0.887,1.502-0.887,2.369v3.545
 c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
 c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span> -->
-                <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
+                
 </div></div></header>
-    
+  
     <section class="u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-xl u-container-align-center-xs u-palette-1-light-3 u-section-2" id="carousel_0d8e">
-       
-    <a class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1" href="AddRental.html">+ NEW POST</a>
+                 <a class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1" href="AddRental.html">+ NEW POST</a>
 
+        
       <div class="u-clearfix u-sheet u-sheet-1">
      
         <div class="u-expanded-width u-list u-list-1">
@@ -163,36 +204,42 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             let additionalInfo = "";
 
             // Check if the annonce has rental-specific properties
-           if ("rentPrice" in annonce) {
-    additionalInfo = `
-        <h4 class="u-align-center u-text u-text-palette-1-base u-text-2">Rent Price: ${annonce.rentPrice} €/${annonce.rentDuration}h</h4>
-        <p class="u-align-center u-text u-text-5">
-            <span class="u-file-icon u-icon u-icon-1">
-                <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
-            </span>
-            &nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
-        </p>
-        <p class="u-align-center u-text" style="margin-bottom: 10px;">Rent Duration: ${annonce.rentDuration} hours</p>
-    `;
-}
+            if ("rentPrice" in annonce) {
+                additionalInfo = `
+                    <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                    <p class="u-align-center u-text u-text-5">
+                        <span class="u-file-icon u-icon u-icon-1">
+                            <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
+                        </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
+                    </p>
+                `;
+            }
 
-const annonceHTML = `<div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
-        <div class="u-container-layout u-similar-container u-container-layout-1">
-        <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
-            <h5 class="u-align-center u-text u-text-3" style="font-size: 36px; margin-bottom: 10px;">${annonce.title}</h5>
-            <p class="u-align-center u-text u-text-4" style="font-size: 14px; color: #666; margin-bottom: 10px;">${annonce.description}</p>
-            ${additionalInfo}
-            <blockquote class="u-align-center u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">
-                Post ends in ${annonce.duration} days
-            </blockquote>
-                <a href="#" onclick="viewAnnonceDetails(${annonce.id})" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Edit Post</a>
-        </div>
-    </div>`;
+            const annonceHTML = `
+                <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
+                    <div class="u-container-layout u-similar-container u-container-layout-1">
+                        <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
+                        <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
+                        <p class="u-align-center u-text u-text-4">${annonce.description}</p>
+                        ${additionalInfo}
+                        <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Post ends in ${annonce.duration} days</blockquote>
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                        <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Edit Post</a>
+                            <a href="#" onclick="deleteAnnonce(${annonce.id})" 
+                               class="u-active-white u-align-center u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-border-hover-custom-color-3 u-btn u-btn-round u-button-style u-custom-color-3 u-custom-item u-hover-white u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-2" style="margin: 2px; margin-left: 5px padding: 10px 5px;">
+                                <span class="u-file-icon u-icon u-text-custom-color-2 u-icon-2">
+                                    <img src="css/images/484611-0e0eab99.png" alt="" style="width: 16px; height: 16px;">
+                                </span>&nbsp;Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
 
             container.innerHTML += annonceHTML;
         });
-
     }
+
 
     function viewAnnonceDetails(postId) {
         let selectedPost = null; // Use let instead of const
@@ -212,7 +259,8 @@ const annonceHTML = `<div class="u-list-item u-radius u-repeater-item u-shape-ro
             const userId = userData.id; // Retrieve user ID from session data
 
             // Fetch annonces for the user
-            fetch(`http://localhost:8081/UserWebService/api/users/${userId}/annonces`)
+            fetch(`http://localhost:8081/UserWebService/api/users/${userId}/annonces`
+            		)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Failed to fetch annonces.");
@@ -246,8 +294,87 @@ const annonceHTML = `<div class="u-list-item u-radius u-repeater-item u-shape-ro
             console.error("No user data found in session.");
         }
     }
+    function deleteUserAnnonce(userId, annonceId) {
+        fetch(`http://localhost:8081/UserWebService/api/users/${userId}/annonces/${annonceId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Annonce deleted successfully.");
 
+                // Optionally refresh the page or update the UI dynamically
+                document.getElementById(`annonce-${annonceId}`)?.remove();
 
+                // If using sessionStorage to manage the user's annonces
+                const userDataJson = sessionStorage.getItem("userData");
+                if (userDataJson) {
+                    const userData = JSON.parse(userDataJson);
+                    userData.annonces = userData.annonces.filter(annonce => annonce.id !== annonceId);
+                    sessionStorage.setItem("userData", JSON.stringify(userData));
+                }
+            } else {
+                return response.text().then(errorMessage => {
+                    alert(`Failed to delete annonce: ${errorMessage}`);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Error deleting annonce:", error);
+            alert("An error occurred while trying to delete the annonce.");
+        });
+    }
+    function deleteAnnonce(annonceId) {
+        // Confirm with the user before deletion
+        if (!confirm("Are you sure you want to delete this annonce?")) {
+            return;
+        }
+
+        // Send DELETE request to the server
+        fetch(`http://localhost:8081/UserWebService/api/rentals/${annonceId}`, 
+        		{
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                // Successfully deleted, refresh the list or remove the element
+                alert("Annonce deleted successfully.");
+                /*const element = document.getElementById(`annonce-${annonceId}`);
+                if (element) {
+                    element.remove();  // Remove the element
+                } else {
+                    console.error(`Annonce with ID ${annonceId} not found in the DOM.`);
+                }*/
+                const userDataJson = sessionStorage.getItem("userData");
+                let userData = null;
+
+                try {
+                    userData = JSON.parse(userDataJson);
+                } catch (error) {
+                    console.error("Error parsing user data:", error);
+                    alert("User is not logged in. Please log in first.");
+                    return;
+                }
+
+                if (!userData || !userData.id) {
+                    alert("User is not logged in. Please log in first.");
+                    return;
+                }
+                deleteUserAnnonce(userData.id,annonceId);
+
+                // Optionally refresh or redirect to update the UI
+                window.location.href = "Annonces.html";
+            } else {
+                // Handle errors
+                return response.text().then(errorMessage => {
+                    alert(`Failed to delete: ${errorMessage}`);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting annonce:', error);
+            alert("An error occurred while trying to delete the annonce.");
+        });
+    }
     </script>
     <script>
    
@@ -267,6 +394,7 @@ const annonceHTML = `<div class="u-list-item u-radius u-repeater-item u-shape-ro
 
             // Safely access and update DOM elements
             const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-link');
             const profileLink = document.getElementById('profile-link');
             const postsLink = document.getElementById('posts-link');
             const bikesLink = document.getElementById('Bikes-link');
@@ -274,6 +402,7 @@ const annonceHTML = `<div class="u-list-item u-radius u-repeater-item u-shape-ro
             const welcomeMessage = document.getElementById('welcome-message');
 
             if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
             if (profileLink) profileLink.style.display = 'block';
             if (postsLink) postsLink.style.display = 'block';
             if (bikesLink) bikesLink.style.display = 'block';
@@ -287,6 +416,16 @@ const annonceHTML = `<div class="u-list-item u-radius u-repeater-item u-shape-ro
         const loginButton = document.getElementById('login-btn');
         if (loginButton) {
             loginButton.addEventListener('click', () => {
+                window.location.href = "Login-Page.html";
+            });
+        }
+        const logoutButton = document.getElementById('logout-btn');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                
+                sessionStorage.clear();
+                localStorage.clear();   
+                
                 window.location.href = "Login-Page.html";
             });
         }

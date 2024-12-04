@@ -38,6 +38,31 @@
 .hidden {
     display: none;
 }
+/* Flexbox container for logo and navigation */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Space between logo and navigation */
+    align-items: center; /* Vertically center the items */
+    padding: 10px 20px;
+}
+
+/* Adjust the logo if necessary */
+.u-logo {
+    margin-right: 20px; /* Add space between the logo and the navigation links */
+}
+
+.u-nav {
+    display: flex; /* Keep the nav links in a row */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Ensure the logo image does not collapse */
+.u-logo-image {
+    max-height: 200px; /* Adjust height as needed */
+    max-width: 100%; /* Maintain the aspect ratio */
+}
 
 
     </style>
@@ -54,11 +79,29 @@
   <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="en">
   <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
   <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
-<a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
-<img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
-</a>
-<nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
-<div class="menu-collapse" style="font-size: 1.125rem; letter-spacing: 0px;">
+
+
+<nav class="navbar">
+    <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+        <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
+    </a>
+    <ul class="u-nav u-unstyled u-nav-1">
+        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px;">Home</a></li>
+        <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
+        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a></li>
+        <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
+        <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
+        <li class="u-nav-item" id="logout-link" style="display: none;">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-2" style="padding: 10px 20px;">
+                Logout
+            </button>
+        </li>
+    </ul>
+    <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
+</nav>
+
+<!-- <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+  <div class="menu-collapse" style="font-size: 1.125rem; letter-spacing: 0px;">
 <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
 <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
 <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
@@ -72,13 +115,21 @@
 </li><li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a>
 </li><li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a>
 </li><li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a>
-</li></ul>
+</li>
+<li class="u-nav-item" id="logout-link" style="display: none;">
+        <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-2" style="padding: 10px 20px;">
+            Logout
+        </button>
+    </li>
+</ul>
 </div>
 
-</nav>
+</nav> -->
 <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
     Login
 </button>
+
+
 <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
 <!-- <span class="u-icon u-icon-rectangle u-text-custom-color-1 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55" style="" id="user-icon" width="80px" height="80px"><use xlink:href="#svg-21d7"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-21d7" style="enable-background:new 0 0 55 55;"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
 c0.058,0.049,0.121,0.089,0.179,0.137c0.474,0.393,0.965,0.766,1.465,1.127c0.162,0.117,0.324,0.234,0.489,0.348
@@ -96,7 +147,7 @@ c0-0.867-0.318-1.708-0.887-2.369v-4.667c0.052-0.52,0.236-3.448-1.883-5.864C34.52
 s-7.024,1.065-8.867,3.168c-2.119,2.416-1.935,5.346-1.883,5.864v4.667c-0.568,0.661-0.887,1.502-0.887,2.369v3.545
 c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
 c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span> -->
-                <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
+                
 </div></div></header>
     <section class="u-clearfix u-container-align-center u-image u-section-1" id="sec-9342" data-image-width="1728" data-image-height="972">
       <div class="u-clearfix u-sheet u-sheet-1"></div>
@@ -105,61 +156,8 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
       <div class="u-clearfix u-sheet u-sheet-1">
         <h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1200" data-animation-delay="0">Rent your own bicycle </h2>
         <div class="u-expanded-width u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
-            <div class="u-container-align-center u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
-              <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1">
-                <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
-                <h5 class="u-align-center u-text u-text-2"> Full Service Wash</h5>
-                <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">10€/h</h4>
-                <p class="u-align-center u-text u-text-4">Sample text. Click to select the text box. Click again or double click to start editing the text.</p>
-                <a href="#" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Learn More </a>
-              </div>
-            </div>
-            <div class="u-container-align-center u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
-              <div class="u-container-layout u-similar-container u-valign-top u-container-layout-2">
-                <img src="css/images/045a512fa8b766a2ae47858d53d6c19587e91ab1.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-2" data-image-width="613" data-image-height="460">
-                <h5 class="u-align-center u-text u-text-5"> Manager’s Special Wash</h5>
-                <h4 class="u-align-center u-text u-text-palette-1-base u-text-6"> 8€/h</h4>
-                <p class="u-align-center u-text u-text-7">Sample text. Click to select the text box. Click again or double click to start editing the text.</p>
-                <a href="#" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-2" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Learn More </a>
-              </div>
-            </div>
-            <div class="u-container-align-center u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-3" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
-              <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3">
-                <img src="css/images/f945c6f9afde2dafb592160d671f8f40de8c0620.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-3" data-image-width="800" data-image-height="600">
-                <h5 class="u-align-center u-text u-text-8"> Deluxe Exterior Wash</h5>
-                <h4 class="u-align-center u-text u-text-palette-1-base u-text-9"> 11€/h</h4>
-                <p class="u-align-center u-text u-text-10">Sample text. Click to select the text box. Click again or double click to start editing the text.</p>
-                <a href="#" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-3" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Learn More </a>
-              </div>
-            </div>
-            <div class="u-container-align-center u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-4" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="600">
-              <div class="u-container-layout u-similar-container u-valign-top u-container-layout-4">
-                <img src="css/images/e1fc47415fe936b517d7d627bbefb7ef7d936313.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-4" data-image-width="375" data-image-height="300">
-                <h5 class="u-align-center u-text u-text-11"> Deluxe Exterior Wash</h5>
-                <h4 class="u-align-center u-text u-text-palette-1-base u-text-12"> 9€/h</h4>
-                <p class="u-align-center u-text u-text-13">Sample text. Click to select the text box. Click again or double click to start editing the text.</p>
-                <a href="#" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-4" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Learn More </a>
-              </div>
-            </div>
-            <div class="u-container-align-center u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-5" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="600">
-              <div class="u-container-layout u-similar-container u-valign-top u-container-layout-5">
-                <img src="css/images/6f7373ffdba9623bc645b3b52ef8e46059264324.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-5" data-image-width="800" data-image-height="600">
-                <h5 class="u-align-center u-text u-text-14"> Super Exterior Wash</h5>
-                <h4 class="u-align-center u-text u-text-palette-1-base u-text-15"> 7€/h</h4>
-                <p class="u-align-center u-text u-text-16">Sample text. Click to select the text box. Click again or double click to start editing the text.</p>
-                <a href="#" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-5" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Learn More </a>
-              </div>
-            </div>
-            <div class="u-container-align-center u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-6" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="600">
-              <div class="u-container-layout u-similar-container u-valign-top u-container-layout-6">
-                <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-6" data-image-width="1067" data-image-height="800">
-                <h5 class="u-align-center u-text u-text-17"> Basic Exterior Wash</h5>
-                <h4 class="u-align-center u-text u-text-palette-1-base u-text-18"> 12€/h</h4>
-                <p class="u-align-center u-text u-text-19">Sample text. Click to select the text box. Click again or double click to start editing the text.</p>
-                <a href="#" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-6" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Learn More </a>
-              </div>
-            </div>
+          <div class="u-repeater u-repeater-1" id="annonces-container-home">
+            
           </div>
         </div>
       </div>
@@ -183,6 +181,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
 
             // Safely access and update DOM elements
             const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-link');
             const profileLink = document.getElementById('profile-link');
             const postsLink = document.getElementById('posts-link');
             const bikesLink = document.getElementById('Bikes-link');
@@ -190,11 +189,31 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             const welcomeMessage = document.getElementById('welcome-message');
 
             if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
             if (profileLink) profileLink.style.display = 'block';
             if (postsLink) postsLink.style.display = 'block';
             if (bikesLink) bikesLink.style.display = 'block';
             if (rentalsLink) rentalsLink.style.display = 'block';
             if (welcomeMessage) welcomeMessage.textContent = `Welcome, ${userData.first_name}`;
+            
+            fetch( `http://localhost:8081/UserWebService/api/annonces/` 
+    		)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch annonces.");
+        }
+        return response.json();
+    })
+    .then(annonces => {
+        displayAnnoncesHome(annonces);
+    })
+    .catch(error => {
+        console.error("Error fetching annonces:", error);
+        document.getElementById('annonces-container-home').innerHTML = `
+            <p style="color: red;">Unable to load your posts. Please try again later.</p>
+            `;
+    });
+            
         } else {
             console.log("No user data found in session.");
         }
@@ -206,8 +225,82 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
                 window.location.href = "Login-Page.html";
             });
         }
-    });
+        const logoutButton = document.getElementById('logout-btn');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                
+                sessionStorage.clear();
+                localStorage.clear();   
+                
+                window.location.href = "Login-Page.html";
+            });
+        }
 
+    });
+    function displayAnnoncesHome(annonces) {
+        const container = document.getElementById('annonces-container-home');
+        let username = null;
+        container.innerHTML = ''; // Clear existing content
+
+        if (annonces.length === 0) {
+            container.innerHTML = '<p>No posts found.</p>';
+            return;
+        }
+        
+        annonces.forEach(annonce => {
+            let additionalInfo = "";
+            fetch(`http://localhost:8081/UserWebService/api/users/${annonce.userid}`
+    		)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch username.");
+            }
+            return response.json();
+        })
+        .then(user => {
+            // Rebuild the user's annonces list from the API response
+        	const username = user.last_name;
+        	if ("rentPrice" in annonce) {
+                additionalInfo = `
+                    <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                    <p class="u-align-center u-text u-text-5">
+                        <span class="u-file-icon u-icon u-icon-1">
+                            <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
+                        </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
+                    </p>`;
+            }
+
+            const annonceHTML = `
+                <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
+                    <div class="u-container-layout u-similar-container u-container-layout-1">
+                        <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
+                        <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
+                        <p class="u-align-center u-text u-text-4">${annonce.description}</p>
+                        ${additionalInfo}
+                        <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Posted By ${username} ends in ${annonce.duration} days</blockquote>
+                        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                        <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Edit Post</a>
+                            <a href="#" onclick="deleteAnnonce(${annonce.id})" 
+                               class="u-active-white u-align-center u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-border-hover-custom-color-3 u-btn u-btn-round u-button-style u-custom-color-3 u-custom-item u-hover-white u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-2" style="margin: 2px; margin-left: 5px padding: 10px 5px;">
+                                <span class="u-file-icon u-icon u-text-custom-color-2 u-icon-2">
+                                    <img src="css/images/484611-0e0eab99.png" alt="" style="width: 16px; height: 16px;">
+                                </span>&nbsp;Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML += annonceHTML;
+        })
+        .catch(error => {
+            console.error("Error fetching username:", error);
+           
+        });
+            // Check if the annonce has rental-specific properties
+            
+        });
+    }
 </script>
 
     

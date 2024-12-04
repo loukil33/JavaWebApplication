@@ -17,9 +17,9 @@ public class Rental extends Annonce{
     public Rental() {
     	
     }
-	public Rental(int id,String title, String description, LocalDate startDate, int duration,List<Note> notes, double rentPrice,
+	public Rental(int id,String title, String description, LocalDate startDate, int duration,int userid,List<Note> notes, double rentPrice,
 			LocalTime start_time,LocalTime end_time, int rentDuration,List<User> waitingList,User CurrentWinner) {
-		super(id,title, description, startDate, duration,notes);
+		super(id,title, description, startDate, duration,userid,notes);
 		this.rentPrice = rentPrice;
 		this.start_time = start_time;
 		this.end_time = end_time;
