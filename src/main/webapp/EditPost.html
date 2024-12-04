@@ -13,7 +13,45 @@
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=ADLaM+Display:400">
     
-    
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            /*max-width: 600px;*/
+            width: 1200px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #0290e6;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0417b2;
+        }
+    </style>
     
     <style>
     .u-nav {
@@ -38,7 +76,15 @@
 .hidden {
     display: none;
 }
-/* Flexbox container for logo and navigation */
+
+h2.u-text-1 {
+    margin-bottom: 0;
+}
+
+form#rental-post-update-form {
+    margin-top: 0;
+    
+}
 .navbar {
     display: flex;
     justify-content: space-between; /* Space between logo and navigation links */
@@ -66,7 +112,6 @@
     margin-top: 45px;
 }
 
-
     </style>
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
@@ -82,11 +127,11 @@
   <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
   <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
 
-
 <nav class="navbar">
-     <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+    <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
     <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1" alt="Université Gustave Eiffel Logo" style="width: auto; height: auto;">
 </a>
+
     <ul class="u-nav u-unstyled u-nav-1">
         <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
         <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
@@ -97,7 +142,6 @@
             <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
                 Logout
             </button>
-            
         </li>
         <li class="u-nav-item" style="margin-left: 80px;">
         <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
@@ -107,34 +151,6 @@
     </ul>
     <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
 </nav>
-
-<!-- <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
-  <div class="menu-collapse" style="font-size: 1.125rem; letter-spacing: 0px;">
-<a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
-<svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
-<svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
-</g></svg>
-</a>
-</div>
-<div class="u-custom-menu u-nav-container">
-<div class="u-menu-close"></div>
-<ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a>
-</li><li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyBikes.html" style="padding: 10px 20px;">My Bikes</a>
-</li><li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a>
-</li><li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a>
-</li>
-<li class="u-nav-item" id="logout-link" style="display: none;">
-        <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-2" style="padding: 10px 20px;">
-            Logout
-        </button>
-    </li>
-</ul>
-</div>
-
-</nav> -->
-
-
 
 <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
 <!-- <span class="u-icon u-icon-rectangle u-text-custom-color-1 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55" style="" id="user-icon" width="80px" height="80px"><use xlink:href="#svg-21d7"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-21d7" style="enable-background:new 0 0 55 55;"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
@@ -153,22 +169,180 @@ c0-0.867-0.318-1.708-0.887-2.369v-4.667c0.052-0.52,0.236-3.448-1.883-5.864C34.52
 s-7.024,1.065-8.867,3.168c-2.119,2.416-1.935,5.346-1.883,5.864v4.667c-0.568,0.661-0.887,1.502-0.887,2.369v3.545
 c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
 c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span> -->
-                
+                <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
 </div></div></header>
-    <section class="u-clearfix u-container-align-center u-image u-section-1" id="sec-9342" data-image-width="1728" data-image-height="972">
-      <div class="u-clearfix u-sheet u-sheet-1"></div>
-    </section>
+    <div id="error-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background-color: #f44336; color: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+    <span id="popup-message"></span>
+    <button onclick="closeErrorPopup()" style="margin-top: 10px; padding: 10px; border: none; background-color: white; color: #f44336; border-radius: 5px; cursor: pointer;">Close</button>
+</div>
+    
     <section class="u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-xl u-container-align-center-xs u-palette-1-light-3 u-section-2" id="carousel_0d8e">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1200" data-animation-delay="0">Rent your own bicycle </h2>
+       <h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1200" data-animation-delay="0">Create your own Post </h2>
         <div class="u-expanded-width u-list u-list-1">
-          <div class="u-repeater u-repeater-1" id="annonces-container-home">
+          <div class="u-repeater u-repeater-1">
+           <form id="rental-post-update-form">
+    <!-- Error message display -->
+    <div id="error-message" class="error" style="display: none;"></div>
+
+    <!-- Title -->
+    <label for="title">Title</label>
+    <input type="text" id="title" name="title" placeholder="Enter title" required>
+
+    <!-- Description -->
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4" placeholder="Enter description" required></textarea>
+
+    <!-- Duration -->
+    <label for="duration">Post Duration (in days, max 30)</label>
+    <input type="number" id="duration" name="duration" placeholder="Enter duration in days" required min="1" max="30">
+
+    <!-- Rent Price -->
+    <label for="rentPrice">Rent Price</label>
+    <input type="number" id="rentPrice" name="rentPrice" placeholder="Enter rent price" step="0.01" required>
+
+    <!-- Start Time -->
+    <label for="start_time">Start Time</label>
+    <input type="time" id="start_time" name="start_time" required>
+
+    <!-- End Time -->
+    <label for="end_time">End Time</label>
+    <input type="time" id="end_time" name="end_time" required>
+
+    <!-- Rent Duration -->
+    <label for="rentDuration">Rent Duration (in hours)</label>
+    <input type="number" id="rentDuration" name="rentDuration" placeholder="Enter rent duration in hours" required min="1">
+
+    <!-- Submit Button -->
+    <button type="submit">Edit Rental Post</button>
+</form>
+            
+            
+            
             
           </div>
         </div>
       </div>
     </section>
-    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Retrieve post details from sessionStorage
+        const postDataJson = sessionStorage.getItem("selectedPost");
+
+        if (!postDataJson) {
+            alert("No post selected. Redirecting to the home page.");
+            window.location.href = "Annonces.html";
+            return;
+        }
+
+        const postData = JSON.parse(postDataJson);
+
+        // Populate the form with existing post details
+        document.getElementById("title").value = postData.title;
+        document.getElementById("description").value = postData.description;
+        document.getElementById("duration").value = postData.duration;
+        document.getElementById("rentPrice").value = postData.rentPrice;
+        document.getElementById("start_time").value = postData.start_time;
+        document.getElementById("end_time").value = postData.end_time;
+        document.getElementById("rentDuration").value = postData.rentDuration;
+
+        // Handle form submission
+        document.getElementById("rental-post-update-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Get form values
+            const updatedData = {
+                id: postData.id, // Keep the post ID for the update
+                title: document.getElementById("title").value.trim(),
+                description: document.getElementById("description").value.trim(),
+                duration: parseInt(document.getElementById("duration").value, 10),
+                rentPrice: parseFloat(document.getElementById("rentPrice").value),
+                start_time: document.getElementById("start_time").value,
+                end_time: document.getElementById("end_time").value,
+                rentDuration: parseInt(document.getElementById("rentDuration").value, 10)
+            };
+
+            // Validate duration
+            if (updatedData.duration > 30) {
+                alert("Post duration cannot exceed 30 days.");
+                return;
+            }
+
+            // Validate start and end times
+            const startTimeObj = new Date(`1970-01-01T${updatedData.start_time}:00`);
+            const endTimeObj = new Date(`1970-01-01T${updatedData.end_time}:00`);
+            if (endTimeObj <= startTimeObj) {
+                alert("End Time must be later than Start Time.");
+                return;
+            }
+
+            // Validate rent duration
+            const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60); // in hours
+            if (updatedData.rentDuration > maxRentDuration) {
+                alert(`Rent Duration cannot exceed ${maxRentDuration.toFixed(2)} hours.`);
+                return;
+            }
+
+            // Get the user data from sessionStorage
+            const userDataJson = sessionStorage.getItem("userData");
+            let userData = null;
+
+            try {
+                userData = JSON.parse(userDataJson);
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+                alert("User is not logged in. Please log in first.");
+                return;
+            }
+
+            if (!userData || !userData.id) {
+                alert("User is not logged in. Please log in first.");
+                return;
+            }
+
+            const userId = userData.id;
+
+            // Submit the updated post data to the backend
+            fetch(` http://localhost:8081/UserWebService/api/rentals/${postData.id} `, 
+            		{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to update rental post");
+                }
+                return response.text();
+            })
+            .then(message => {
+                alert(message);
+
+                // Update session data with the modified post
+                userData.annonces = userData.annonces.map(annonce => {
+                    if (annonce.id === postData.id) {
+                        return updatedData; // Replace the old post with updated post
+                    }
+                    return annonce;
+                });
+
+                // Save updated user data to sessionStorage
+                sessionStorage.setItem("userData", JSON.stringify(userData));
+
+                // Redirect to the annonces page
+                window.location.href = "Annonces.html";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error updating post: " + error.message);
+            });
+        }); // Closing for the "submit" event listener
+    }); // Closing for the "DOMContentLoaded" event listener
+
+
+</script>
     <script>
    
     document.addEventListener('DOMContentLoaded', () => {
@@ -201,25 +375,6 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             if (bikesLink) bikesLink.style.display = 'block';
             if (rentalsLink) rentalsLink.style.display = 'block';
             if (welcomeMessage) welcomeMessage.textContent = `Welcome, ${userData.first_name}`;
-            
-            fetch( `http://localhost:8081/UserWebService/api/annonces/` 
-    		)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to fetch annonces.");
-        }
-        return response.json();
-    })
-    .then(annonces => {
-        displayAnnoncesHome(annonces);
-    })
-    .catch(error => {
-        console.error("Error fetching annonces:", error);
-        document.getElementById('annonces-container-home').innerHTML = `
-            <p style="color: red;">Unable to load your posts. Please try again later.</p>
-            `;
-    });
-            
         } else {
             console.log("No user data found in session.");
         }
@@ -241,86 +396,8 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
                 window.location.href = "Login-Page.html";
             });
         }
-
     });
-    function displayAnnoncesHome(annonces) {
-        const container = document.getElementById('annonces-container-home');
-        let username = null;
-        container.innerHTML = ''; // Clear existing content
 
-        if (annonces.length === 0) {
-            container.innerHTML = '<p>No posts found.</p>';
-            return;
-        }
-        
-        annonces.forEach(annonce => {
-        	const userDataJson = sessionStorage.getItem("userData");
-            let userData = null;
-
-            try {
-                userData = JSON.parse(userDataJson);
-            } catch (error) {
-                console.error("Error parsing user data:", error);
-            }
-        	if(userData){
-        		
-        		if (annonce.userid === userData.id) {
-            		//container.innerHTML = '<p>No posts found.</p>';
-                    return;
-                }
-        		let additionalInfo = "";
-                fetch(`http://localhost:8081/UserWebService/api/users/${annonce.userid}`
-        		)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch username.");
-                }
-                return response.json();
-            })
-            .then(user => {
-                // Rebuild the user's annonces list from the API response
-            	const username = user.last_name;
-            	if ("rentPrice" in annonce) {
-                    additionalInfo = `
-                        <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
-                        <p class="u-align-center u-text u-text-5">
-                            <span class="u-file-icon u-icon u-icon-1">
-                                <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
-                            </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
-                        </p>`;
-                }
-
-                const annonceHTML = `
-                    <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
-                        <div class="u-container-layout u-similar-container u-container-layout-1">
-                            <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
-                            <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
-                            <p class="u-align-center u-text u-text-4">${annonce.description}</p>
-                            ${additionalInfo}
-                            <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Posted By ${username} ends in ${annonce.duration} days</blockquote>
-                            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                            <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Rent Bike</a>
-                                
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                container.innerHTML += annonceHTML;
-            })
-            .catch(error => {
-                console.error("Error fetching username:", error);
-               
-            });
-                
-        	}
-        	
-        	
-        	
-            // Check if the annonce has rental-specific properties
-            
-        });
-    }
 </script>
 
     

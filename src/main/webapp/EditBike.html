@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Edit your Bike">
+    <meta name="description" content="">
+    <title>Edit Bike</title>
+    <link rel="stylesheet" href="css/nicepage.css" media="screen">
+    <link rel="stylesheet" href="css/index.css" media="screen">
+    <script class="u-script" type="text/javascript" src="css/js/jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="css/js/nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 7.0.3, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Edit Bike">
+    <meta property="og:type" content="website">
+    <style>
+        form {
+            width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #0290e6;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0417b2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Edit Bike</h1>
+    <form id="edit-bike-form">
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" required><br><br>
+
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand" required><br><br>
+
+        <label for="condition">Condition:</label>
+        <select id="condition" name="condition" required>
+            <option value="New">New</option>
+            <option value="Used">Used</option>
+        </select><br><br>
+
+        <label for="color">Color:</label>
+        <input type="text" id="color" name="color" required><br><br>
+
+        <label for="image">Upload Image (optional):</label>
+        <input type="file" id="image" name="image" accept="image/*"><br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retrieve selected bike from sessionStorage
+            const selectedBikeJson = sessionStorage.getItem("selectedBike");
+
+            if (!selectedBikeJson) {
+                alert("No bike selected. Redirecting to the bike list.");
+                window.location.href = "MyBikes.html";  // Redirect if no bike is selected
+                return;
+            }
+
+            const selectedBike = JSON.parse(selectedBikeJson);
+
+            // Populate the form with the bike data
+            document.getElementById("model").value = selectedBike.model;
+            document.getElementById("brand").value = selectedBike.brand;
+            document.getElementById("condition").value = selectedBike.condition;
+            document.getElementById("color").value = selectedBike.color;
+
+            // Handle form submission
+            document.getElementById("edit-bike-form").addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent form submission
+
+                // Get updated values from the form
+                const updatedBike = {
+                    id: selectedBike.id, // Keep the same ID for the update
+                    model: document.getElementById("model").value.trim(),
+                    brand: document.getElementById("brand").value.trim(),
+                    condition: document.getElementById("condition").value,
+                    color: document.getElementById("color").value.trim(),
+                    images: []  // You can handle image upload here if required
+                };
+
+                // Optionally, update the image if a new one is selected
+                const imageInput = document.getElementById("image");
+                const imageFile = imageInput.files[0];
+
+                if (imageFile) {
+                    const reader = new FileReader();
+                    reader.onloadend = function () {
+                        updatedBike.images.push(reader.result);  // Add the base64 image data
+                        saveUpdatedBike(updatedBike);  // Call function to save the updated bike
+                    };
+                    reader.readAsDataURL(imageFile); // Convert the image to base64
+                } else {
+                    saveUpdatedBike(updatedBike);  // If no image, save without it
+                }
+            });
+        });
+
+        // Function to save the updated bike (send to the server or save locally)
+        function saveUpdatedBike(updatedBike) {
+            // Send updated bike data to the server (example using fetch)
+            fetch(`http://localhost:8081/UserWebService/api/bikes/${updatedBike.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedBike)
+            })
+            .then(response => response.json())
+            .then(updatedBike => {
+                alert("Bike updated successfully!");
+                sessionStorage.removeItem("selectedBike"); // Clear the selected bike from sessionStorage
+                window.location.href = "MyBikes.html"; // Redirect after updating
+            })
+            .catch(error => {
+                console.error("Error updating bike:", error);
+                alert("Error updating bike.");
+            });
+        }
+    </script>
+</body>
+</html>

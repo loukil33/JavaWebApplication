@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Rent your own bicycle​">
+    <meta name="description" content="">
+    <title>Add a Bike</title>
+    <link rel="stylesheet" href="css/nicepage.css" media="screen">
+    <link rel="stylesheet" href="css/index.css" media="screen">
+    <script class="u-script" type="text/javascript" src="css/js/jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="css/js/nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 7.0.3, nicepage.com">
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Add a Bike">
+    <meta property="og:type" content="website">
+</head>
+
+<body class="u-body u-xl-mode" data-lang="en">
+    <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
+        <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
+            <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+              <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
+            </a>
+            <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+                <div class="menu-collapse" style="font-size: 1.125rem;">
+                    <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+                        <svg class="u-svg-link" viewBox="0 0 24 24">
+                            <use xlink:href="#menu-hamburger"></use>
+                        </svg>
+                        <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <rect y="1" width="16" height="2"></rect>
+                                <rect y="7" width="16" height="2"></rect>
+                                <rect y="13" width="16" height="2"></rect>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+            </nav>
+            <button id="login-btn" class="u-btn u-btn-round u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+                Login
+            </button>
+        </div>
+    </header>
+
+    <h1>Add a Bike</h1>
+    <form id="add-bike-form" onsubmit="return validateForm(event)">
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" placeholder="Enter bike model" required><br><br>
+
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand" placeholder="Enter bike brand" required><br><br>
+
+        <label for="condition">Condition:</label>
+        <select id="condition" name="condition" required>
+            <option value="">Select condition</option>
+            <option value="New">New</option>
+            <option value="Used">Used</option>
+        </select><br><br>
+
+        <label for="color">Color:</label>
+        <input type="text" id="color" name="color" placeholder="Enter bike color" required><br><br>
+
+        <label for="image">Upload Image (optional):</label>
+        <input type="file" id="image" name="image" accept="image/*"><br><br>
+
+        <button type="submit">Add Bike</button>
+    </form>
+
+    <script>
+        // Validate form inputs
+        function validateForm(event) {
+            const model = document.getElementById("model").value.trim();
+            const brand = document.getElementById("brand").value.trim();
+            const condition = document.getElementById("condition").value;
+            const color = document.getElementById("color").value.trim();
+            const image = document.getElementById("image").files[0];
+
+            // Check model
+            if (model.length < 3) {
+                alert("Model must be at least 3 characters long.");
+                return false;
+            }
+
+            // Check brand
+            if (brand.length < 3) {
+                alert("Brand must be at least 3 characters long.");
+                return false;
+            }
+
+            // Check condition
+            if (!condition) {
+                alert("Please select a condition for the bike.");
+                return false;
+            }
+
+            // Check color
+            if (!color.match(/^[a-zA-Z\s]+$/)) {
+                alert("Color must only contain letters and spaces.");
+                return false;
+            }
+
+            // Check image file size (if provided)
+            if (image && image.size > 10 * 1024 * 1024) { // 10MB limit
+                alert("Image file size must be less than 10MB.");
+                return false;
+            }
+
+            // If validation passes, proceed to handle submission
+            handleSubmit(event);
+            return false; // Prevent default form submission
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            console.log("Submit button clicked.");
+            const userDataJson = sessionStorage.getItem("userData");
+            let userData = null;
+
+            try {
+                userData = JSON.parse(userDataJson); // Parse user data from session
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+                return;
+            }
+            // Collect form data
+            const form = document.getElementById('add-bike-form');
+            const formData = new FormData(form);
+
+            // Convert image file to Base64 (if uploaded)
+            const imageInput = document.getElementById('image');
+            const file = imageInput.files[0];
+
+            let base64Image = null;
+            if (file) {
+                base64Image = await convertFileToBase64(file);
+            }
+
+            // Prepare JSON payload
+            const data = {
+                model: formData.get('model'),
+                brand: formData.get('brand'),
+                condition: formData.get('condition'),
+                color: formData.get('color'),
+                images: base64Image ? [base64Image] : [] // Send Base64 image if available
+            };
+
+            console.log("Data to send:", data);
+
+            // Send data to the server
+            fetch("http://localhost:8081/UserWebService/api/bikes", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                console.log("Fetch response:", response);
+                if (!response.ok) {
+                    throw new Error("Failed to register bike.");
+                }
+                return response.json();
+            })
+            .then(message => {
+                console.log("Success message:", message);
+                alert('Bike added successfully!');
+                
+                userData.bikes.push(data); 
+        	    sessionStorage.setItem("userData", JSON.stringify(userData));
+                form.reset();
+                window.location.href = "MyBikes.html";
+            })
+            .catch(error => {
+                console.error("Error during fetch:", error);
+                alert('Error: ' + error.message);
+            });
+        }
+
+        // Convert file to Base64
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    resolve(reader.result);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+
+    <footer class="u-align-center u-clearfix u-footer">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <p>© 2024 Your Company. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

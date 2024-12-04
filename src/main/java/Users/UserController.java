@@ -3,6 +3,8 @@ package Users;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import Annonces.Annonce;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,12 +17,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import static Users.UserDatabase.users;
 
 @Path("/users")
 public class UserController {
-	private static List<User> users = new ArrayList<>(); // In-memory list to store users
-	private static int idCounter = 1; // Initialize counter for id, starts from 1
-	private static int currentUserId = 1;
+	
+	private static int idCounter = 2; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -48,6 +50,52 @@ public class UserController {
                 .entity("User registered successfully.")
                 .build();
     
+    }
+    @GET
+    @Path("/{id}/annonces")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserAnnonces(@PathParam("id") int id) {
+        // Find the user by ID
+        Optional<User> user = users.stream()
+                                   .filter(u -> u.getId() == id)
+                                   .findFirst();
+
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + id)
+                           .build();
+        }
+
+        // Check if the user has no annonces and return an empty list
+        List<Annonce> annonces = user.get().getAnnonces();
+        if (annonces == null || annonces.isEmpty()) {
+            return Response.ok(new ArrayList<>()) // Return an empty list
+                           .build();
+        }
+
+        // Return the list of annonces
+        return Response.ok(annonces)
+                       .build();
+    }
+
+    @GET
+    @Path("/{id}/bikes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserBikes(@PathParam("id") int id) {
+        // Find the user by ID
+        Optional<User> user = users.stream()
+                                   .filter(u -> u.getId() == id)
+                                   .findFirst();
+
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + id)
+                           .build();
+        }
+
+        // Return the list of annonces
+        return Response.ok(user.get().getBikes())
+                       .build();
     }
 
     // Get all users (for testing purposes)
@@ -78,6 +126,44 @@ public class UserController {
                        .build();
     }
 
+    @DELETE
+    @Path("/{userId}/annonces/{annonceId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response deleteUserAnnonce(@PathParam("userId") int userId, @PathParam("annonceId") int annonceId) {
+        // Find the user by userId
+        Optional<User> userOptional = users.stream()
+                                           .filter(user -> user.getId() == userId)
+                                           .findFirst();
+
+        if (userOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + userId)
+                           .build();
+        }
+
+        User user = userOptional.get();
+
+        if (user.getAnnonces() == null || user.getAnnonces().isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("No annonces found for user ID: " + userId)
+                           .build();
+        }
+
+        // Find and remove the annonce
+        Optional<Annonce> annonceOptional = user.getAnnonces().stream()
+                                                .filter(annonce -> annonce.getId() == annonceId)
+                                                .findFirst();
+
+        if (annonceOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("Annonce not found for ID: " + annonceId)
+                           .build();
+        }
+
+        user.getAnnonces().remove(annonceOptional.get());
+
+        return Response.ok("Annonce deleted successfully for user ID: " + userId).build();
+    }
 
    
 
