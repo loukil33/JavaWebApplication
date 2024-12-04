@@ -12,7 +12,6 @@
     <script class="u-script" type="text/javascript" src="css/js/nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 7.0.3, nicepage.com">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
-    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=ADLaM+Display:400">
     <meta name="theme-color" content="#478ac9">
     <meta property="og:title" content="Add a Bike">
     <meta property="og:type" content="website">
@@ -47,34 +46,86 @@
     </header>
 
     <h1>Add a Bike</h1>
-    <form id="add-bike-form">
+    <form id="add-bike-form" onsubmit="return validateForm(event)">
         <label for="model">Model:</label>
-        <input type="text" id="model" name="model" required><br><br>
+        <input type="text" id="model" name="model" placeholder="Enter bike model" required><br><br>
 
         <label for="brand">Brand:</label>
-        <input type="text" id="brand" name="brand" required><br><br>
+        <input type="text" id="brand" name="brand" placeholder="Enter bike brand" required><br><br>
 
         <label for="condition">Condition:</label>
         <select id="condition" name="condition" required>
+            <option value="">Select condition</option>
             <option value="New">New</option>
             <option value="Used">Used</option>
         </select><br><br>
 
         <label for="color">Color:</label>
-        <input type="text" id="color" name="color" required><br><br>
+        <input type="text" id="color" name="color" placeholder="Enter bike color" required><br><br>
 
         <label for="image">Upload Image (optional):</label>
         <input type="file" id="image" name="image" accept="image/*"><br><br>
 
-        <button type="submit" onclick="handleSubmit(event)">Add Bike</button>
+        <button type="submit">Add Bike</button>
     </form>
 
     <script>
-        function handleSubmit(event) {
+        // Validate form inputs
+        function validateForm(event) {
+            const model = document.getElementById("model").value.trim();
+            const brand = document.getElementById("brand").value.trim();
+            const condition = document.getElementById("condition").value;
+            const color = document.getElementById("color").value.trim();
+            const image = document.getElementById("image").files[0];
+
+            // Check model
+            if (model.length < 3) {
+                alert("Model must be at least 3 characters long.");
+                return false;
+            }
+
+            // Check brand
+            if (brand.length < 3) {
+                alert("Brand must be at least 3 characters long.");
+                return false;
+            }
+
+            // Check condition
+            if (!condition) {
+                alert("Please select a condition for the bike.");
+                return false;
+            }
+
+            // Check color
+            if (!color.match(/^[a-zA-Z\s]+$/)) {
+                alert("Color must only contain letters and spaces.");
+                return false;
+            }
+
+            // Check image file size (if provided)
+            if (image && image.size > 10 * 1024 * 1024) { // 10MB limit
+                alert("Image file size must be less than 10MB.");
+                return false;
+            }
+
+            // If validation passes, proceed to handle submission
+            handleSubmit(event);
+            return false; // Prevent default form submission
+        }
+
+        async function handleSubmit(event) {
             event.preventDefault(); // Prevent default form submission
 
             console.log("Submit button clicked.");
-            
+            const userDataJson = sessionStorage.getItem("userData");
+            let userData = null;
+
+            try {
+                userData = JSON.parse(userDataJson); // Parse user data from session
+            } catch (error) {
+                console.error("Error parsing user data:", error);
+                return;
+            }
             // Collect form data
             const form = document.getElementById('add-bike-form');
             const formData = new FormData(form);
@@ -85,7 +136,7 @@
 
             let base64Image = null;
             if (file) {
-                base64Image = convertFileToBase64(file);
+                base64Image = await convertFileToBase64(file);
             }
 
             // Prepare JSON payload
@@ -112,12 +163,16 @@
                 if (!response.ok) {
                     throw new Error("Failed to register bike.");
                 }
-                return response.json(); // Assuming the response is JSON
+                return response.json();
             })
             .then(message => {
                 console.log("Success message:", message);
                 alert('Bike added successfully!');
-                form.reset(); // Reset the form after successful submission
+                
+                userData.bikes.push(data); 
+        	    sessionStorage.setItem("userData", JSON.stringify(userData));
+                form.reset();
+                window.location.href = "MyBikes.html";
             })
             .catch(error => {
                 console.error("Error during fetch:", error);
@@ -125,7 +180,7 @@
             });
         }
 
-        // Function to convert a file to Base64
+        // Convert file to Base64
         function convertFileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -133,14 +188,14 @@
                     resolve(reader.result);
                 };
                 reader.onerror = reject;
-                reader.readAsDataURL(file); // Convert file to Base64
+                reader.readAsDataURL(file);
             });
         }
     </script>
 
-    <footer class="u-align-center u-clearfix u-container-align-center u-custom-color-1 u-footer u-footer" id="sec-5467">
+    <footer class="u-align-center u-clearfix u-footer">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
+            <p>© 2024 Your Company. All rights reserved.</p>
         </div>
     </footer>
 </body>
