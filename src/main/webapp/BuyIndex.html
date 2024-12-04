@@ -45,16 +45,16 @@
 </head>
 <body>
     <h1>Available Bikes</h1>
-    <button onclick="window.location.href='BuyCart.html'" style="margin-bottom: 20px; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-        Check Cart
-    </button>
+	<button onclick="checkCartBeforeNavigation()" style="margin-bottom: 20px; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+	    Check Cart
+	</button>
     <div class="bike-list" id="bike-list">
         <!-- Bikes will be dynamically loaded here -->
     </div>
 
     <script>
         let cartItems = []; // To track items in the cart
-
+         
         // Fetch and display bikes
         async function loadBikes() {
             const bikeList = document.getElementById('bike-list');
@@ -79,8 +79,8 @@
             }
         }
 
-
-        const userId = 1; // Static user ID for testing; Replace with actual user ID
+     //Static user ID for testing; Replace with actual user ID
+        const userId = 1; 
 
      // Add bike to the cart
      async function addToCart(id, model, price, image) {
@@ -108,7 +108,22 @@
              alert('Failed to add to cart. Please try again.');
          }
      }
+     
+     async function checkCartBeforeNavigation() {
+    	    try {
+    	        const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+    	        const data = await response.json();
 
+    	        if (data.cartItems.length === 0) {
+    	            alert(data.message || "Your cart is empty. Please add items before proceeding to the cart.");
+    	        } else {
+    	            window.location.href = 'BuyCart.html';
+    	        }
+    	    } catch (error) {
+    	        console.error("Error checking cart:", error);
+    	        alert("Failed to check the cart. Please try again.");
+    	    }
+    	}
 
 
         // Load bikes on page load

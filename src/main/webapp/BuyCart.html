@@ -160,7 +160,7 @@
                 <div class="col">TOTAL PRICE</div>
                 <div class="col text-right">&euro;<span id="total-price">0.00</span></div>
             </div>
-            <button class="btn" onclick="window.location.href='BuyStripe.html'">CHECKOUT</button>
+            <button class="btn" onclick="checkCartBeforePayment()">CHECKOUT</button>
         </div>
     </div>
 
@@ -229,6 +229,22 @@
             } catch (error) {
                 console.error('Error removing item from cart:', error);
                 alert('Failed to remove item. Please try again.');
+            }
+        }
+        
+        async function checkCartBeforePayment() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+
+                if (data.cartItems.length === 0) {
+                    alert("Your cart is empty. Please add items before proceeding to payment.");
+                } else {
+                    window.location.href = 'BuyStripe.html';
+                }
+            } catch (error) {
+                console.error("Error checking cart:", error);
+                alert("Failed to verify cart status. Please try again.");
             }
         }
 

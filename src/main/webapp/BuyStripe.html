@@ -324,10 +324,28 @@
                 submitButton.disabled = false;
             }
         });
+        
+        async function validateCartBeforePayment() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+
+                if (!data.cartItems || data.cartItems.length === 0) {
+                    alert("Your cart is empty. Redirecting to the Shopping page.");
+                    window.location.href = 'BuyIndex.html';
+                }
+            } catch (error) {
+                console.error("Error validating cart:", error);
+                alert("Failed to verify cart status. Redirecting to the cart page.");
+                window.location.href = 'BuyIndex.html';
+            }
+        }
+        
 
         // Initialize on page load
         fetchTotalPrice();
         loadOrderSummary();
+        validateCartBeforePayment();
     </script>
 </body>
 

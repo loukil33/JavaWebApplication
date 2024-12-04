@@ -55,22 +55,23 @@ public class CartController {
 	        // Get the user's cart (this is where you might retrieve the cart for a specific user)
 	        Cart cart = getCartForUser(userId);
 
-	        if (cart == null) {
-	            return Response.status(Response.Status.NOT_FOUND).entity("Cart not found").build();
+	        if (cart == null || cart.getItems().isEmpty()) {
+	            // Return an empty cart JSON structure with a meaningful message
+	            Map<String, Object> response = new HashMap<>();
+	            response.put("cartItems", new ArrayList<>()); // Empty list of items
+	            response.put("totalPrice", 0.0); // Total price is zero
+	            response.put("message", cart == null ? "Cart is empty" : "Cart is empty");
+	            return Response.ok(response).build(); // Respond with 200 OK
 	        }
 
-	        List<BikeForSale> cartItems = cart.getItems(); // Retrieve items from the cart
-	        double totalPrice = cart.getTotalPrice(); // Get the total price from the Cart class
-	        
-	        if (cartItems.isEmpty()) {
-	            return Response.status(Response.Status.NOT_FOUND).entity("Cart is empty").build();
-	        }
-	        
-	        // Create a response with both cart items and the total price
+	        // Retrieve items and total price from the cart
+	        List<BikeForSale> cartItems = cart.getItems();
+	        double totalPrice = cart.getTotalPrice();
+
+	        // Create a response with cart items and total price
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("cartItems", cartItems);
 	        response.put("totalPrice", totalPrice);
-	        
 	        return Response.ok(response).build();
 	    }
 
