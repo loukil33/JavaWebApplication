@@ -7,13 +7,17 @@ public class PaymentRecord {
     private double bikePrice;
     private LocalDateTime paymentDate;
     private String paymentId;
+    private int userId;
+    private String bikeImage; // Add this field
 
     // Constructor
-    public PaymentRecord(String bikeName, double bikePrice, LocalDateTime paymentDate, String paymentId) {
+    public PaymentRecord(String bikeName, double bikePrice, LocalDateTime paymentDate, String paymentId, int userId, String bikeImage) {
         this.bikeName = bikeName;
         this.bikePrice = bikePrice;
         this.paymentDate = paymentDate;
         this.paymentId = paymentId;
+        this.userId = userId;
+        this.bikeImage = bikeImage; // Initialize the image field
     }
 
     // Getters
@@ -33,6 +37,14 @@ public class PaymentRecord {
         return paymentId;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getBikeImage() {
+        return bikeImage; // Add getter for the image
+    }
+
     // To string for debugging
     @Override
     public String toString() {
@@ -41,6 +53,8 @@ public class PaymentRecord {
                 ", bikePrice=" + bikePrice +
                 ", paymentDate=" + paymentDate +
                 ", paymentId='" + paymentId + '\'' +
+                ", userId=" + userId +
+                ", bikeImage='" + bikeImage + '\'' +
                 '}';
     }
 }
