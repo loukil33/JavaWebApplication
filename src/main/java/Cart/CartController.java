@@ -63,6 +63,34 @@ public class CartController {
         response.put("totalPrice", totalPrice);
         return Response.ok(response).build();
     }
+    
+    @DELETE
+    @Path("/remove/{bikeId}")
+    public Response removeItem(@QueryParam("userId") int userId, @PathParam("bikeId") int bikeId) {
+        Cart cart = getCartForUser(userId);
+        if (cart == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Cart not found").build();
+        }
+
+        try {
+            // Attempt to remove the bike by its ID
+            cart.removeItemFromCart(bikeId);
+
+            // Get updated cart items and total price
+            List<BikeForSale> cartItems = cart.getItems();
+            double totalPrice = cart.getTotalPrice();
+
+            // Return updated cart and price details
+            Map<String, Object> response = new HashMap<>();
+            response.put("cartItems", cartItems);
+            response.put("totalPrice", totalPrice);
+
+            return Response.ok(response).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
 
     @POST
     @Path("/checkout")
