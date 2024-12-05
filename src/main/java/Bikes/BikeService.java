@@ -228,7 +228,7 @@ public class BikeService {
             // Remove the image file associated with the bike
             if (bikeToDelete.getImages() != null && !bikeToDelete.getImages().isEmpty()) {
                 String imagePath = bikeToDelete.getImages().get(0).replace("http://localhost:8081/UserWebService/css/images/", "");
-                File imageFile = new File("E:/github/JavaWebApplication/src/main/webapp/css/images/" + imagePath);
+                File imageFile = new File("C:/Users/Mohamed Aziz/Documents/GitHub/JavaWebApplication/src/main/webapp/css/images/" + imagePath);
 
                 if (imageFile.exists()) {
                     boolean imageDeleted = imageFile.delete();  // Delete the image file

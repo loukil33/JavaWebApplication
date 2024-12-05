@@ -213,13 +213,13 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             // Check if the annonce has rental-specific properties
             if ("rentPrice" in annonce) {
                 additionalInfo = `
-                    <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                	<h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                    <p class="u-align-center u-text u-text-4"><strong>${annonce.bike.condition}</strong> ${annonce.bike.model} | ${annonce.bike.brand} | ${annonce.bike.color}</p>
                     <p class="u-align-center u-text u-text-5">
                         <span class="u-file-icon u-icon u-icon-1">
-                            <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
+                            <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px; margin-bottom: 8px">
                         </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
-                    </p>
-                `;
+                    </p>`;
             }
             const imageUrl = annonce.bike.images && annonce.bike.images.length > 0 
             ? annonce.bike.images[0] 

@@ -186,7 +186,8 @@ form#rental-post-update-form {
                 const userId = userData.id; // Retrieve user ID from session data
 
                 // Fetch bikes for the user
-                fetch(`http://localhost:8081/UserWebService/api/users/${userId}/bikes`)
+                fetch( `http://localhost:8081/UserWebService/api/users/${userId}/bikes`
+                		)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Failed to fetch bikes.");
@@ -287,7 +288,8 @@ form#rental-post-update-form {
             }
 
             // Send DELETE request to the server to remove the bike
-            fetch(`http://localhost:8081/UserWebService/api/bikes/${bikeId}`, 
+            fetch(`http://localhost:8081/UserWebService/api/bikes/${bikeId}`
+            		, 
             		{
                 method: 'DELETE',
                 headers: {
