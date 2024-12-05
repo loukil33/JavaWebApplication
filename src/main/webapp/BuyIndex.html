@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Shop - Buy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .bike-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .bike-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .bike-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .bike-card button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .bike-card button:hover {
+            background-color: #0056b3;
+        }
+
+        .cart-button-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .cart-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-button:hover {
+            background-color: #218838;
+        }
+
+        .cart-icon {
+            margin-right: 10px;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 5px;
+            font-size: 12px;
+            min-width: 20px;
+            min-height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .badge.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Bikes</h1>
+    <div class="cart-button-container">
+        <button class="cart-button" onclick="checkCartBeforeNavigation()">
+            <span class="cart-icon">🛒</span> Check Cart
+        </button>
+        <div id="cart-badge" class="badge hidden">0</div>
+    </div>
+    <div class="bike-list" id="bike-list">
+        <!-- Bikes will be dynamically loaded here -->
+    </div>
+
+    <script>
+        let cartItems = []; // To track items in the cart
+        const userId = 1; // Static user ID for testing; Replace with actual user ID.
+
+     // Fetch and display bikes
+ async function loadBikes() {
+    const bikeList = document.getElementById('bike-list');
+    try {
+        const response = await fetch("http://localhost:8081/UserWebService/api/sales");
+
+        // Check if the response is OK (status code 200)
+        if (!response.ok) {
+            throw new Error('Failed to fetch bikes, status code: ' + response.status);
+        }
+
+        const bikes = await response.json();
+
+        // Check if the bikes response is valid
+        if (!Array.isArray(bikes)) {
+            throw new Error('Expected bikes data to be an array');
+        }
+
+        bikeList.innerHTML = ""; // Clear the list
+
+        bikes.forEach(bike => {
+            let image = 'default_image.jpg'; // Default image
+            let price = 0;
+            let model = bike.model || 'Unknown Model'; // Fallback for missing model
+            let brand = bike.brand || 'Unknown Brand'; // Fallback for missing brand
+
+            // Check if the bike is a Sale object
+            if (bike.salePrice !== undefined) {  // Sale object will have salePrice
+                price = bike.salePrice;
+                model = bike.model || 'Sale Bike'; // Model for Sale
+                brand = bike.brand || 'Sale Brand'; // Brand for Sale
+                image = bike.bike && bike.bike.images && bike.bike.images.length > 0 ? bike.bike.images[0] : image;
+            } else {
+                price = bike.salePrice || 15.0;  // Default price for regular bikes
+                image = bike.images && bike.images.length > 0 ? bike.images[0] : image; // Default to provided image or fallback
+            }
+
+            const displayPrice = price > 0 ? `€${price}` : "Price not available";
+
+            const bikeCard = document.createElement('div');
+            bikeCard.classList.add('bike-card');
+            bikeCard.innerHTML = `
+                <img src="${image}" alt="${model}">
+                <h3>${model} (${brand})</h3>
+                <p>Price: ${displayPrice}</p>
+                <button onclick="addToCart(${bike.id}, '${model}', ${price}, '${image}')">Add to Cart</button>
+            `;
+            bikeList.appendChild(bikeCard);
+        });
+    } catch (error) {
+        console.error('Error loading bikes:', error);
+        bikeList.innerHTML = `<p>Failed to load bikes. Please try again later. Error: ${error.message}</p>`;
+    }
+}
+
+
+ async function addToCart(saleId, model, price, image) {
+	    try {
+	        // Construct the Sale object
+	        const sale = {
+	            id: saleId,
+	            model: model,
+	            salePrice: price,
+	            bike: {
+	                model: model,
+	                images: [image]  // Ensure bike details are included
+	            }
+	        };
+
+	        // Log the Sale object to inspect it
+	        console.log("Sale object being sent:", sale);
+
+	        // Make the POST request to add the item to the cart
+	        const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
+	            method: "POST",
+	            headers: {
+	                "Content-Type": "application/json"
+	            },
+	            body: JSON.stringify(sale)  // Sending Sale object as JSON
+	        });
+
+	        if (response.status === 400) {
+	            const errorText = await response.text();
+	            // Log the error message from the response
+	            console.log("Error response from server:", errorText);
+
+	            // Check if the error message is about the item being already in the cart
+	            if (errorText.includes("Sale item already in cart")) {
+	                alert("This item is already in your cart.");
+	            } else {
+	                alert(`Error: ${errorText}`);
+	            }
+	        } else if (response.ok) {
+	            alert("Item added to cart successfully!");
+	            updateCartBadge(); // Update the cart badge after adding the item
+	        } else {
+	            throw new Error(`Failed to add item. Status: ${response.status}`);
+	        }
+	    } catch (error) {
+	        console.error("Error adding item to cart:", error.message);
+	        alert("An error occurred while adding the item to the cart.");
+	    }
+	}
+
+
+        // Check cart before navigation
+        async function checkCartBeforeNavigation() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+
+                if (data.cartItems.length === 0) {
+                    alert(data.message || "Your cart is empty. Please add items before proceeding to the cart.");
+                } else {
+                    window.location.href = 'BuyCart.html';
+                }
+            } catch (error) {
+                console.error("Error checking cart:", error);
+                alert("Failed to check the cart. Please try again.");
+            }
+        }
+
+        // Update the cart badge
+        async function updateCartBadge() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+
+                const badge = document.getElementById('cart-badge');
+                const itemCount = data.cartItems.length;
+
+                if (itemCount > 0) {
+                    badge.textContent = itemCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Error updating cart badge:", error);
+            }
+        }
+
+        // Load bikes and update cart badge on page load
+        loadBikes();
+        updateCartBadge();
+    </script>
+</body>
+</html>

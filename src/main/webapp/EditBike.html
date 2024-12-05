@@ -128,7 +128,8 @@
         // Function to save the updated bike (send to the server or save locally)
         function saveUpdatedBike(updatedBike) {
             // Send updated bike data to the server (example using fetch)
-            fetch(`http://localhost:8081/UserWebService/api/bikes/${updatedBike.id}`, {
+            fetch(`http://localhost:8081/UserWebService/api/bikes/${updatedBike.id}`, 
+            		{
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

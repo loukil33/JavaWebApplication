@@ -11,9 +11,9 @@ public class bikesDB {
     public static final String DEFAULT_IMAGE = "http://localhost:8081/UserWebService/css/images/imagevelo.jpg"; // Default image path
 
     static {
-        bikes.add(new Bike(1, "Mountain Bike", "Trek", "New", "Red", true, null));
-        bikes.add(new Bike(2, "Road Bike", "Giant", "Used", "Blue", false, null));
-        bikes.add(new Bike(3, "Hybrid Bike", "Specialized", "New", "Black", true, null));
+        bikes.add(new Bike(1,1, "Mountain Bike", "Trek", "New", "Red", true, null));
+        bikes.add(new Bike(2,1, "Road Bike", "Giant", "Used", "Blue", true, null));
+        bikes.add(new Bike(3,1, "Hybrid Bike", "Specialized", "New", "Black", true, null));
     }
 
 

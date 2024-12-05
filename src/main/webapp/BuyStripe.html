@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Shop - Payment</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+   body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 1000px;
+            width: 100%;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-top {
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-top a {
+            text-decoration: none;
+            color: #478ac9;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .left,
+        .right {
+            flex: 1;
+        }
+
+        .left {
+            margin-right: 30px;
+        }
+
+        .right {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-left: 30px;
+        }
+
+        .header {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .icons {
+            margin-bottom: 10px;
+        }
+
+        .icons span {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #478ac9;
+            color: #fff;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #478ac9;
+            border: 2px solid #478ac9;
+        }
+
+        .order-summary {
+            font-size: 1rem;
+        }
+
+        .row.item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .text-muted {
+            color: #888;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        /* Stripe Payment Styles */
+        .payment-form {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 480px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .payment-form h1 {
+            margin-bottom: 15px;
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+        }
+
+        .payment-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .payment-form .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #card-element {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+
+        .payment-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .payment-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .payment-errors {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <!-- Card Top -->
+        <div class="card-top">
+            <a href="BuyIndex.html">&larr; Back to Shop</a>
+            <span id="logo"></span>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="row">
+                <!-- Payment Section -->
+                <div class="left">
+                    <div class="header">Payment</div>
+                    <form id="payment-form" class="payment-form">
+                        <div class="form-group">
+                            <label for="card-element">Card Details</label>
+                            <div id="card-element">
+                                <!-- Stripe Card Element will be injected here -->
+                            </div>
+                        </div>
+                        <button id="submit-button">Pay Now</button>
+                        <div id="payment-errors" class="payment-errors" role="alert"></div>
+                    </form>
+                </div>
+
+                <!-- Order Summary Section -->
+                <div class="right">
+                    <div class="header">Order Summary</div>
+                    <p id="item-count">0 items</p>
+                    <div id="order-summary">
+                        <!-- Dynamic order items will load here -->
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="text-left">Subtotal</div>
+                        <div class="text-right" id="subtotal">€0.00</div>
+                    </div>
+                    <div class="row">
+                        <div class="text-left">Delivery</div>
+                        <div class="text-right">Free</div>
+                    </div>
+                    <div class="row">
+                        <div class="text-left"><b>Total to Pay</b></div>
+                        <div class="text-right"><b id="total-price">€0.00</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const userId = 1;
+
+        // Fetch and display the total price
+        async function fetchTotalPrice() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+                const totalPrice = data.totalPrice.toFixed(2);
+                document.getElementById("total-price").textContent = `€${totalPrice}`;
+            } catch (error) {
+                console.error("Error fetching total price:", error);
+                document.getElementById("total-price").textContent = "Error calculating total.";
+            }
+        }
+
+        // Load order summary
+        async function loadOrderSummary() {
+            const orderSummaryContainer = document.getElementById('order-summary');
+            const subtotalEl = document.getElementById('subtotal');
+            const itemCountEl = document.getElementById('item-count');
+
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+                const { cartItems, totalPrice } = data;
+
+                if (!cartItems || cartItems.length === 0) {
+                    orderSummaryContainer.innerHTML = '<p>Your cart is empty.</p>';
+                    subtotalEl.textContent = "€0.00";
+                    itemCountEl.textContent = "0 items";
+                    return;
+                }
+
+                orderSummaryContainer.innerHTML = cartItems.map(item => `
+                    <div class="row item">
+                        <div><span>${item.model}</span></div>
+                        <div><b>€${item.salePrice.toFixed(2)}</b></div>
+                    </div>
+                `).join('');
+
+                subtotalEl.textContent = `€${totalPrice.toFixed(2)}`;
+                itemCountEl.textContent = `${cartItems.length} items`;
+            } catch (error) {
+                console.error('Error loading order summary:', error);
+                orderSummaryContainer.innerHTML = '<p>Failed to load order summary.</p>';
+            }
+        }
+
+        // Initialize Stripe
+        const stripe = Stripe("pk_test_51MfRIsHcaMLPP7A1CiVHTe3wo69caUJgl4GbfkBL83Ih7wler9uw1CV5Di08BfPEqhgXsJNjCEb54COPS8zbOVUd005emg9WN9");
+        const elements = stripe.elements();
+        const card = elements.create('card');
+        card.mount('#card-element');
+
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
+
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/checkout?userId=${userId}`, {
+                    method: 'POST'
+                });
+
+                const { clientSecret } = await response.json();
+
+                const { error } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: card
+                    }
+                });
+
+                if (error) {
+                    document.getElementById('payment-errors').textContent = error.message;
+                } else {
+                    alert("Payment successful!");
+                    window.location.href = "BuyIndex.html";
+                }
+            } catch (error) {
+                console.error("Error processing payment:", error);
+                document.getElementById('payment-errors').textContent = "An error occurred. Please try again.";
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+        
+        async function validateCartBeforePayment() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+
+                if (!data.cartItems || data.cartItems.length === 0) {
+                    alert("Your cart is empty. Redirecting to the Shopping page.");
+                    window.location.href = 'BuyIndex.html';
+                }
+            } catch (error) {
+                console.error("Error validating cart:", error);
+                alert("Failed to verify cart status. Redirecting to the cart page.");
+                window.location.href = 'BuyIndex.html';
+            }
+        }
+        
+
+        // Initialize on page load
+        fetchTotalPrice();
+        loadOrderSummary();
+        validateCartBeforePayment();
+    </script>
+</body>
+
+</html>

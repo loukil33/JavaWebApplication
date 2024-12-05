@@ -1,5 +1,6 @@
 package Bikes;
 
+import Annonces.*;
 
 import javax.servlet.http.Part;
 import javax.ws.rs.*;
@@ -7,7 +8,9 @@ import javax.ws.rs.core.*;
 import java.util.Base64;
 import java.io.*;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +20,8 @@ import Users.User;
 
 @Path("/bikes")
 public class BikeService {
-
+	
+	
 
 	private static int currentId = 4; // Auto-increment ID counter
 
@@ -72,6 +76,14 @@ public class BikeService {
 	    return Response.status(Response.Status.CREATED).entity(bike).build();
 	}
 	
+
+	// Read (Get all bikes)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllBikes() {
+        return Response.ok(bikes).build();
+    }
+
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -148,16 +160,6 @@ public class BikeService {
 
 
 
-
-    
-
-    // Read (Get all bikes)
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllBikes() {
-        return Response.ok(bikes).build();
-    }
-
     // Read (Get a bike by ID)
     @GET
     @Path("/{id}")
@@ -169,6 +171,14 @@ public class BikeService {
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
         }
+    }
+    
+    public Bike getBikeByIdDirect(int id) {
+        Bike bike = findBikeById(id);
+        if (bike != null) {
+            return bike; // Return the bike if found
+        }
+        return null; // Return null if the bike is not found
     }
     
     // Method to get the name (model) of a bike by ID
@@ -228,7 +238,7 @@ public class BikeService {
             // Remove the image file associated with the bike
             if (bikeToDelete.getImages() != null && !bikeToDelete.getImages().isEmpty()) {
                 String imagePath = bikeToDelete.getImages().get(0).replace("http://localhost:8081/UserWebService/css/images/", "");
-                File imageFile = new File("E:/github/JavaWebApplication/src/main/webapp/css/images/" + imagePath);
+                File imageFile = new File("C:/Users/Mohamed Aziz/Documents/GitHub/JavaWebApplication/src/main/webapp/css/images/" + imagePath);
 
                 if (imageFile.exists()) {
                     boolean imageDeleted = imageFile.delete();  // Delete the image file

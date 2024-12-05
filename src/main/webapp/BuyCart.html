@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Shop - Cart</title>
+    <style>
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .cart {
+            flex: 2;
+            padding: 20px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .summary {
+            flex: 1;
+            padding: 20px;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .title h4 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: #333;
+        }
+
+        .text-muted {
+            color: #888;
+        }
+
+        .main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .main:last-child {
+            border-bottom: none;
+        }
+
+        .main img {
+            width: 60px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .main .col {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .main .col .model {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .main .col .price {
+            color: #333;
+        }
+
+        .main .close {
+            font-size: 1.2rem;
+            color: #d9534f;
+            cursor: pointer;
+        }
+
+        .summary h5 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .summary .row {
+            width: 100%;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+	.summary .btn {
+	    width: 100%;
+	    padding: 12px;
+	    background: #478ac9;
+	    color: #fff;
+	    border: 2px solid #478ac9; /* Ensure the border matches the background color initially */
+	    border-radius: 5px;
+	    font-size: 1rem;
+	    cursor: pointer;
+	    transition: background 0.3s, color 0.3s, border 0.3s; /* Smooth transitions */
+	}
+	
+	.summary .btn:hover {
+	    background: #fff;
+	    color: #000;
+	    border: 2px solid #478ac9; /* Keeps the contour */
+	}
+
+
+        .back-to-shop a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 0.9rem;
+        }
+
+        .back-to-shop a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="cart">
+            <div class="title">
+                <h4><b>Shopping Cart</b></h4>
+                <span class="text-muted" id="item-count">0 items</span>
+            </div>
+            <div id="cart-items">
+                <!-- Dynamically loaded cart items will go here -->
+            </div>
+            <div class="back-to-shop"><a href="BuyIndex.html">&leftarrow; Back to shop</a></div>
+        </div>
+        <div class="summary">
+            <h5><b>Summary</b></h5>
+            <div class="row">
+                <div class="col">TOTAL PRICE</div>
+                <div class="col text-right">&euro;<span id="total-price">0.00</span></div>
+            </div>
+            <button class="btn" onclick="checkCartBeforePayment()">CHECKOUT</button>
+        </div>
+    </div>
+
+    <script>
+        const userId = 1; // Static user ID for testing; Replace with actual user ID.
+        let cartItems = []; // Global cart items array.
+
+        async function loadCart(data = null) {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const totalPriceEl = document.getElementById('total-price');
+            const itemCountEl = document.getElementById('item-count');
+
+            cartItemsContainer.innerHTML = ""; // Clear previous items.
+
+            try {
+                if (!data) {
+                    const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                    data = await response.json();
+                }
+
+                const { cartItems: items, totalPrice } = data;
+
+                if (items.length === 0) {
+                    cartItemsContainer.innerHTML = `<p>Your cart is empty. Add items to your cart.</p>`;
+                    totalPriceEl.textContent = "0.00";
+                    itemCountEl.textContent = "0 items";
+                    return;
+                }
+
+                cartItems = items; // Update global cart items.
+
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('main');
+                    itemDiv.innerHTML = `
+                        <div class="col">
+                            <img src="${item.image}" alt="${item.model}">
+                        </div>
+                        <div class="col">
+                            <div class="model">${item.model}</div>
+                        </div>
+                        <div class="col text-right price">&euro; ${item.salePrice.toFixed(2)}</div>
+                        <div class="close" onclick="removeFromCart(${item.id})">&#10005;</div>
+                    `;
+                    cartItemsContainer.appendChild(itemDiv);
+                });
+
+                totalPriceEl.textContent = totalPrice.toFixed(2);
+                itemCountEl.textContent = `${items.length} item${items.length > 1 ? "s" : ""}`;
+            } catch (error) {
+                console.error('Error loading cart:', error);
+                cartItemsContainer.innerHTML = `<p>Failed to load cart items. Please try again later.</p>`;
+            }
+        }
+
+
+        async function removeFromCart(id) {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/remove/${id}?userId=${userId}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to remove item. Status: ${response.status}`);
+                }
+
+                alert("Item removed from cart");
+
+                // Reload the page after successful deletion
+                location.reload();
+            } catch (error) {
+                console.error("Error removing item from cart:", error);
+                alert("Failed to remove item. Please try again.");
+            }
+        }
+
+        
+      
+        
+        async function checkCartBeforePayment() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+
+                if (data.cartItems.length === 0) {
+                    alert("Your cart is empty. Please add items before proceeding to payment.");
+                } else {
+                    window.location.href = 'BuyStripe.html';
+                }
+            } catch (error) {
+                console.error("Error checking cart:", error);
+                alert("Failed to verify cart status. Please try again.");
+            }
+        }
+
+        // Load cart items on page load.
+        loadCart();
+    </script>
+</body>
+</html>
