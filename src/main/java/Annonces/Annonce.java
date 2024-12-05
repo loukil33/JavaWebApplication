@@ -72,7 +72,13 @@ public class Annonce {
 		this.id = id;
 	}
 
-	
+    public Bike getBike() {
+        return bike; // Getter for bike
+    }
+
+    public void setBike(Bike bike) {
+        this.bike = bike; // Setter for bike
+    }
 
 	public List<Note> getNotes() {
 		return notes;
@@ -91,9 +97,9 @@ public class Annonce {
 		this.userid = userid;
 	}
 
-	@Override
-	public String toString() {
-		return "Annonce [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
-				+ ", duration=" + duration + ", userid=" + userid + ", notes=" + notes + "]";
-	}
+	   @Override
+	    public String toString() {
+	        return "Annonce [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
+	                + ", duration=" + duration + ", userid=" + userid + ", notes=" + notes + "]";
+	    }
 }

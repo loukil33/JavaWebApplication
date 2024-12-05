@@ -8,7 +8,7 @@ import Users.User;
 
 public class Sale extends Annonce{
 
-    private Bike bike; // Composition relationship
+    //private Bike bike; // Composition relationship
     private double salePrice; // Assumed to be in EUR by default
 
     // Default constructor for deserialization
@@ -20,7 +20,7 @@ public class Sale extends Annonce{
     public Sale(int id, String title, String description, LocalDate startDate, int duration, int userid, List<Note> notes, double salePrice, Bike bike) {
         super(id, title, description, startDate, duration, userid, notes);
         this.salePrice = salePrice;
-        this.bike = bike;
+        this.setBike(bike); // Set the bike using the inherited setBike method
     }
 
     public double getSalePrice() {
@@ -31,13 +31,14 @@ public class Sale extends Annonce{
         this.salePrice = salePrice;
     }
 
+    /*
     public Bike getBike() {
         return bike;
     }
 
     public void setBike(Bike bike) {
         this.bike = bike;
-    }
+    }*/
 
     public double getPriceInCurrency(String currencyCode) {
         try {
@@ -50,7 +51,7 @@ public class Sale extends Annonce{
 
     @Override
     public String toString() {
-        return "Sale [salePrice (EUR)=" + salePrice + "]";
+        return "Sale [salePrice=" + salePrice + ", " + super.toString() + "]";
     }
 }
  

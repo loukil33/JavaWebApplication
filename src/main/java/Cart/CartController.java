@@ -53,7 +53,6 @@ public class CartController {
     }
 
 
-
     @GET
     @Path("/items")
     @Produces(MediaType.APPLICATION_JSON)
@@ -76,8 +75,10 @@ public class CartController {
         for (Sale sale : cartItems) {
             Map<String, Object> itemData = new HashMap<>();
             itemData.put("id", sale.getId());
-            itemData.put("model", sale.getBike().getModel()); // Ensure you have the bike's model
-            itemData.put("image", sale.getBike().getImages() != null && !sale.getBike().getImages().isEmpty() ? sale.getBike().getImages().get(0) : "default_image.jpg");
+            itemData.put("model", sale.getBike() != null ? sale.getBike().getModel() : "Unknown Model"); // Use inherited getBike()
+            itemData.put("image", sale.getBike() != null && sale.getBike().getImages() != null && !sale.getBike().getImages().isEmpty()
+                    ? sale.getBike().getImages().get(0)
+                    : "default_image.jpg");
             itemData.put("salePrice", sale.getSalePrice());  // Ensure salePrice is included
             responseItems.add(itemData);
         }
