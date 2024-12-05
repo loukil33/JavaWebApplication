@@ -135,7 +135,7 @@ form#rental-post-update-form {
     <ul class="u-nav u-unstyled u-nav-1">
         <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
         <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
-        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a></li>
+        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyBikes.html" style="padding: 10px 20px;">My Bikes</a></li>
         <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
         <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
         <li class="u-nav-item" id="logout-link" style="display: none;">
@@ -197,6 +197,12 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
     <label for="duration">Post Duration (in days, max 30)</label>
     <input type="number" id="duration" name="duration" placeholder="Enter duration in days" required min="1" max="30">
 
+<label for="bike">Select a Bike</label>
+<select id="bike" name="bike" required>
+    <option value="" disabled selected>Select a bike</option>
+    <!-- Bike options will be dynamically loaded -->
+</select>
+
     <!-- Rent Price -->
     <label for="rentPrice">Rent Price</label>
     <input type="number" id="rentPrice" name="rentPrice" placeholder="Enter rent price" step="0.01" required>
@@ -228,6 +234,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
     document.addEventListener("DOMContentLoaded", function () {
         // Retrieve post details from sessionStorage
         const postDataJson = sessionStorage.getItem("selectedPost");
+        const userDataJson = sessionStorage.getItem("userData");
 
         if (!postDataJson) {
             alert("No post selected. Redirecting to the home page.");
@@ -236,6 +243,14 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         }
 
         const postData = JSON.parse(postDataJson);
+        const userData = JSON.parse(userDataJson);
+
+        if (!userData || !userData.id) {
+            alert("User is not logged in. Please log in first.");
+            return;
+        }
+
+        const userId = userData.id;
 
         // Populate the form with existing post details
         document.getElementById("title").value = postData.title;
@@ -246,100 +261,117 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         document.getElementById("end_time").value = postData.end_time;
         document.getElementById("rentDuration").value = postData.rentDuration;
 
+        // Populate the bike dropdown
+        const bikeSelect = document.getElementById("bike");
+        fetch(`http://localhost:8081/UserWebService/api/users/${userId}/bikes`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user bikes.");
+                }
+                return response.json();
+            })
+            .then(bikes => {
+                bikes.forEach(bike => {
+                    const option = document.createElement("option");
+                    option.value = bike.id;
+                    option.textContent = `${bike.model}`;
+                    option.selected = postData.bike && postData.bike.id === bike.id; // Preselect if it matches
+                    bikeSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching bikes:", error);
+            });
+
         // Handle form submission
         document.getElementById("rental-post-update-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
             // Get form values
             const updatedData = {
-                id: postData.id, // Keep the post ID for the update
+                id: postData.id,
                 title: document.getElementById("title").value.trim(),
                 description: document.getElementById("description").value.trim(),
                 duration: parseInt(document.getElementById("duration").value, 10),
                 rentPrice: parseFloat(document.getElementById("rentPrice").value),
                 start_time: document.getElementById("start_time").value,
                 end_time: document.getElementById("end_time").value,
-                rentDuration: parseInt(document.getElementById("rentDuration").value, 10)
+                rentDuration: parseInt(document.getElementById("rentDuration").value, 10),
             };
 
-            // Validate duration
+            // Validate inputs (existing validation steps)
             if (updatedData.duration > 30) {
                 alert("Post duration cannot exceed 30 days.");
                 return;
             }
 
-            // Validate start and end times
             const startTimeObj = new Date(`1970-01-01T${updatedData.start_time}:00`);
             const endTimeObj = new Date(`1970-01-01T${updatedData.end_time}:00`);
+
             if (endTimeObj <= startTimeObj) {
                 alert("End Time must be later than Start Time.");
                 return;
             }
 
-            // Validate rent duration
-            const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60); // in hours
+            const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60);
             if (updatedData.rentDuration > maxRentDuration) {
                 alert(`Rent Duration cannot exceed ${maxRentDuration.toFixed(2)} hours.`);
                 return;
             }
 
-            // Get the user data from sessionStorage
-            const userDataJson = sessionStorage.getItem("userData");
-            let userData = null;
-
-            try {
-                userData = JSON.parse(userDataJson);
-            } catch (error) {
-                console.error("Error parsing user data:", error);
-                alert("User is not logged in. Please log in first.");
-                return;
-            }
-
-            if (!userData || !userData.id) {
-                alert("User is not logged in. Please log in first.");
-                return;
-            }
-
-            const userId = userData.id;
-
-            // Submit the updated post data to the backend
-            fetch(` http://localhost:8081/UserWebService/api/rentals/${postData.id} `, 
-            		{
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to update rental post");
-                }
-                return response.text();
-            })
-            .then(message => {
-                alert(message);
-
-                // Update session data with the modified post
-                userData.annonces = userData.annonces.map(annonce => {
-                    if (annonce.id === postData.id) {
-                        return updatedData; // Replace the old post with updated post
+            // Fetch the selected bike object
+            const selectedBikeId = bikeSelect.value;
+            fetch(`http://localhost:8081/UserWebService/api/bikes/${selectedBikeId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch selected bike.");
                     }
-                    return annonce;
+                    return response.json();
+                })
+                .then(bike => {
+                    // Add the bike object to updatedData
+                    updatedData.bike = bike;
+
+                    // Submit the updated data to the backend
+                    fetch(`http://localhost:8081/UserWebService/api/rentals/${postData.id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(updatedData),
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Failed to update rental post");
+                            }
+                            return response.text();
+                        })
+                        .then(message => {
+                            alert(message);
+
+                            // Update sessionStorage
+                            userData.annonces = userData.annonces.map(annonce => {
+                                if (annonce.id === postData.id) {
+                                    return updatedData;
+                                }
+                                return annonce;
+                            });
+                            sessionStorage.setItem("userData", JSON.stringify(userData));
+
+                            // Redirect
+                            window.location.href = "Annonces.html";
+                        })
+                        .catch(error => {
+                            console.error("Error updating rental post:", error);
+                            alert("Error updating post: " + error.message);
+                        });
+                })
+                .catch(error => {
+                    console.error("Error fetching bike data:", error);
+                    alert("Error fetching bike: " + error.message);
                 });
-
-                // Save updated user data to sessionStorage
-                sessionStorage.setItem("userData", JSON.stringify(userData));
-
-                // Redirect to the annonces page
-                window.location.href = "Annonces.html";
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Error updating post: " + error.message);
-            });
-        }); // Closing for the "submit" event listener
-    }); // Closing for the "DOMContentLoaded" event listener
+        });
+    });
 
 
 </script>

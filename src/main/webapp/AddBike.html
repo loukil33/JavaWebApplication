@@ -142,6 +142,7 @@
             // Prepare JSON payload
             const data = {
                 model: formData.get('model'),
+                userid: userData.id,
                 brand: formData.get('brand'),
                 condition: formData.get('condition'),
                 color: formData.get('color'),
@@ -151,7 +152,8 @@
             console.log("Data to send:", data);
 
             // Send data to the server
-            fetch("http://localhost:8081/UserWebService/api/bikes", {
+            fetch("http://localhost:8081/UserWebService/api/bikes/add", 
+            		{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -168,7 +170,9 @@
             .then(message => {
                 console.log("Success message:", message);
                 alert('Bike added successfully!');
-                
+                if (!Array.isArray(userData.bikes)) {
+        	        userData.bikes = []; // Initialize as an empty array if undefined
+        	    } 
                 userData.bikes.push(data); 
         	    sessionStorage.setItem("userData", JSON.stringify(userData));
                 form.reset();
@@ -179,6 +183,9 @@
                 alert('Error: ' + error.message);
             });
         }
+
+
+
 
         // Convert file to Base64
         function convertFileToBase64(file) {

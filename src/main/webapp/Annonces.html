@@ -88,7 +88,7 @@
     <ul class="u-nav u-unstyled u-nav-1">
         <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
         <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
-        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a></li>
+        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyBikes.html" style="padding: 10px 20px;">My Bikes</a></li>
         <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
         <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
         <li class="u-nav-item" id="logout-link" style="display: none;">
@@ -102,7 +102,9 @@
             </button>
             </li>
     </ul>
+    <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
     <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
+    </div>
 </nav>
 <!--  
 <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
@@ -125,7 +127,7 @@
 
 </nav>-->
 
-<div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
+
 <!-- <span class="u-icon u-icon-rectangle u-text-custom-color-1 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55" style="" id="user-icon" width="80px" height="80px"><use xlink:href="#svg-21d7"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-21d7" style="enable-background:new 0 0 55 55;"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
 c0.058,0.049,0.121,0.089,0.179,0.137c0.474,0.393,0.965,0.766,1.465,1.127c0.162,0.117,0.324,0.234,0.489,0.348
 c0.534,0.368,1.082,0.717,1.642,1.048c0.122,0.072,0.245,0.142,0.368,0.212c0.613,0.349,1.239,0.678,1.88,0.98
@@ -143,7 +145,7 @@ s-7.024,1.065-8.867,3.168c-2.119,2.416-1.935,5.346-1.883,5.864v4.667c-0.568,0.66
 c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
 c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span> -->
                 
-</div></div></header>
+</div></header>
   
     <section class="u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-xl u-container-align-center-xs u-palette-1-light-3 u-section-2" id="carousel_0d8e">
                  <a class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1" href="AddRental.html">+ NEW POST</a>
@@ -211,19 +213,22 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             // Check if the annonce has rental-specific properties
             if ("rentPrice" in annonce) {
                 additionalInfo = `
-                    <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                	<h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                    <p class="u-align-center u-text u-text-4"><strong>${annonce.bike.condition}</strong> ${annonce.bike.model} | ${annonce.bike.brand} | ${annonce.bike.color}</p>
                     <p class="u-align-center u-text u-text-5">
                         <span class="u-file-icon u-icon u-icon-1">
-                            <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px;">
+                            <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px; margin-bottom: 8px">
                         </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
-                    </p>
-                `;
+                    </p>`;
             }
-
+            const imageUrl = annonce.bike.images && annonce.bike.images.length > 0 
+            ? annonce.bike.images[0] 
+            : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
+            
             const annonceHTML = `
                 <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
                     <div class="u-container-layout u-similar-container u-container-layout-1">
-                        <img src="css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
+                        <img src="${imageUrl}" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
                         <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
                         <p class="u-align-center u-text u-text-4">${annonce.description}</p>
                         ${additionalInfo}

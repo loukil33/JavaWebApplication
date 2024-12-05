@@ -1,26 +1,27 @@
 package Annonces;
-import Bikes.*;
+
 import java.time.LocalDate;
 import java.util.List;
 
+import Bikes.Bike;
 import Users.User;
 
 public class Annonce {
 	
 	private int id;
-	private Bike bike;
 	private String title;
 	private String description;
 	private LocalDate startDate;
     private int duration;
     private int userid;
+    private Bike bike;
     private List<Note> notes;
     
     public Annonce() {
        
     }
 
-	public Annonce(int id, String title, String description, LocalDate startDate, int duration,int user, List<Note> notes) {
+	public Annonce(int id, String title, String description, LocalDate startDate, int duration,int userid,Bike bike, List<Note> notes) {
 		
 		this.id = id;
 		this.title = title;
@@ -28,6 +29,7 @@ public class Annonce {
 		this.startDate = startDate;
 		this.duration = duration;
 		this.userid = userid;
+		this.bike = bike;
 		this.notes = notes;
 	}
 
@@ -72,13 +74,7 @@ public class Annonce {
 		this.id = id;
 	}
 
-    public Bike getBike() {
-        return bike; // Getter for bike
-    }
-
-    public void setBike(Bike bike) {
-        this.bike = bike; // Setter for bike
-    }
+	
 
 	public List<Note> getNotes() {
 		return notes;
@@ -89,6 +85,9 @@ public class Annonce {
 		this.notes = notes;
 	}
 
+	
+	
+
 	public int getUserid() {
 		return userid;
 	}
@@ -97,9 +96,22 @@ public class Annonce {
 		this.userid = userid;
 	}
 
-	   @Override
-	    public String toString() {
-	        return "Annonce [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
-	                + ", duration=" + duration + ", userid=" + userid + ", notes=" + notes + "]";
-	    }
+	public Bike getBike() {
+		return bike;
+	}
+
+	public void setBike(Bike bike) {
+		this.bike = bike;
+	}
+
+	@Override
+	public String toString() {
+		return "Annonce [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
+				+ ", duration=" + duration + ", userid=" + userid + ", bike=" + bike + ", notes=" + notes + "]";
+	}
+
+	
+
+	
+
 }

@@ -4,6 +4,7 @@ import Currency.CurrencyConverter;
 import java.time.LocalDate;
 import java.util.List;
 
+import Bikes.Bike;
 import Users.User;
 
 public class Sale extends Annonce{
