@@ -111,56 +111,117 @@
         let cartItems = []; // To track items in the cart
         const userId = 1; // Static user ID for testing; Replace with actual user ID.
 
-        // Fetch and display bikes
-        async function loadBikes() {
-            const bikeList = document.getElementById('bike-list');
-            try {
-                const response = await fetch("http://localhost:8081/UserWebService/api/bikes");
-                const bikes = await response.json();
-                bikeList.innerHTML = ""; // Clear the list
-                bikes.forEach(bike => {
-                    const bikeCard = document.createElement('div');
-                    bikeCard.classList.add('bike-card');
-                    bikeCard.innerHTML = `
-                        <img src="${bike.images[0]}" alt="${bike.model}">
-                        <h3>${bike.model} (${bike.brand})</h3>
-                        <p>Price: €${bike.salePrice}</p>
-                        <button onclick="addToCart(${bike.id}, '${bike.model}', ${bike.salePrice}, '${bike.images[0]}')">Add to Cart</button>
-                    `;
-                    bikeList.appendChild(bikeCard);
-                });
-            } catch (error) {
-                console.error('Error loading bikes:', error);
-                bikeList.innerHTML = `<p>Failed to load bikes. Please try again later.</p>`;
-            }
+     // Fetch and display bikes
+ async function loadBikes() {
+    const bikeList = document.getElementById('bike-list');
+    try {
+        const response = await fetch("http://localhost:8081/UserWebService/api/bikes");
+
+        // Check if the response is OK (status code 200)
+        if (!response.ok) {
+            throw new Error('Failed to fetch bikes, status code: ' + response.status);
         }
 
-        // Add bike to the cart
-        async function addToCart(id, model, price, image) {
-            if (!price || price <= 0) {
-                alert("Invalid bike price. Please provide a valid price.");
-                return;
-            }
+        const bikes = await response.json();
 
-            if (cartItems.some(item => item.id === id)) {
-                alert('This bike is already in your cart.');
-                return;
-            }
-
-            try {
-                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id, model, salePrice: price, image })
-                });
-                const message = await response.text();
-                alert(message);
-                updateCartBadge();
-            } catch (error) {
-                console.error('Error adding to cart:', error);
-                alert('Failed to add to cart. Please try again.');
-            }
+        // Check if the bikes response is valid
+        if (!Array.isArray(bikes)) {
+            throw new Error('Expected bikes data to be an array');
         }
+
+        bikeList.innerHTML = ""; // Clear the list
+
+        bikes.forEach(bike => {
+            let image = 'default_image.jpg'; // Default image
+            let price = 0;
+            let model = bike.model || 'Unknown Model'; // Fallback for missing model
+            let brand = bike.brand || 'Unknown Brand'; // Fallback for missing brand
+
+            // Check if the bike is a Sale object
+            if (bike.salePrice !== undefined) {  // Sale object will have salePrice
+                price = bike.salePrice;
+                model = bike.model || 'Sale Bike'; // Model for Sale
+                brand = bike.brand || 'Sale Brand'; // Brand for Sale
+                image = bike.bike && bike.bike.images && bike.bike.images.length > 0 ? bike.bike.images[0] : image;
+            } else {
+                price = bike.salePrice || 15.0;  // Default price for regular bikes
+                image = bike.images && bike.images.length > 0 ? bike.images[0] : image; // Default to provided image or fallback
+            }
+
+            const displayPrice = price > 0 ? `€${price}` : "Price not available";
+
+            const bikeCard = document.createElement('div');
+            bikeCard.classList.add('bike-card');
+            bikeCard.innerHTML = `
+                <img src="${image}" alt="${model}">
+                <h3>${model} (${brand})</h3>
+                <p>Price: ${displayPrice}</p>
+                <button onclick="addToCart(${bike.id}, '${model}', ${price}, '${image}')">Add to Cart</button>
+            `;
+            bikeList.appendChild(bikeCard);
+        });
+    } catch (error) {
+        console.error('Error loading bikes:', error);
+        bikeList.innerHTML = `<p>Failed to load bikes. Please try again later. Error: ${error.message}</p>`;
+    }
+}
+
+
+ async function addToCart(saleId, model, price, image) {
+	    try {
+	        // Construct the Sale object
+	        const sale = {
+	            id: saleId,
+	            model: model,
+	            salePrice: price,
+	            bike: {
+	                model: model,
+	                images: [image]  // Ensure bike details are included
+	            }
+	        };
+
+	        // Log the Sale object to inspect it
+	        console.log("Sale object being sent:", sale);
+
+	        // Make the POST request to add the item to the cart
+	        const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
+	            method: "POST",
+	            headers: {
+	                "Content-Type": "application/json"
+	            },
+	            body: JSON.stringify(sale)  // Sending Sale object as JSON
+	        });
+
+	        if (response.status === 400) {
+	            const errorText = await response.text();
+	            // Log the error message from the response
+	            console.log("Error response from server:", errorText);
+
+	            // Check if the error message is about the item being already in the cart
+	            if (errorText.includes("Sale item already in cart")) {
+	                alert("This item is already in your cart.");
+	            } else {
+	                alert(`Error: ${errorText}`);
+	            }
+	        } else if (response.ok) {
+	            alert("Item added to cart successfully!");
+	            updateCartBadge(); // Update the cart badge after adding the item
+	        } else {
+	            throw new Error(`Failed to add item. Status: ${response.status}`);
+	        }
+	    } catch (error) {
+	        console.error("Error adding item to cart:", error.message);
+	        alert("An error occurred while adding the item to the cart.");
+	    }
+	}
+
+
+
+
+
+
+
+
 
         // Check cart before navigation
         async function checkCartBeforeNavigation() {

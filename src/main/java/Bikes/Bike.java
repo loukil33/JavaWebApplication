@@ -40,7 +40,8 @@ public class Bike {
 		public void setColor(String color) {
 			this.color = color;
 		}
-
+		
+	 
 		
 		public boolean isAvailable() {
 			return isAvailable;
@@ -93,14 +94,5 @@ public class Bike {
 			return "Bike [id=" + id + ", model=" + model + ", brand=" + brand + ", condition=" + condition + ", color="
 					+ color + ", isAvailable=" + isAvailable + ", images=" + images + "]";
 		}
-	    
-	    
-	    
-	
-	
-	    
-	    
-
-
 
 }

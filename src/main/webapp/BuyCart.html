@@ -168,7 +168,6 @@
         const userId = 1; // Static user ID for testing; Replace with actual user ID.
         let cartItems = []; // Global cart items array.
 
-        // Fetch cart items and load dynamically
         async function loadCart(data = null) {
             const cartItemsContainer = document.getElementById('cart-items');
             const totalPriceEl = document.getElementById('total-price');
@@ -216,6 +215,7 @@
                 cartItemsContainer.innerHTML = `<p>Failed to load cart items. Please try again later.</p>`;
             }
         }
+
 
         // Remove item from the cart
         async function removeFromCart(id) {

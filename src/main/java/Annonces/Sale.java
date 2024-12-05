@@ -1,4 +1,5 @@
 package Annonces;
+import Bikes.*;
 import Currency.CurrencyConverter;
 import java.time.LocalDate;
 import java.util.List;
@@ -7,12 +8,20 @@ import Users.User;
 
 public class Sale extends Annonce{
 
+    private Bike bike; // Composition relationship
     private double salePrice; // Assumed to be in EUR by default
 
-	public Sale(int id,String title, String description, LocalDate startDate, int duration,int userid,List<Note> notes, double salePrice) {
-		super(id,title, description, startDate, duration,userid,notes);
-		this.salePrice = salePrice;
-	}
+    // Default constructor for deserialization
+    public Sale() {
+        // No-op constructor needed for deserialization
+    }
+
+    // Parameterized constructor
+    public Sale(int id, String title, String description, LocalDate startDate, int duration, int userid, List<Note> notes, double salePrice, Bike bike) {
+        super(id, title, description, startDate, duration, userid, notes);
+        this.salePrice = salePrice;
+        this.bike = bike;
+    }
 
     public double getSalePrice() {
         return salePrice;
@@ -20,6 +29,14 @@ public class Sale extends Annonce{
 
     public void setSalePrice(double salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public Bike getBike() {
+        return bike;
+    }
+
+    public void setBike(Bike bike) {
+        this.bike = bike;
     }
 
     public double getPriceInCurrency(String currencyCode) {
@@ -36,3 +53,9 @@ public class Sale extends Annonce{
         return "Sale [salePrice (EUR)=" + salePrice + "]";
     }
 }
+ 
+
+ 
+ 
+ 
+

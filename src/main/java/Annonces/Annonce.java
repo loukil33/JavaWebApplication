@@ -1,5 +1,5 @@
 package Annonces;
-
+import Bikes.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -8,6 +8,7 @@ import Users.User;
 public class Annonce {
 	
 	private int id;
+	private Bike bike;
 	private String title;
 	private String description;
 	private LocalDate startDate;
@@ -82,9 +83,6 @@ public class Annonce {
 		this.notes = notes;
 	}
 
-	
-	
-
 	public int getUserid() {
 		return userid;
 	}
@@ -98,8 +96,4 @@ public class Annonce {
 		return "Annonce [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate
 				+ ", duration=" + duration + ", userid=" + userid + ", notes=" + notes + "]";
 	}
-
-
-	
-
 }
