@@ -22,6 +22,58 @@ public class BikeService {
 	private static int currentId = 4; // Auto-increment ID counter
 
 	@POST
+	@Path("/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addBike(Bike bike) {
+	    if (bike.getModel() == null || bike.getBrand() == null || bike.getCondition() == null || bike.getColor() == null) {
+	        return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
+	    }
+
+	    if (bike.getImages() != null && !bike.getImages().isEmpty()) {
+	        String imageBase64 = bike.getImages().get(0);
+
+	        if (imageBase64.startsWith("data:image")) {
+	            imageBase64 = imageBase64.split(",")[1]; // Remove the prefix
+	        }
+
+	        try {
+	            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
+
+
+	            String fileName = "bike_" + currentId + ".jpg";
+	            String filePath = "C:/Users/Mohamed Aziz/Documents/GitHub/JavaWebApplication/src/main/webapp/css/images/" + fileName;
+
+
+	            File outputFile = new File(filePath);
+	            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+	                fos.write(imageBytes);
+	                System.out.println("Image saved at: " + outputFile.getAbsolutePath());
+	            }
+
+	            bike.setImages(List.of("http://localhost:8081/UserWebService/css/images/" + fileName));
+	        } catch (IllegalArgumentException e) {
+	            e.printStackTrace();
+	            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Base64 image data").build();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+	                           .entity("Failed to write image file: " + e.getMessage())
+	                           .build();
+	        }
+	    } else {
+	        bike.setImages(null);
+	    }
+
+	    bike.setId(currentId++);
+	    bike.setAvailable(true);
+	    bikes.add(bike);
+
+	    return Response.status(Response.Status.CREATED).entity(bike).build();
+	}
+	
+	
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addBike(Bike bike, @QueryParam("userId") int userId) {

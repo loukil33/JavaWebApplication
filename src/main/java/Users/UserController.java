@@ -4,6 +4,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import Annonces.Annonce;
+import Bikes.Bike;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,9 +93,15 @@ public class UserController {
                            .entity("User not found for ID: " + id)
                            .build();
         }
+        
+        List<Bike> bikes = user.get().getBikes();
+        if (bikes == null || bikes.isEmpty()) {
+            return Response.ok(new ArrayList<>()) // Return an empty list
+                           .build();
+        }
 
         // Return the list of annonces
-        return Response.ok(user.get().getBikes())
+        return Response.ok(bikes)
                        .build();
     }
 

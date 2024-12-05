@@ -21,7 +21,7 @@ public class Annonce {
        
     }
 
-	public Annonce(int id, String title, String description, LocalDate startDate, int duration,int user,Bike bike, List<Note> notes) {
+	public Annonce(int id, String title, String description, LocalDate startDate, int duration,int userid,Bike bike, List<Note> notes) {
 		
 		this.id = id;
 		this.title = title;
