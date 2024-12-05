@@ -4,6 +4,8 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import Bikes.Bike;
 import Users.User;
 public class Rental extends Annonce{
 
@@ -17,9 +19,9 @@ public class Rental extends Annonce{
     public Rental() {
     	
     }
-	public Rental(int id,String title, String description, LocalDate startDate, int duration,int userid,List<Note> notes, double rentPrice,
+	public Rental(int id,String title, String description, LocalDate startDate, int duration,int userid,Bike bike,List<Note> notes, double rentPrice,
 			LocalTime start_time,LocalTime end_time, int rentDuration,List<User> waitingList,User CurrentWinner) {
-		super(id,title, description, startDate, duration,userid,notes);
+		super(id,title, description, startDate, duration,userid,bike,notes);
 		this.rentPrice = rentPrice;
 		this.start_time = start_time;
 		this.end_time = end_time;
@@ -73,6 +75,8 @@ public class Rental extends Annonce{
 	public void setCurrentWinner(User currentWinner) {
 		CurrentWinner = currentWinner;
 	}
+	
+	
 	@Override
 	public String toString() {
 		return super.toString() +"Rental [rentPrice=" + rentPrice + ", start_time=" + start_time + ", end_time=" + end_time

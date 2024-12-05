@@ -9,7 +9,11 @@ import java.io.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static Bikes.bikesDB.bikes;
+import static Users.UserDatabase.users;
+import Users.User;
 
 @Path("/bikes")
 public class BikeService {
@@ -20,11 +24,26 @@ public class BikeService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addBike(Bike bike) {
+	public Response addBike(Bike bike, @QueryParam("userId") int userId) {
+	    // Validate bike details
 	    if (bike.getModel() == null || bike.getBrand() == null || bike.getCondition() == null || bike.getColor() == null) {
 	        return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
 	    }
 
+	    // Find the user by userId
+	    Optional<User> userOptional = users.stream()
+	                                       .filter(user -> user.getId() == userId)
+	                                       .findFirst();
+
+	    if (userOptional.isEmpty()) {
+	        return Response.status(Response.Status.NOT_FOUND)
+	                       .entity("User not found for ID: " + userId)
+	                       .build();
+	    }
+
+	    User user = userOptional.get();
+
+	    // Save the bike image if provided
 	    if (bike.getImages() != null && !bike.getImages().isEmpty()) {
 	        String imageBase64 = bike.getImages().get(0);
 
@@ -35,10 +54,8 @@ public class BikeService {
 	        try {
 	            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
 
-
 	            String fileName = "bike_" + currentId + ".jpg";
-	            String filePath = "E:/github/JavaWebApplication/src/main/webapp/css/images/" + fileName;
-
+	            String filePath = "C:/Users/Mohamed Aziz/Documents/GitHub/JavaWebApplication/src/main/webapp/css/images/" + fileName;
 
 	            File outputFile = new File(filePath);
 	            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
@@ -60,12 +77,23 @@ public class BikeService {
 	        bike.setImages(null);
 	    }
 
+	    // Set the bike ID and mark it as available
 	    bike.setId(currentId++);
 	    bike.setAvailable(true);
+
+	    // Add the bike to the list of bikes and associate it with the user
 	    bikes.add(bike);
+	    if (user.getBikes() == null) {
+	        user.setBikes(new ArrayList<>());
+	    }
+	    user.getBikes().add(bike); // Add the bike to the user's bike list
+
+	    System.out.println("Bike added for User ID: " + userId);
+	    System.out.println("User's Bike List: " + user.getBikes());
 
 	    return Response.status(Response.Status.CREATED).entity(bike).build();
 	}
+
 
 
 

@@ -116,6 +116,9 @@
         async function handleSubmit(event) {
             event.preventDefault(); // Prevent default form submission
 
+            const submitButton = event.target.querySelector("button[type='submit']");
+            submitButton.disabled = true; // Disable the button to prevent double submissions
+
             console.log("Submit button clicked.");
             const userDataJson = sessionStorage.getItem("userData");
             let userData = null;
@@ -124,13 +127,15 @@
                 userData = JSON.parse(userDataJson); // Parse user data from session
             } catch (error) {
                 console.error("Error parsing user data:", error);
+                alert("User not logged in.");
+                submitButton.disabled = false; // Re-enable the button
                 return;
             }
+
             // Collect form data
             const form = document.getElementById('add-bike-form');
             const formData = new FormData(form);
 
-            // Convert image file to Base64 (if uploaded)
             const imageInput = document.getElementById('image');
             const file = imageInput.files[0];
 
@@ -139,7 +144,6 @@
                 base64Image = await convertFileToBase64(file);
             }
 
-            // Prepare JSON payload
             const data = {
                 model: formData.get('model'),
                 brand: formData.get('brand'),
@@ -150,35 +154,35 @@
 
             console.log("Data to send:", data);
 
-            // Send data to the server
-            fetch("http://localhost:8081/UserWebService/api/bikes", {
+            fetch(`http://localhost:8081/UserWebService/api/bikes?userId=${userData.id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => {
-                console.log("Fetch response:", response);
-                if (!response.ok) {
-                    throw new Error("Failed to register bike.");
-                }
-                return response.json();
-            })
-            .then(message => {
-                console.log("Success message:", message);
-                alert('Bike added successfully!');
-                
-                userData.bikes.push(data); 
-        	    sessionStorage.setItem("userData", JSON.stringify(userData));
-                form.reset();
-                window.location.href = "MyBikes.html";
-            })
-            .catch(error => {
-                console.error("Error during fetch:", error);
-                alert('Error: ' + error.message);
-            });
+                .then(response => {
+                    console.log("Fetch response:", response);
+                    if (!response.ok) {
+                        throw new Error("Failed to register bike.");
+                    }
+                    return response.json();
+                })
+                .then(message => {
+                    console.log("Success message:", message);
+                    alert('Bike added successfully!');
+                    form.reset();
+                    window.location.href = "MyBikes.html";
+                })
+                .catch(error => {
+                    console.error("Error during fetch:", error);
+                    alert('Error: ' + error.message);
+                })
+                .finally(() => {
+                    submitButton.disabled = false; // Re-enable the button
+                });
         }
+
 
         // Convert file to Base64
         function convertFileToBase64(file) {
