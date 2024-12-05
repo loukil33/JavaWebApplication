@@ -17,14 +17,14 @@ public class Sale extends Annonce{
         // No-op constructor needed for deserialization
     }
 
-    // Parameterized constructor
     public Sale(int id, String title, String description, LocalDate startDate, int duration, int userid, List<Note> notes, double salePrice, Bike bike) {
-        super(id, title, description, startDate, duration, userid, notes);
+        super(id, title, description, startDate, duration, userid, bike, notes);
         this.salePrice = salePrice;
-        this.setBike(bike); // Set the bike using the inherited setBike method
     }
 
-    public double getSalePrice() {
+    
+
+	public double getSalePrice() {
         return salePrice;
     }
 

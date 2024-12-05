@@ -20,7 +20,8 @@ import Users.User;
 
 @Path("/bikes")
 public class BikeService {
-
+	
+	
 
 	private static int currentId = 4; // Auto-increment ID counter
 
@@ -75,6 +76,14 @@ public class BikeService {
 	    return Response.status(Response.Status.CREATED).entity(bike).build();
 	}
 	
+
+	// Read (Get all bikes)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllBikes() {
+        return Response.ok(bikes).build();
+    }
+
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -162,6 +171,14 @@ public class BikeService {
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
         }
+    }
+    
+    public Bike getBikeByIdDirect(int id) {
+        Bike bike = findBikeById(id);
+        if (bike != null) {
+            return bike; // Return the bike if found
+        }
+        return null; // Return null if the bike is not found
     }
     
     // Method to get the name (model) of a bike by ID

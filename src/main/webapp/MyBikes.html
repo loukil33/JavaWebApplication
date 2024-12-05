@@ -52,6 +52,8 @@
         button:hover {
             background-color: #0417b2;
         }
+        
+
     </style>
     
     <style>
@@ -114,6 +116,65 @@ form#rental-post-update-form {
 }
 
     </style>
+    
+    
+<style>
+  .modal {
+        display: none; 
+        position: fixed; 
+        z-index: 1; 
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        overflow: auto; 
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.4); 
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+    }
+
+    .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close-btn:hover,
+    .close-btn:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    button {
+        padding: 10px 15px;
+        margin: 10px;
+        background-color: #0290e6;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #0417b2;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+    
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
 		"@type": "Organization",
@@ -170,6 +231,18 @@ form#rental-post-update-form {
         </div>
     </section>
 
+	<!-- The Modal -->
+<div id="sell-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Please enter the bike sell price in € !</h3>
+        <input type="number" id="sell-price" placeholder="Enter price" min="0" required>
+        <button id="confirm-sell-btn">Confirm</button>
+    </div>
+</div>
+
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const userDataJson = sessionStorage.getItem("userData");
@@ -216,11 +289,24 @@ form#rental-post-update-form {
                 container.innerHTML = '<p>No bikes found for this account.</p>';
                 return;
             }
+            
+
+
 
             bikes.forEach(bike => {
                 const imageUrl = bike.images && bike.images.length > 0 
                     ? bike.images[0] 
                     : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
+                    
+                    const sellButton = bike.rented && bike.available
+                    ? `<a href="#" onclick="sellBike(${bike.id})" 
+                            class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-green u-btn u-btn-round u-button-style u-hover-white u-green u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-3" 
+                            style="margin: 2px; margin-left: 5px; padding: 10px 5px;">
+                            <span class="u-file-icon u-icon u-text-white u-icon-3">
+                                <img src="css/images/sell-icon.png" alt="" style="width: 16px; height: 16px;">
+                            </span>&nbsp;Sell
+                        </a>`
+                    : ''; // Add Sell button only if bike.rented is true
 
                 const bikeHTML = `
                     <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;">
@@ -247,12 +333,49 @@ form#rental-post-update-form {
                             	<img src="css/images/484611-0e0eab99.png" alt="" style="width: 16px; height: 16px;">
                                 </span>&nbsp;Delete Bike
                             </a> 
+                                ${sellButton}
                             </div>
+                         
                         </div>
                     </div>`;
                 container.innerHTML += bikeHTML;
             });
         }
+        
+        function sellBike(bikeId) {
+            // Show the modal
+            const modal = document.getElementById('sell-modal');
+            const confirmButton = document.getElementById('confirm-sell-btn');
+            const cancelButton = document.getElementById('cancel-sell-btn');
+            const closeButton = document.getElementsByClassName('close-btn')[0];
+
+            modal.style.display = 'block';
+
+            // Handle closing the modal
+            closeButton.onclick = () => {
+                modal.style.display = 'none';
+            };
+
+            cancelButton.onclick = () => {
+                modal.style.display = 'none';
+            };
+
+            // Confirm the sell action
+            confirmButton.onclick = () => {
+                // Send the request to sell the bike (add your actual selling functionality here)
+                alert('Bike sold!');
+                modal.style.display = 'none';
+            };
+        }
+
+        // Hide the modal when clicking outside of it
+        window.onclick = (event) => {
+            const modal = document.getElementById('sell-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+
 
         function editBike(bikeId) {
             // Fetch the list of bikes from sessionStorage

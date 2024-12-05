@@ -11,7 +11,14 @@ public class Bike {
 	    private String color;
 	    private boolean isAvailable;
 	    private List<String> images;
+	    private boolean rented;
 	    
+		public boolean isRented() {
+			return rented;
+		}
+		public void setRented(boolean rented) {
+			this.rented = rented;
+		}
 		public int getId() {
 			return id;
 		}
