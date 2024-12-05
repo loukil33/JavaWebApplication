@@ -85,7 +85,17 @@ public class Rental extends Annonce{
 	}
 
 	
+	 // Method to get the first user in the waiting list
+    public User getFirstInWaitingList() {
+        return waitingList.isEmpty() ? null : waitingList.get(0);
+    }
 
+    // Method to remove the first user and shift the list
+    public void removeFirstUser() {
+        if (!waitingList.isEmpty()) {
+            waitingList.remove(0);
+        }
+    }
 	
     
     

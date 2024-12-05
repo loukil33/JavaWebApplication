@@ -185,10 +185,10 @@
 
     	    // Phone Number Validation
     	    const phoneNumber = document.getElementById('phone-number').value.trim();
-    	    if (!/^\d{10,15}$/.test(phoneNumber)) {
+    	    if (!/^\d{8,9}$/.test(phoneNumber)) {
     	        valid = false;
     	        document.getElementById('phone-number-error').innerText = 
-    	            "Phone number must be between 10 to 15 digits.";
+    	            "Phone number must be between 8 to 9 digits.";
     	    }
 
     	    // Agree to Terms Validation
