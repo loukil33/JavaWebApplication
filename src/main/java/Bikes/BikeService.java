@@ -70,38 +70,6 @@ public class BikeService {
 	    return Response.status(Response.Status.CREATED).entity(bike).build();
 	}
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllBikes() {
-	    // Create and populate the list of bikes (only Sale objects with associated bikes)
-	    List<Sale> bikes = new ArrayList<>();  // List holding only Sale objects
-	    
-	    // Regular Bike (without salePrice)
-	    Bike regularBike = new Bike(1, "Mountain Bike", "BrandX", "New", "Red", true,
-	            Arrays.asList("css/images/ebe783d0b4cfae10f695a4c7c8dd076269e3429d.jpg"));
-	    
-	    // No Sale price for regular bikes, so it won't be added as a Sale object.
-	    // If you'd like, you could add it as a "dummy" Sale object with no sale price (for display purposes only).
-	    bikes.add(new Sale(1, "Mountain Bike Sale", "A regular mountain bike", LocalDate.now(), 30, 1, null, 150.0, regularBike));
-	    
-	    // Sale Bike (with salePrice), bike is included inside Sale
-	    Bike saleBikeBike = new Bike(2, "Road Bike", "BrandY", "Used", "Blue", true,
-	            Arrays.asList("css/images/045a512fa8b766a2ae47858d53d6c19587e91ab1.jpg"));
-	    Sale saleBike = new Sale(2, "Road Bike Sale", "Used road bike", LocalDate.now(), 30, 1, null, 200.0, saleBikeBike);
-	    bikes.add(saleBike);  // Adding Sale object that contains Bike and salePrice
-
-	    // Another Sale Bike
-	    Bike anotherSaleBikeBike = new Bike(3, "Mountain Bike Pro", "BrandZ", "New", "Green", true,
-	            Arrays.asList("css/images/045a512fa8b766a2ae47858d53d6c19587e91ab1.jpg"));
-	    Sale anotherSaleBike = new Sale(3, "Mountain Bike Pro Sale", "High-end mountain bike", LocalDate.now(), 30, 2, null, 350.0, anotherSaleBikeBike);
-	    bikes.add(anotherSaleBike);  // Adding another Sale object with its Bike
-
-	    // Return the response with the list of bikes (Sale object includes salePrice)
-	    return Response.ok(bikes).build();
-	}
-
-
-
 
     // Read (Get a bike by ID)
     @GET

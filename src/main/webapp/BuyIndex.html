@@ -115,7 +115,7 @@
  async function loadBikes() {
     const bikeList = document.getElementById('bike-list');
     try {
-        const response = await fetch("http://localhost:8081/UserWebService/api/bikes");
+        const response = await fetch("http://localhost:8081/UserWebService/api/sales");
 
         // Check if the response is OK (status code 200)
         if (!response.ok) {
@@ -214,13 +214,6 @@
 	        alert("An error occurred while adding the item to the cart.");
 	    }
 	}
-
-
-
-
-
-
-
 
 
         // Check cart before navigation
