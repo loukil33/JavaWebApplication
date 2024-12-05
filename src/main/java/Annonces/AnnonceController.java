@@ -108,4 +108,6 @@ public class AnnonceController {
         annoncesList.remove(existingAnnonce.get());
         return Response.ok("Annonce deleted successfully.").build();
     }
+    
+    
 }

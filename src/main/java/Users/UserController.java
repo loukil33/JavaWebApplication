@@ -3,9 +3,13 @@ package Users;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import Annonces.Annonce;
+import Bikes.Bike;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
 import javax.ws.rs.Consumes;
@@ -15,12 +19,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+
+import static Bikes.bikesDB.bikes;
 import static Users.UserDatabase.users;
 
 @Path("/users")
 public class UserController {
 	
-	private static int idCounter = 1; // Initialize counter for id, starts from 1
+	private static int idCounter = 2; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -64,10 +70,18 @@ public class UserController {
                            .build();
         }
 
+        // Check if the user has no annonces and return an empty list
+        List<Annonce> annonces = user.get().getAnnonces();
+        if (annonces == null || annonces.isEmpty()) {
+            return Response.ok(new ArrayList<>()) // Return an empty list
+                           .build();
+        }
+
         // Return the list of annonces
-        return Response.ok(user.get().getAnnonces())
+        return Response.ok(annonces)
                        .build();
     }
+
     @GET
     @Path("/{id}/bikes")
     @Produces(MediaType.APPLICATION_JSON)
@@ -82,9 +96,15 @@ public class UserController {
                            .entity("User not found for ID: " + id)
                            .build();
         }
+        
+        List<Bike> bikes = user.get().getBikes();
+        if (bikes == null || bikes.isEmpty()) {
+            return Response.ok(new ArrayList<>()) // Return an empty list
+                           .build();
+        }
 
         // Return the list of annonces
-        return Response.ok(user.get().getBikes())
+        return Response.ok(bikes)
                        .build();
     }
 
@@ -116,6 +136,44 @@ public class UserController {
                        .build();
     }
 
+    @DELETE
+    @Path("/{userId}/annonces/{annonceId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response deleteUserAnnonce(@PathParam("userId") int userId, @PathParam("annonceId") int annonceId) {
+        // Find the user by userId
+        Optional<User> userOptional = users.stream()
+                                           .filter(user -> user.getId() == userId)
+                                           .findFirst();
+
+        if (userOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + userId)
+                           .build();
+        }
+
+        User user = userOptional.get();
+
+        if (user.getAnnonces() == null || user.getAnnonces().isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("No annonces found for user ID: " + userId)
+                           .build();
+        }
+
+        // Find and remove the annonce
+        Optional<Annonce> annonceOptional = user.getAnnonces().stream()
+                                                .filter(annonce -> annonce.getId() == annonceId)
+                                                .findFirst();
+
+        if (annonceOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("Annonce not found for ID: " + annonceId)
+                           .build();
+        }
+
+        user.getAnnonces().remove(annonceOptional.get());
+
+        return Response.ok("Annonce deleted successfully for user ID: " + userId).build();
+    }
 
    
 
@@ -165,6 +223,12 @@ public class UserController {
         }
         if (updatedUser.getPhoneNumber() != 0) { // Assuming phoneNumber is an int
             user.setPhoneNumber(updatedUser.getPhoneNumber());
+        }
+        if (updatedUser.getBikes() != null) {
+            List<Bike> validBikes = updatedUser.getBikes().stream()
+                                               .filter(bike -> bike.getModel() != null && bike.getBrand() != null)
+                                               .collect(Collectors.toList());
+            user.setBikes(validBikes);
         }
 
         return Response.ok("User updated successfully.") // HTTP 200 OK

@@ -3,14 +3,17 @@ import Currency.CurrencyConverter;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Sale extends Annonce {
+import Bikes.Bike;
+import Users.User;
+
+public class Sale extends Annonce{
 
     private double salePrice; // Assumed to be in EUR by default
 
-    public Sale(int id, String title, String description, LocalDate startDate, int duration, List<Note> notes, double salePrice) {
-        super(id, title, description, startDate, duration, notes);
-        this.salePrice = salePrice;
-    }
+	public Sale(int id,String title, String description, LocalDate startDate, int duration,int userid,Bike bike,List<Note> notes, double salePrice) {
+		super(id,title, description, startDate, duration,userid,bike,notes);
+		this.salePrice = salePrice;
+	}
 
     public double getSalePrice() {
         return salePrice;

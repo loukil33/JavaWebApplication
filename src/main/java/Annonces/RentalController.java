@@ -3,6 +3,7 @@ package Annonces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import Bikes.Bike;
 import Users.User;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import static Users.UserDatabase.users;
 import static Annonces.AnnonceDB.annoncesList;
+import static Bikes.bikesDB.bikes;
 
 @Path("/rentals")
 public class RentalController {
@@ -117,6 +119,7 @@ public class RentalController {
         if (updatedRental.getDuration() > 0) {
             rental.setDuration(updatedRental.getDuration());
         }
+        
         if (updatedRental.getRentPrice() > 0) {
             rental.setRentPrice(updatedRental.getRentPrice());
         }
@@ -135,7 +138,20 @@ public class RentalController {
         if (updatedRental.getCurrentWinner() != null) {
             rental.setCurrentWinner(updatedRental.getCurrentWinner());
         }
+ 
+        if (updatedRental.getBike() != null && updatedRental.getBike().getId() > 0) {
+            Optional<Bike> bikeOptional = bikes.stream()
+                    .filter(bike -> bike.getId() == updatedRental.getBike().getId())
+                    .findFirst();
 
+            if (bikeOptional.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Bike not found for ID: " + updatedRental.getBike().getId())
+                        .build();
+            }
+
+            rental.setBike(bikeOptional.get());
+        }
         return Response.ok("Rental updated successfully.").build();
     }
 
@@ -155,6 +171,7 @@ public class RentalController {
         }
 
         rentalList.remove(existingRental.get());
+        annoncesList.remove(existingRental.get());
         return Response.ok("Rental deleted successfully.").build();
     }
 

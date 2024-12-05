@@ -5,43 +5,156 @@
     <meta charset="utf-8">
     <meta name="keywords" content="Rent your own bicycle​">
     <meta name="description" content="">
-    <title>My Bikes</title>
+    <title>Home</title>
     <link rel="stylesheet" href="css/nicepage.css" media="screen">
-    <link rel="stylesheet" href="css/index.css" media="screen">
+<link rel="stylesheet" href="css/index.css" media="screen">
     <script class="u-script" type="text/javascript" src="css/js/jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="css/js/nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 7.0.3, nicepage.com">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=ADLaM+Display:400">
+    
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            /*max-width: 600px;*/
+            width: 1200px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #0290e6;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0417b2;
+        }
+    </style>
+    
+    <style>
+    .u-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.u-nav-item {
+    margin: 0 10px;
+}
+.u-nav-link {
+    text-decoration: none;
+    padding: 10px 20px;
+    color: black;
+}
+.u-nav-link:hover {
+    color: blue;
+}
+.hidden {
+    display: none;
+}
+
+h2.u-text-1 {
+    margin-bottom: 0;
+}
+
+form#rental-post-update-form {
+    margin-top: 0;
+    
+}
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Space between logo and navigation links */
+    align-items: center; /* Vertically center the items */
+    padding: 10px 20px;
+}
+
+/* Adjust the logo if necessary */
+.u-logo {
+    margin-right: 20px; /* Adjust space between the logo and the nav */
+    margin-left: -10px; /* Move the logo slightly to the left */
+}
+.u-nav {
+    display: flex; /* Keep the nav links in a row */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Ensure the logo image does not collapse */
+.u-logo-image {
+    max-height: 100px; /* Adjust the height for better scaling */
+    max-width: auto; /* Ensure the aspect ratio is maintained */
+    object-fit: contain; /* Fit the image within its container */
+    margin-top: 45px;
+}
+
+    </style>
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "",
+		"logo": "css/images/universite-gustave-eiffel.png"
+}</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="My Bikes">
+    <meta property="og:title" content="Home">
     <meta property="og:type" content="website">
-</head>
+  <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
 
 <body class="u-body u-xl-mode" data-lang="en">
     <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
-        <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
-            <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
-                <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
-            </a>
-            <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
-                <div class="menu-collapse" style="font-size: 1.125rem;">
-                    <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
-                        <svg class="u-svg-link" viewBox="0 0 24 24">
-                            <use xlink:href="#menu-hamburger"></use>
-                        </svg>
-                        <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <g>
-                                <rect y="1" width="16" height="2"></rect>
-                                <rect y="7" width="16" height="2"></rect>
-                                <rect y="13" width="16" height="2"></rect>
-                            </g>
-                        </svg>
-                    </a>
-                </div>
-            </nav>
-            <button id="login-btn" class="u-btn u-btn-round u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
-                Login
+  <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
+           
+            <nav class="navbar">
+   <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+    <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1" alt="Université Gustave Eiffel Logo" style="width: auto; height: auto;">
+</a>
+    <ul class="u-nav u-unstyled u-nav-1">
+        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
+        <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
+        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyBikes.html" style="padding: 10px 20px;">My Bikes</a></li>
+        <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
+        <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
+        <li class="u-nav-item" id="logout-link" style="display: none;">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+                Logout
             </button>
+        </li>
+        <li class="u-nav-item" style="margin-left: 80px;">
+        <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+             Login
+            </button>
+            </li>
+    </ul>
+    <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
+    <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
+    </div>
+</nav>
+           
         </div>
     </header>
 
@@ -109,7 +222,7 @@
                     : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
 
                 const bikeHTML = `
-                    <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1">
+                    <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;">
                         <div class="u-container-layout u-similar-container u-container-layout-1">
                             <img src="${imageUrl}" 
                                 alt="Bike Image" 
@@ -120,17 +233,20 @@
                             <p class="u-align-center u-text u-text-4">Brand: ${bike.brand}</p>
                             <p class="u-align-center u-text u-text-5">Condition: ${bike.condition}</p>
                             <p class="u-align-center u-text u-text-6">Color: ${bike.color}</p>
-
+                            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
                             <a href="EditBike.html" onclick="editBike(${bike.id})" 
-                               class="u-btn u-btn-round u-button-style u-hover-custom-color-1 u-radius u-btn-2">
+                            	class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">
                                 Edit Bike
                             </a>
                                 
                             <!-- Delete Button -->
-                            <button onclick="deleteBike(${bike.id})" 
-                                class="u-btn u-btn-round u-button-style u-hover-custom-color-1 u-radius u-btn-3" style="margin-left: 10px;">
-                                Delete Bike
-                            </button> 
+                            <a href="" onclick="deleteBike(${bike.id})" 
+                            	class="u-active-white u-align-center u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-border-hover-custom-color-3 u-btn u-btn-round u-button-style u-custom-color-3 u-custom-item u-hover-white u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-2" style="margin: 2px; margin-left: 5px padding: 10px 5px;">
+                            	<span class="u-file-icon u-icon u-text-custom-color-2 u-icon-2">
+                            	<img src="css/images/484611-0e0eab99.png" alt="" style="width: 16px; height: 16px;">
+                                </span>&nbsp;Delete Bike
+                            </a> 
+                            </div>
                         </div>
                     </div>`;
                 container.innerHTML += bikeHTML;
@@ -171,7 +287,8 @@
             }
 
             // Send DELETE request to the server to remove the bike
-            fetch(`http://localhost:8081/UserWebService/api/bikes/${bikeId}`, {
+            fetch(`http://localhost:8081/UserWebService/api/bikes/${bikeId}`, 
+            		{
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -206,6 +323,62 @@
 
 
     </script>
+    <script>
+   
+    document.addEventListener('DOMContentLoaded', () => {
+        // Safely retrieve user data from session storage
+        const userDataJson = sessionStorage.getItem("userData");
+        let userData = null;
+
+        try {
+            userData = JSON.parse(userDataJson);
+        } catch (error) {
+            console.error("Error parsing user data:", error);
+        }
+
+        if (userData) {
+            console.log("User data found in session:", userData);
+
+            // Safely access and update DOM elements
+            const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-link');
+            const profileLink = document.getElementById('profile-link');
+            const postsLink = document.getElementById('posts-link');
+            const bikesLink = document.getElementById('Bikes-link');
+            const rentalsLink = document.getElementById('rentals-link');
+            const welcomeMessage = document.getElementById('welcome-message');
+
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
+            if (profileLink) profileLink.style.display = 'block';
+            if (postsLink) postsLink.style.display = 'block';
+            if (bikesLink) bikesLink.style.display = 'block';
+            if (rentalsLink) rentalsLink.style.display = 'block';
+            if (welcomeMessage) welcomeMessage.textContent = `Welcome, ${userData.first_name}`;
+        } else {
+            console.log("No user data found in session.");
+        }
+
+        // Handle login button click
+        const loginButton = document.getElementById('login-btn');
+        if (loginButton) {
+            loginButton.addEventListener('click', () => {
+                window.location.href = "Login-Page.html";
+            });
+        }
+        const logoutButton = document.getElementById('logout-btn');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                
+                sessionStorage.clear();
+                localStorage.clear();   
+                
+                window.location.href = "Login-Page.html";
+            });
+        }
+    });
+
+</script>
 
     <footer class="u-align-center u-clearfix u-footer">
         <div class="u-clearfix u-sheet u-sheet-1">

@@ -25,7 +25,7 @@ public class UserDatabase {
 	            123456789, // Phone Number
 	            new ArrayList<Annonce>(), // Annonces
 	            new ArrayList<Note>(),
-	            bikes// Notes
+	            bikes
 	        );
 
 	        users.add(defaultUser);

@@ -77,6 +77,40 @@
     display: none;
 }
 
+h2.u-text-1 {
+    margin-bottom: 0;
+}
+
+form#rental-post-update-form {
+    margin-top: 0;
+    
+}
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Space between logo and navigation links */
+    align-items: center; /* Vertically center the items */
+    padding: 10px 20px;
+}
+
+/* Adjust the logo if necessary */
+.u-logo {
+    margin-right: 20px; /* Adjust space between the logo and the nav */
+    margin-left: -10px; /* Move the logo slightly to the left */
+}
+.u-nav {
+    display: flex; /* Keep the nav links in a row */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Ensure the logo image does not collapse */
+.u-logo-image {
+    max-height: 100px; /* Adjust the height for better scaling */
+    max-width: auto; /* Ensure the aspect ratio is maintained */
+    object-fit: contain; /* Fit the image within its container */
+    margin-top: 45px;
+}
 
     </style>
     <script type="application/ld+json">{
@@ -92,31 +126,32 @@
   <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="en">
   <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
   <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
-<a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
-<img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1">
-</a>
-<nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
-<div class="menu-collapse" style="font-size: 1.125rem; letter-spacing: 0px;">
-<a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
-<svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
-<svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
-</g></svg>
-</a>
-</div>
-<div class="u-custom-menu u-nav-container">
-<div class="u-menu-close"></div>
-<ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a>
-</li><li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Bikes</a>
-</li><li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a>
-</li><li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a>
-</li></ul>
-</div>
 
+<nav class="navbar">
+    <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+    <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1" alt="Université Gustave Eiffel Logo" style="width: auto; height: auto;">
+</a>
+
+    <ul class="u-nav u-unstyled u-nav-1">
+        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
+        <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
+        <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyBikes.html" style="padding: 10px 20px;">My Bikes</a></li>
+        <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
+        <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
+        <li class="u-nav-item" id="logout-link" style="display: none;">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+                Logout
+            </button>
+        </li>
+        <li class="u-nav-item" style="margin-left: 80px;">
+        <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+             Login
+            </button>
+            </li>
+    </ul>
+    <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
 </nav>
-<button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
-    Login
-</button>
+
 <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
 <!-- <span class="u-icon u-icon-rectangle u-text-custom-color-1 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55" style="" id="user-icon" width="80px" height="80px"><use xlink:href="#svg-21d7"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-21d7" style="enable-background:new 0 0 55 55;"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
 c0.058,0.049,0.121,0.089,0.179,0.137c0.474,0.393,0.965,0.766,1.465,1.127c0.162,0.117,0.324,0.234,0.489,0.348
@@ -162,6 +197,12 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
     <label for="duration">Post Duration (in days, max 30)</label>
     <input type="number" id="duration" name="duration" placeholder="Enter duration in days" required min="1" max="30">
 
+<label for="bike">Select a Bike</label>
+<select id="bike" name="bike" required>
+    <option value="" disabled selected>Select a bike</option>
+    <!-- Bike options will be dynamically loaded -->
+</select>
+
     <!-- Rent Price -->
     <label for="rentPrice">Rent Price</label>
     <input type="number" id="rentPrice" name="rentPrice" placeholder="Enter rent price" step="0.01" required>
@@ -179,7 +220,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
     <input type="number" id="rentDuration" name="rentDuration" placeholder="Enter rent duration in hours" required min="1">
 
     <!-- Submit Button -->
-    <button type="submit">Create Rental Post</button>
+    <button type="submit">Edit Rental Post</button>
 </form>
             
             
@@ -193,6 +234,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
     document.addEventListener("DOMContentLoaded", function () {
         // Retrieve post details from sessionStorage
         const postDataJson = sessionStorage.getItem("selectedPost");
+        const userDataJson = sessionStorage.getItem("userData");
 
         if (!postDataJson) {
             alert("No post selected. Redirecting to the home page.");
@@ -201,6 +243,14 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         }
 
         const postData = JSON.parse(postDataJson);
+        const userData = JSON.parse(userDataJson);
+
+        if (!userData || !userData.id) {
+            alert("User is not logged in. Please log in first.");
+            return;
+        }
+
+        const userId = userData.id;
 
         // Populate the form with existing post details
         document.getElementById("title").value = postData.title;
@@ -211,99 +261,118 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         document.getElementById("end_time").value = postData.end_time;
         document.getElementById("rentDuration").value = postData.rentDuration;
 
+        // Populate the bike dropdown
+        const bikeSelect = document.getElementById("bike");
+        fetch(`http://localhost:8081/UserWebService/api/users/${userId}/bikes`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user bikes.");
+                }
+                return response.json();
+            })
+            .then(bikes => {
+                bikes.forEach(bike => {
+                    const option = document.createElement("option");
+                    option.value = bike.id;
+                    option.textContent = `${bike.model}`;
+                    option.selected = postData.bike && postData.bike.id === bike.id; // Preselect if it matches
+                    bikeSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching bikes:", error);
+            });
+
         // Handle form submission
         document.getElementById("rental-post-update-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
             // Get form values
             const updatedData = {
-                id: postData.id, // Keep the post ID for the update
+                id: postData.id,
                 title: document.getElementById("title").value.trim(),
                 description: document.getElementById("description").value.trim(),
                 duration: parseInt(document.getElementById("duration").value, 10),
                 rentPrice: parseFloat(document.getElementById("rentPrice").value),
                 start_time: document.getElementById("start_time").value,
                 end_time: document.getElementById("end_time").value,
-                rentDuration: parseInt(document.getElementById("rentDuration").value, 10)
+                rentDuration: parseInt(document.getElementById("rentDuration").value, 10),
             };
 
-            // Validate duration
+            // Validate inputs (existing validation steps)
             if (updatedData.duration > 30) {
                 alert("Post duration cannot exceed 30 days.");
                 return;
             }
 
-            // Validate start and end times
             const startTimeObj = new Date(`1970-01-01T${updatedData.start_time}:00`);
             const endTimeObj = new Date(`1970-01-01T${updatedData.end_time}:00`);
+
             if (endTimeObj <= startTimeObj) {
                 alert("End Time must be later than Start Time.");
                 return;
             }
 
-            // Validate rent duration
-            const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60); // in hours
+            const maxRentDuration = (endTimeObj - startTimeObj) / (1000 * 60 * 60);
             if (updatedData.rentDuration > maxRentDuration) {
                 alert(`Rent Duration cannot exceed ${maxRentDuration.toFixed(2)} hours.`);
                 return;
             }
 
-            // Get the user data from sessionStorage
-            const userDataJson = sessionStorage.getItem("userData");
-            let userData = null;
-
-            try {
-                userData = JSON.parse(userDataJson);
-            } catch (error) {
-                console.error("Error parsing user data:", error);
-                alert("User is not logged in. Please log in first.");
-                return;
-            }
-
-            if (!userData || !userData.id) {
-                alert("User is not logged in. Please log in first.");
-                return;
-            }
-
-            const userId = userData.id;
-
-            // Submit the updated post data to the backend
-            fetch( `http://localhost:8081/UserWebService/api/rentals/${postData.id} ` , {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedData)
-            })
+            // Fetch the selected bike object
+            const selectedBikeId = bikeSelect.value;
+            fetch(`http://localhost:8081/UserWebService/api/bikes/${selectedBikeId}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error("Failed to update rental post");
+                        throw new Error("Failed to fetch selected bike.");
                     }
-                    return response.text();
+                    return response.json();
                 })
-                .then(message => {
-                    alert(message);
+                .then(bike => {
+                    // Add the bike object to updatedData
+                    updatedData.bike = bike;
 
-                    // Update session data with the modified post
-                    userData.annonces = userData.annonces.map(annonce => {
-                        if (annonce.id === postData.id) {
-                            return updatedData; // Replace the old post with updated post
-                        }
-                        return annonce;
-                    });
+                    // Submit the updated data to the backend
+                    fetch(`http://localhost:8081/UserWebService/api/rentals/${postData.id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(updatedData),
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Failed to update rental post");
+                            }
+                            return response.text();
+                        })
+                        .then(message => {
+                            alert(message);
 
-                    // Save updated user data to sessionStorage
-                    sessionStorage.setItem("userData", JSON.stringify(userData));
+                            // Update sessionStorage
+                            userData.annonces = userData.annonces.map(annonce => {
+                                if (annonce.id === postData.id) {
+                                    return updatedData;
+                                }
+                                return annonce;
+                            });
+                            sessionStorage.setItem("userData", JSON.stringify(userData));
 
-                    // Redirect to the annonces page
-                    window.location.href = "Annonces.html";
+                            // Redirect
+                            window.location.href = "Annonces.html";
+                        })
+                        .catch(error => {
+                            console.error("Error updating rental post:", error);
+                            alert("Error updating post: " + error.message);
+                        });
                 })
                 .catch(error => {
-                    console.error("Error:", error);
-                    alert("Error updating post: " + error.message);
+                    console.error("Error fetching bike data:", error);
+                    alert("Error fetching bike: " + error.message);
                 });
         });
     });
+
 
 </script>
     <script>
@@ -324,6 +393,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
 
             // Safely access and update DOM elements
             const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-link');
             const profileLink = document.getElementById('profile-link');
             const postsLink = document.getElementById('posts-link');
             const bikesLink = document.getElementById('Bikes-link');
@@ -331,6 +401,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             const welcomeMessage = document.getElementById('welcome-message');
 
             if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
             if (profileLink) profileLink.style.display = 'block';
             if (postsLink) postsLink.style.display = 'block';
             if (bikesLink) bikesLink.style.display = 'block';
@@ -344,6 +415,16 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         const loginButton = document.getElementById('login-btn');
         if (loginButton) {
             loginButton.addEventListener('click', () => {
+                window.location.href = "Login-Page.html";
+            });
+        }
+        const logoutButton = document.getElementById('logout-btn');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                
+                sessionStorage.clear();
+                localStorage.clear();   
+                
                 window.location.href = "Login-Page.html";
             });
         }
