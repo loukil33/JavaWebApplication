@@ -151,7 +151,8 @@
             console.log("Data to send:", data);
 
             // Send data to the server
-            fetch("http://localhost:8081/UserWebService/api/bikes/add", {
+            fetch(`http://localhost:8081/UserWebService/api/bikes?userId=${userId}`, 
+            		{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

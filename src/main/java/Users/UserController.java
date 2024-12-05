@@ -9,6 +9,7 @@ import Bikes.Bike;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
 import javax.ws.rs.Consumes;
@@ -18,6 +19,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+
+import static Bikes.bikesDB.bikes;
 import static Users.UserDatabase.users;
 
 @Path("/users")
@@ -220,6 +223,12 @@ public class UserController {
         }
         if (updatedUser.getPhoneNumber() != 0) { // Assuming phoneNumber is an int
             user.setPhoneNumber(updatedUser.getPhoneNumber());
+        }
+        if (updatedUser.getBikes() != null) {
+            List<Bike> validBikes = updatedUser.getBikes().stream()
+                                               .filter(bike -> bike.getModel() != null && bike.getBrand() != null)
+                                               .collect(Collectors.toList());
+            user.setBikes(validBikes);
         }
 
         return Response.ok("User updated successfully.") // HTTP 200 OK
