@@ -51,7 +51,7 @@ public class UserDatabase {
 		            87614621, // CIN
 		            "mohamed", // First Name
 		            "loukil", // Last Name
-		            "aziz@gmail.com", // Email
+		            "azouzloukil@gmail.com", // Email
 		            "123", // Password
 		            "123 Main St", // Address
 		            LocalDate.of(1990, 1, 1), // Birth Date

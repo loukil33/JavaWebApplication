@@ -148,7 +148,7 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
 </div></header>
   
     <section class="u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-xl u-container-align-center-xs u-palette-1-light-3 u-section-2" id="carousel_0d8e">
-                 <a class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1" href="AddRental.html">+ NEW POST</a>
+                 
 
         
       <div class="u-clearfix u-sheet u-sheet-1">
@@ -234,12 +234,11 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
                         ${additionalInfo}
                         <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Post ends in ${annonce.duration} days</blockquote>
                         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                        <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Edit Post</a>
                             <a href="#" onclick="deleteRental(${annonce.id})" 
-                               class="u-active-white u-align-center u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-border-hover-custom-color-3 u-btn u-btn-round u-button-style u-custom-color-3 u-custom-item u-hover-white u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-2" style="margin: 2px; margin-left: 5px padding: 10px 5px;">
+                               class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;">
                                 <span class="u-file-icon u-icon u-text-custom-color-2 u-icon-2">
-                                    <img src="css/images/484611-0e0eab99.png" alt="" style="width: 16px; height: 16px;">
-                                </span>&nbsp;Delete
+                                    <img src="css/images/2099238-a0c89031.png" alt="" style="width: 16px; height: 16px;">
+                                </span>&nbsp;Return Bike
                             </a>
                         </div>
                     </div>
@@ -304,39 +303,10 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
             console.error("No user data found in session.");
         }
     }
-    function deleteUserAnnonce(userId, annonceId) {
-        fetch(`http://localhost:8081/UserWebService/api/users/${userId}/annonces/${annonceId}`, 
-        		{
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                alert("Annonce deleted successfully.");
-
-                // Optionally refresh the page or update the UI dynamically
-                document.getElementById(`annonce-${annonceId}`)?.remove();
-
-                // If using sessionStorage to manage the user's annonces
-                const userDataJson = sessionStorage.getItem("userData");
-                if (userDataJson) {
-                    const userData = JSON.parse(userDataJson);
-                    userData.annonces = userData.annonces.filter(annonce => annonce.id !== annonceId);
-                    sessionStorage.setItem("userData", JSON.stringify(userData));
-                }
-            } else {
-                return response.text().then(errorMessage => {
-                    alert(`Failed to delete annonce: ${errorMessage}`);
-                });
-            }
-        })
-        .catch(error => {
-            console.error("Error deleting annonce:", error);
-            alert("An error occurred while trying to delete the annonce.");
-        });
-    }
+    
     function deleteRental(annonceId) {
         // Confirm with the user before deletion
-        if (!confirm("Are you sure you want to delete this annonce?")) {
+        if (!confirm("Are you sure you want to return this rental?")) {
             return;
         }
 
@@ -373,12 +343,12 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
                     sessionStorage.setItem("userData", JSON.stringify(userData));
                 }
 
-                alert("Annonce deleted successfully.");
+                alert("Rental returned successfully.");
                 window.location.href = "MyRentals.html"; // Optionally redirect or refresh
             })
             .catch(error => {
                 console.error("Error deleting rental:", error);
-                alert("An error occurred while trying to delete the annonce.");
+                alert("An error occurred while trying to return the rental.");
             });
     }
 

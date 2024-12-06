@@ -316,6 +316,9 @@ public class UserController {
                 nextWinnerUser.getRentals().add(rentalToRemove);
             }
 
+            
+         // Send email notification to the next winner
+            sendEmailNotification(nextWinner.getEmail(), rentalToRemove);
             // Update the rental's waiting list
             rentalToRemove.setWaitingList(waitingList);
             return Response.ok("Rental returned successfully. The next user is now the current winner.").build();
@@ -329,6 +332,22 @@ public class UserController {
         //return Response.ok("Rental removed successfully from the user's list.").build();
 
         
+    }
+    private void sendEmailNotification(String recipientEmail, Rental rental) {
+        String subject = "You Have Been Assigned a Rental!";
+        String body = "Congratulations! You are now the current renter for the bike: " + rental.getBike().getModel() +
+                ". Please pick it up at your convenience.\n\nRental Details:\n" +
+                "Title: " + rental.getTitle() + "\n" +
+                "Description: " + rental.getDescription() + "\n" +
+                "Start Time: " + rental.getStart_time() + "\n" +
+                "End Time: " + rental.getEnd_time();
+
+        try {
+            EmailUtility.sendEmail(recipientEmail, subject, body);
+        } catch (Exception e) {
+            System.err.println("Failed to send email to " + recipientEmail);
+            e.printStackTrace();
+        }
     }
 
     @DELETE
