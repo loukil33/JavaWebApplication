@@ -4,6 +4,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import Annonces.Annonce;
+import Annonces.Rental;
 import Bikes.Bike;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import javax.ws.rs.Produces;
 
 import static Bikes.bikesDB.bikes;
 import static Users.UserDatabase.users;
+import static Annonces.AnnonceDB.annoncesList;
 
 @Path("/users")
 public class UserController {
@@ -81,6 +83,32 @@ public class UserController {
         return Response.ok(annonces)
                        .build();
     }
+    @GET
+    @Path("/{id}/rentals")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserRentals(@PathParam("id") int id) {
+        // Find the user by ID
+        Optional<User> user = users.stream()
+                                   .filter(u -> u.getId() == id)
+                                   .findFirst();
+
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + id)
+                           .build();
+        }
+
+        // Check if the user has no annonces and return an empty list
+        List<Rental> rentals = user.get().getRentals();
+        if (rentals == null || rentals.isEmpty()) {
+            return Response.ok(new ArrayList<>()) // Return an empty list
+                           .build();
+        }
+
+        // Return the list of annonces
+        return Response.ok(rentals)
+                       .build();
+    }
 
     @GET
     @Path("/{id}/bikes")
@@ -134,6 +162,173 @@ public class UserController {
         // If the user is found, return HTTP 200 with the user object
         return Response.ok(user.get()) // HTTP 200 OK
                        .build();
+    }
+    
+ // Method to remove rental from the user's rental list and handle waiting list
+    @DELETE
+    @Path("/{userId}/return/{id}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response returnRental(@PathParam("id") int rentalId, @PathParam("userId") int userId) {
+        // Find the rental by ID
+    	// Step 1: Find the user by userId
+        Optional<User> userOptional = users.stream()
+                .filter(user -> user.getId() == userId)
+                .findFirst();
+
+        if (userOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("User not found for ID: " + userId)
+                    .build();
+        }
+
+        User user = userOptional.get();
+
+        // Step 2: Check if the user has a rentals list
+        if (user.getRentals() == null || user.getRentals().isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("No rentals found for this user.")
+                    .build();
+        }
+
+        // Step 3: Find and remove the rental from the user's list
+        Optional<Rental> rentalOptional = user.getRentals().stream()
+                .filter(rental -> rental.getId() == rentalId)
+                .findFirst();
+
+        if (rentalOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Rental not found for ID: " + rentalId)
+                    .build();
+        }
+
+        Rental rental = rentalOptional.get();
+
+        // Check if the user is the current winner
+        if (!rental.getCurrentWinner().equals(user)) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("You are not the current winner of this rental.")
+                    .build();
+        }
+
+
+        if (userOptional.isPresent()) {
+            User currentUser = userOptional.get();
+            currentUser.getRentals().remove(rental); // Remove rental from user's list
+        }
+
+        // Handle the waiting list and set the next user as the current winner
+        List<User> waitingList = rental.getWaitingList();
+        if (waitingList != null && !waitingList.isEmpty()) {
+            User nextWinner = waitingList.remove(0); // Get the first user from the waiting list
+            rental.setCurrentWinner(nextWinner); // Set the new current winner
+
+            // Add the rental to the new winner's rental list
+            Optional<User> newUserOptional = users.stream()
+                    .filter(u -> u.getId() == nextWinner.getId())
+                    .findFirst();
+
+            if (newUserOptional.isPresent()) {
+                User nextWinnerUser = newUserOptional.get();
+                nextWinnerUser.getRentals().add(rental);
+            }
+
+            // Update the rental's waiting list
+            rental.setWaitingList(waitingList);
+            return Response.ok("Rental returned successfully. The next user is now the current winner.").build();
+        } else {
+            // No users in the waiting list, make the bike available again
+            rental.getBike().setAvailable(true);
+            rental.setCurrentWinner(null);
+            return Response.ok("Rental returned successfully. The bike is now available for rent.").build();
+        }
+    }
+
+    @DELETE
+    @Path("/{userId}/rentals/{rentalId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response removeRentalFromUser(@PathParam("userId") int userId, @PathParam("rentalId") int rentalId) {
+        // Step 1: Find the user by userId
+        Optional<User> userOptional = users.stream()
+                .filter(user -> user.getId() == userId)
+                .findFirst();
+
+        if (userOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("User not found for ID: " + userId)
+                    .build();
+        }
+
+        User user = userOptional.get();
+
+        // Step 2: Check if the user has a rentals list
+        if (user.getRentals() == null || user.getRentals().isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("No rentals found for this user.")
+                    .build();
+        }
+
+        // Step 3: Find and remove the rental from the user's list
+        Optional<Rental> rentalOptional = user.getRentals().stream()
+                .filter(rental -> rental.getId() == rentalId)
+                .findFirst();
+
+        if (rentalOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Rental not found for ID: " + rentalId)
+                    .build();
+        }
+
+        Rental rentalToRemove = rentalOptional.get();
+        
+     // Check if the user is the current winner
+        /*if (!rentalToRemove.getCurrentWinner().equals(user)) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("You are not the current winner of this rental.")
+                    .build();
+        }*/
+        
+        user.getRentals().remove(rentalToRemove);
+
+     // Step 4: Update the bike availability if applicable
+        if (rentalToRemove instanceof Rental) {
+            Rental rental = (Rental) rentalToRemove;
+            Bike bike = rental.getBike();
+            if (bike != null) {
+                bike.setAvailable(true); // Mark the bike as available
+            }
+        }
+     // Handle the waiting list and set the next user as the current winner
+        List<User> waitingList = rentalToRemove.getWaitingList();
+        if (waitingList != null && !waitingList.isEmpty()) {
+            User nextWinner = waitingList.remove(0); // Get the first user from the waiting list
+            rentalToRemove.setCurrentWinner(nextWinner); // Set the new current winner
+
+            // Add the rental to the new winner's rental list
+            Optional<User> newUserOptional = users.stream()
+                    .filter(u -> u.getId() == nextWinner.getId())
+                    .findFirst();
+
+            if (newUserOptional.isPresent()) {
+                User nextWinnerUser = newUserOptional.get();
+                if (nextWinnerUser.getRentals() == null) {
+                    nextWinnerUser.setRentals(new ArrayList<>());
+                }
+                nextWinnerUser.getRentals().add(rentalToRemove);
+            }
+
+            // Update the rental's waiting list
+            rentalToRemove.setWaitingList(waitingList);
+            return Response.ok("Rental returned successfully. The next user is now the current winner.").build();
+        } else {
+            // No users in the waiting list, make the bike available again
+        	rentalToRemove.getBike().setAvailable(true);
+        	rentalToRemove.setCurrentWinner(null);
+            return Response.ok("Rental returned successfully. The bike is now available for rent.").build();
+        }
+       
+        //return Response.ok("Rental removed successfully from the user's list.").build();
+
+        
     }
 
     @DELETE

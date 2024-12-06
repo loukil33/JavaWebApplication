@@ -92,7 +92,7 @@
         <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">Profile</a></li>
         <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyBikes.html" style="padding: 10px 20px;">My Bikes</a></li>
         <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
-        <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Page-1.html" style="padding: 10px 20px;">My Rentals</a></li>
+        <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyRentals.html" style="padding: 10px 20px;">My Rentals</a></li>
         <li class="u-nav-item" id="logout-link" style="display: none;">
             <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
                 Logout
@@ -260,7 +260,7 @@
                             ${additionalInfo}
                             <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Posted By ${username} ends in ${annonce.duration} days</blockquote>
                             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                            <a href="#" onclick="viewAnnonceDetails( ${annonce.id} )" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Rent Bike</a>
+                            <a href="#" onclick="RentBike(${annonce.id})" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Rent Bike</a>
                                 
                             </div>
                         </div>
@@ -282,6 +282,50 @@
             
         });
     }
+    
+    function RentBike(postId) {
+        const userDataJson = sessionStorage.getItem("userData");
+        if (!userDataJson) {
+            alert("No user data found. Please log in.");
+            return;
+        }
+
+        const userData = JSON.parse(userDataJson);
+
+        fetch(`http://localhost:8081/UserWebService/api/rentals/${postId}/waiting-list`, 
+        		{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to process rental request.");
+                }
+                return response.text();
+            })
+            .then(message => {
+                console.log(message);
+                alert(message);
+
+                // If bike becomes available, check for next user
+                if (message.includes("successfully rented")) {
+                    if (!Array.isArray(userData.rentals)) {
+                        userData.rentals = [];
+                    }
+                    userData.rentals.push(postId);
+                    sessionStorage.setItem("userData", JSON.stringify(userData));
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error: " + error.message);
+            });
+    }
+
+    
 </script>
 
     
