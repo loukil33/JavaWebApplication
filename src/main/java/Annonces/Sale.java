@@ -9,12 +9,11 @@ import Users.User;
 
 public class Sale extends Annonce{
 
-    //private Bike bike; // Composition relationship
     private double salePrice; // Assumed to be in EUR by default
 
-    // Default constructor for deserialization
+    
     public Sale() {
-        // No-op constructor needed for deserialization
+        
     }
 
     public Sale(int id, String title, String description, LocalDate startDate, int duration, int userid, List<Note> notes, double salePrice, Bike bike) {

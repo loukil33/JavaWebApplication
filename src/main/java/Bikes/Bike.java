@@ -81,6 +81,19 @@ public class Bike {
 		}
 		
 		
+		public Bike(int id, int userid, String model, String brand, String condition, String color, boolean isAvailable,
+				List<String> images, boolean rented) {
+			this.id = id;
+			this.userid = userid;
+			this.model = model;
+			this.brand = brand;
+			this.condition = condition;
+			this.color = color;
+			this.isAvailable = isAvailable;
+			this.images = images;
+			this.rented = rented;
+		}
+		
 		public Bike(String model, String brand, String condition, String color, boolean isAvailable) {
 			this.model = model;
 			this.brand = brand;
