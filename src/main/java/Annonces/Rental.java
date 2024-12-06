@@ -29,7 +29,6 @@ public class Rental extends Annonce{
 		this.waitingList = waitingList;
 		this.CurrentWinner = CurrentWinner;
 	}
-
 	public double getRentPrice() {
 		return rentPrice;
 	}
@@ -37,8 +36,6 @@ public class Rental extends Annonce{
 	public void setRentPrice(double rentPrice) {
 		this.rentPrice = rentPrice;
 	}
-
-	
 
 	public LocalTime getStart_time() {
 		return start_time;
@@ -76,7 +73,6 @@ public class Rental extends Annonce{
 		CurrentWinner = currentWinner;
 	}
 	
-	
 	@Override
 	public String toString() {
 		return super.toString() +"Rental [rentPrice=" + rentPrice + ", start_time=" + start_time + ", end_time=" + end_time
@@ -84,9 +80,4 @@ public class Rental extends Annonce{
 				+ "]";
 	}
 
-	
-
-	
-    
-    
 }
