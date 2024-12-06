@@ -128,36 +128,5 @@ public class SaleController {
         return Response.ok(sales).build();
     }
     
-    /*
-    @POST
-    @Path("/add/{bikeId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addSale(@PathParam("bikeId") int bikeId, Sale sale) {
-        // Find the bike by bikeId from your bike service or database
-        Bike bike = BikeService.getBikeByIdDirect(bikeId); // Adjust method if needed
-
-        if (bike == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
-        }
-
-        // Create a Sale object and associate the price with the bike
-        Sale newSale = new Sale(
-            bikeId, 
-            "Bike for Sale", 
-            "This is a great bike for sale",
-            LocalDate.now(), 
-            30, 
-            1, // User ID who added the sale (adjust accordingly)
-            null, 
-            sale.getSalePrice(), 
-            bike
-        );
-
-        // Add the sale to your database or sales list
-        addSale(newSale); // Implement this in your service class
-        
-        return Response.status(Response.Status.CREATED).entity(newSale).build();
-    }
-    */
+   
 }
