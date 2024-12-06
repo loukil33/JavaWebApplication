@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.ws.rs.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import java.util.Properties;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -265,58 +262,6 @@ public class RentalController {
         Rental rental = rentalOptional.get();
         rental.setCurrentWinner(winner);
         return Response.ok("Current winner set successfully.").build();
-    }
-    
-    // Send email to the first user in the waiting list
-    public void notifyFirstInWaitingList(Rental rental) {
-        User firstUser = rental.getFirstInWaitingList();
-        if (firstUser == null) {
-            System.out.println("No users in the waiting list.");
-            return;
-        }
-
-        // Compose the email
-        String subject = "You're next in line!";
-        String messageBody = "Hello " + firstUser.getFirst_name() + ",\n\n" +
-                             "Good news! You are now the first in line for the rental: " + rental.getTitle() + ".\n" +
-                             "Please proceed to finalize your rental.\n\n" +
-                             "Best regards,\nEiffel Corp Team";
-
-        // Send the email
-        sendEmail(firstUser.getEmail(), subject, messageBody);
-
-        // Optionally, mark this user as notified
-        rental.setCurrentWinner(firstUser);
-    }
-
-    private void sendEmail(String toEmail, String subject, String messageBody) {
-        String fromEmail = "your-email@example.com";
-        String password = "your-email-password";
-
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.example.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(fromEmail, password);
-            }
-        });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(fromEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject(subject);
-            message.setText(messageBody);
-
-            Transport.send(message);
-            System.out.println("Email sent successfully!");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
     }
     
     public static List<Rental> getRentalList() {

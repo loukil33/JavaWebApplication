@@ -1,6 +1,5 @@
 package Annonces;
 import Bikes.*;
-import Currency.CurrencyConverter;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,14 +39,7 @@ public class Sale extends Annonce{
         this.bike = bike;
     }*/
 
-    public double getPriceInCurrency(String currencyCode) {
-        try {
-            return CurrencyConverter.convertCurrency(currencyCode, this.salePrice); // Convert from EUR to target currency
-        } catch (Exception e) {
-            System.err.println("Error converting currency: " + e.getMessage());
-            return -1; // Indicate failure
-        }
-    }
+  
 
     @Override
     public String toString() {

@@ -1,130 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <meta name="keywords" content="Bike Sales">
-    <meta name="description" content="">
-    <title>Bike Sales</title>
-    <link rel="stylesheet" href="css/nicepage.css" media="screen">
-    <link rel="stylesheet" href="css/SignUp-Page.css" media="screen">
-    <script class="u-script" type="text/javascript" src="css/js/jquery.js" defer=""></script>
-    <script class="u-script" type="text/javascript" src="css/js/nicepage.js" defer=""></script>
-    <meta name="generator" content="Nicepage 7.0.3, nicepage.com">
-    <meta name="theme-color" content="#478ac9">
+    <title>Sales Page</title>
+    <link rel="stylesheet" href="css/nicepage.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
-<body data-path-to-root="./" class="u-body u-xl-mode" data-lang="en">
-    <section class="u-align-center u-clearfix u-image u-section-1" id="carousel_3266" data-image-width="1200" data-image-height="568">
-        <div class="u-clearfix u-sheet u-sheet-1">
-            <h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-default u-text-1">Available Bike Sales</h2>
+<body>
+    <header class="u-align-center u-header u-header" id="header">
+        <div class="u-sheet u-sheet-1">
+            <h2 class="u-align-center u-custom-font u-text u-text-default u-text-1">Available Sales</h2>
+        </div>
+    </header>
 
-            <div id="sales-container" class="u-list u-list-1">
-                <!-- Sales data will be populated here -->
-            </div>
+    <h1>Sales with Live Currency Conversion</h1>
+
+    <label for="currency">Select Currency:</label>
+    <select id="currency" onchange="convertPrices()">
+        <!-- Currencies will be populated dynamically -->
+    </select>
+
+    <section class="u-clearfix u-container-align-center u-palette-1-light-3 u-section" id="sales-section">
+        <div id="sales-container" class="u-list">
+            <!-- Sales will be dynamically loaded here -->
         </div>
     </section>
 
-    <footer class="u-align-center u-clearfix u-container-align-center u-custom-color-1 u-footer u-footer" id="sec-5467">
-        <div class="u-clearfix u-sheet u-sheet-1">
-            <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
-        </div>
+    <footer class="u-align-center u-footer u-footer" id="footer">
+        <p class="u-small-text u-text u-text-variant u-text-1">Eiffel Corp &copy; 2024. All rights reserved.</p>
     </footer>
-    
-    <section class="u-backlink u-clearfix u-grey-80">
-        <p class="u-text">
-            <span>This site was created with the </span>
-            <a class="u-link" href="https://nicepage.com/" target="_blank" rel="nofollow">
-                <span>Nicepage</span>
-            </a>
-        </p>
-    </section>
 
     <script>
-        // Sample sales data - you can replace this with actual data from a backend API
-        const sales = [
-            {
-                id: 1,
-                title: "Mountain Bike Sale",
-                description: "High-performance mountain bike",
-                salePrice: 300,
-                startDate: "2024-05-01",
-                bike: {
-                    model: "Mountain Bike",
-                    brand: "Trek",
-                    condition: "New",
-                    color: "Red"
-                }
-            },
-            {
-                id: 2,
-                title: "Road Bike Sale",
-                description: "Speedy road bike",
-                salePrice: 250,
-                startDate: "2024-06-01",
-                bike: {
-                    model: "Road Bike",
-                    brand: "Giant",
-                    condition: "Used",
-                    color: "Blue"
-                }
-            },
-            {
-                id: 3,
-                title: "Electric Bike Sale",
-                description: "Eco-friendly electric bike",
-                salePrice: 500,
-                startDate: "2024-07-01",
-                bike: {
-                    model: "Electric Bike",
-                    brand: "Specialized",
-                    condition: "New",
-                    color: "Black"
-                }
-            }
-        ];
+        const BASE_CURRENCY = "EUR"; // Base currency for the sales prices
+        let conversionRates = {}; // To store the fetched currency rates
+        let salesData = []; // To store the sales data for dynamic rendering
 
-        // Function to display all sales
+        // Fetch sales and display them
+        async function fetchAndDisplaySales() {
+            try {
+                const response = await fetch("http://localhost:8081/UserWebService/api/sales");
+                if (!response.ok) throw new Error("Failed to fetch sales data.");
+
+                salesData = await response.json();
+                displaySales(salesData);
+                fetchCurrencyRates(); // Fetch currency rates once sales data is loaded
+            } catch (error) {
+                console.error("Error fetching sales:", error);
+                document.getElementById("sales-container").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+
+        // Display sales
         function displaySales(sales) {
-            const container = document.getElementById('sales-container');
-            container.innerHTML = ''; // Clear existing content
+            const container = document.getElementById("sales-container");
+            container.innerHTML = ""; // Clear any previous content
 
             if (sales.length === 0) {
-                container.innerHTML = '<p>No sales available.</p>';
+                container.innerHTML = `<p>No sales available at the moment.</p>`;
                 return;
             }
 
             sales.forEach(sale => {
+                const bike = sale.bike;
+
                 const saleHTML = `
                     <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1">
                         <div class="u-container-layout u-similar-container u-container-layout-1">
-                            <h5 class="u-align-center u-text u-text-3">${sale.title}</h5>
-                            <p class="u-align-center u-text u-text-4">Model: ${sale.bike.model}</p>
-                            <p class="u-align-center u-text u-text-5">Brand: ${sale.bike.brand}</p>
-                            <p class="u-align-center u-text u-text-6">Condition: ${sale.bike.condition}</p>
-                            <p class="u-align-center u-text u-text-6">Color: ${sale.bike.color}</p>
-                            <p class="u-align-center u-text u-text-6">Price: €${sale.salePrice}</p>
-                            <p class="u-align-center u-text u-text-6">Start Date: ${sale.startDate}</p>
+                            <img src="${bike.images && bike.images.length > 0 ? bike.images[0] : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg'}" 
+                                 alt="Bike Image" 
+                                 class="u-expanded-width u-image u-image-round u-radius u-image-1" 
+                                 style="height: 200px; object-fit: cover;">
 
-                            <a href="#" onclick="purchaseSale(${sale.id})" class="u-btn u-btn-round u-button-style u-hover-custom-color-1 u-radius u-btn-2">
+                            <h3 class="u-align-center u-text u-text-1">${sale.title}</h3>
+                            <p class="u-align-center u-text u-text-2">${sale.description}</p>
+                            <p class="u-align-center u-text u-text-3">
+                                <strong>Price:</strong> 
+                                <span data-price="${sale.salePrice}" class="price">€${sale.salePrice.toFixed(2)}</span>
+                            </p>
+                            <p class="u-align-center u-text u-text-4"><strong>Start Date:</strong> ${sale.startDate}</p>
+                            <p class="u-align-center u-text u-text-5"><strong>Duration:</strong> ${sale.duration} days</p>
+                            <p class="u-align-center u-text u-text-6"><strong>Bike:</strong> ${bike.model} (${bike.brand}, ${bike.color})</p>
+
+                            <button class="u-btn u-btn-round u-button-style u-radius u-btn-2" 
+                                    onclick="purchaseSale(${sale.id})">
                                 Buy Now
-                            </a>
+                            </button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 container.innerHTML += saleHTML;
             });
         }
 
-        // Function to handle purchase of a sale
-        function purchaseSale(saleId) {
-            alert("You are attempting to purchase sale with ID: " + saleId);
+        // Fetch currency rates and populate dropdown
+        async function fetchCurrencyRates() {
+            try {
+                const response = await fetch("https://v6.exchangerate-api.com/v6/b799283f68d4ffc21668f606/latest/EUR");
+                if (!response.ok) throw new Error("Failed to fetch currency rates.");
+
+                const data = await response.json();
+                conversionRates = data.conversion_rates;
+
+                populateCurrencyDropdown(Object.keys(conversionRates));
+            } catch (error) {
+                console.error("Error fetching currency rates:", error);
+            }
         }
 
-        // Display sales on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            displaySales(sales);
-        });
-    </script>
+        // Populate the currency dropdown
+        function populateCurrencyDropdown(currencies) {
+            const dropdown = document.getElementById("currency");
+            dropdown.innerHTML = ""; // Clear existing options
 
+            currencies.forEach(currency => {
+                const option = document.createElement("option");
+                option.value = currency;
+                option.textContent = currency;
+                dropdown.appendChild(option);
+            });
+
+            dropdown.value = BASE_CURRENCY; // Set default to base currency
+        }
+
+        // Convert prices based on selected currency
+        function convertPrices() {
+            const selectedCurrency = document.getElementById("currency").value;
+            const prices = document.querySelectorAll(".price");
+
+            prices.forEach(priceElement => {
+                const basePrice = parseFloat(priceElement.getAttribute("data-price"));
+                const convertedPrice = (basePrice * conversionRates[selectedCurrency]).toFixed(2);
+
+                priceElement.textContent = `${selectedCurrency} ${convertedPrice}`;
+            });
+        }
+
+        // Purchase sale handler
+        function purchaseSale(saleId) {
+            alert(`Purchase functionality for Sale ID: ${saleId} is not yet implemented.`);
+        }
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", fetchAndDisplaySales);
+    </script>
 </body>
 </html>

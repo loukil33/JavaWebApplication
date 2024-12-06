@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-
+import javax.websocket.server.PathParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,21 +18,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import Bikes.Bike;
-import Bikes.BikeService;
+import Annonces.SaleDB;
 @Path("/sales")
 public class SaleController {
 	
-
-	 	private BikeService bikeController; // Reference to BikeController
-
-	    public SaleController(BikeService bikeController) {
-	        this.bikeController = bikeController;
-	    }
-
- 
-
-	private List<Sale> sales = new ArrayList<>();
-
+	private List<Sale> sales = SaleDB.salesList;
+	
+	
 	@POST
 	@Path("/addSale")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -67,7 +59,6 @@ public class SaleController {
 	            .filter(rental -> rental.getBike().getId() == bikeId)
 	            .findFirst();
 
-
 	    if (associatedRental.isPresent()) {
 	        // Call deleteRental to remove the rental
 	        Response deleteResponse = new RentalController().deleteRental(associatedRental.get().getId());
@@ -99,11 +90,24 @@ public class SaleController {
 	 private int generateUniqueId() {
 	       return sales.size() + 1; // Or use a more robust ID generation logic
 	  }
+	 
+	    /**
+	     * Retrieve all sales
+	     * @return Response containing the list of all sales
+	     */
+	    @GET
+	    @Produces(MediaType.APPLICATION_JSON)
+	    public Response getAllSales() {
+	        if (sales.isEmpty()) {
+	            return Response.status(Response.Status.NOT_FOUND)
+	                    .entity("No sales available at the moment.")
+	                    .build();
+	        }
+	        return Response.ok(sales).build();
+	    }
 	   
 	      
-
-   
-
-
+    
+    
 
 }
