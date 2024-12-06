@@ -217,6 +217,8 @@ public class RentalController {
         return Response.ok("Rental deleted successfully.").build();
     }
 
+   
+
     // **6. Add User to Waiting List**
     @POST
     @Path("/{id}/waiting-list")
@@ -317,4 +319,8 @@ public class RentalController {
         }
     }
     
+    public static List<Rental> getRentalList() {
+        return rentalList;
+    }
+
 }

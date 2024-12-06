@@ -77,6 +77,18 @@ public class BikeService {
 	}
 	
 
+	public void updateBike(Bike bike) {
+	    // Update the bike's availability in the database or data structure
+	    // Example for an in-memory list:
+	    for (int i = 0; i < bikes.size(); i++) {
+	        if (bikes.get(i).getId() == bike.getId()) {
+	            bikes.set(i, bike);
+	            break;
+	        }
+	    }
+	    // If using a database, add code to update the bike's status there
+	}
+
 	// Read (Get all bikes)
     @GET
     @Produces(MediaType.APPLICATION_JSON)

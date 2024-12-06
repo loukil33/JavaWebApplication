@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 import javax.ws.rs.Consumes;
@@ -21,6 +22,7 @@ import Bikes.BikeService;
 @Path("/sales")
 public class SaleController {
 	
+<<<<<<< HEAD
 	 	private BikeService bikeController; // Reference to BikeController
 
 	    public SaleController(BikeService bikeController) {
@@ -85,7 +87,77 @@ public class SaleController {
 	   }
 
 	    
+=======
+	private List<Sale> sales = new ArrayList<>();
 
+	@POST
+	@Path("/addSale")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addSale(@QueryParam("bikeId") int bikeId, Sale sale) {
+	    // Validate input
+	    if (bikeId <= 0) {
+	        return Response.status(Response.Status.BAD_REQUEST)
+	                .entity("A valid bike ID must be provided as a query parameter.")
+	                .build();
+	    }
+	    if (sale == null || sale.getSalePrice() <= 0) {
+	        return Response.status(Response.Status.BAD_REQUEST)
+	                .entity("The sale price must be greater than zero.")
+	                .build();
+	    }
+	    if (sale.getDuration() <= 0) {
+	        return Response.status(Response.Status.BAD_REQUEST)
+	                .entity("The sale duration must be greater than zero.")
+	                .build();
+	    }
+	    // Fetch the bike using BikeService
+	    BikeService bikeService = new BikeService();
+	    Bike bikeForSale = bikeService.getBikeByIdDirect(bikeId);
+	    if (bikeForSale == null) {
+	        return Response.status(Response.Status.NOT_FOUND)
+	                .entity("Bike with the given ID does not exist.")
+	                .build();
+	    }
+	   // Ensure the bike is not rented
+	    Optional<Rental> associatedRental = RentalController.getRentalList().stream()
+	            .filter(rental -> rental.getBike().getId() == bikeId)
+	            .findFirst();
+>>>>>>> amine
+
+	    if (associatedRental.isPresent()) {
+	        // Call deleteRental to remove the rental
+	        Response deleteResponse = new RentalController().deleteRental(associatedRental.get().getId());
+	        if (deleteResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+	            return Response.status(Response.Status.CONFLICT)
+	                    .entity("Failed to delete the associated rental. Sale cannot proceed.")
+	                    .build();
+	        }
+	    }
+	    // Mark the bike as sold
+	    bikeForSale.setAvailable(false);
+	    // Associate the bike with the sale
+	    sale.setBike(bikeForSale);
+	    sale.setId(generateUniqueId()); // Generate a unique ID for the sale
+	    // Persist the bike update
+	    bikeService.updateBike(bikeForSale);
+	    // Save the sale (assuming `sales` is a shared list of Sale objects)
+	    synchronized (sales) {
+	        sales.add(sale);
+	    }
+
+	    return Response.status(Response.Status.CREATED)
+	            .entity(sale)
+	            .build();
+	}
+
+
+	   // Helper method to generate a unique ID
+	 private int generateUniqueId() {
+	       return sales.size() + 1; // Or use a more robust ID generation logic
+	  }
+	   
+	      
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBikesForSale() {
@@ -128,5 +200,9 @@ public class SaleController {
         return Response.ok(sales).build();
     }
     
+<<<<<<< HEAD
    
+=======
+
+>>>>>>> amine
 }
