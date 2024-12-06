@@ -359,6 +359,49 @@ function displayBikes(bikes) {
     });
 }
 
+function deleteBike(bikeId) {
+    // Confirm if the user wants to delete the bike
+    const confirmDelete = confirm("Are you sure you want to delete this bike?");
+    if (!confirmDelete) {
+        return; // Exit if user cancels the delete action
+    }
+
+    // Send DELETE request to the server to remove the bike
+    fetch(`http://localhost:8081/UserWebService/api/bikes/${bikeId}`
+    		, 
+    		{
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        // If the response is not ok (e.g., not 200 status), throw an error
+        if (!response.ok) {
+            throw new Error("Bike deleted");
+        }
+
+        // Try to parse the response as JSON, if it fails, treat it as text
+        return response.text();  // Since we expect a plain text response
+    })
+    .then(message => {
+        alert(message);  // Show the message returned by the server
+
+        // Update bikes in sessionStorage after deletion
+        let bikes = JSON.parse(sessionStorage.getItem("bikes"));
+        bikes = bikes.filter(bike => bike.id !== bikeId);  // Remove the deleted bike
+        sessionStorage.setItem("bikes", JSON.stringify(bikes));  // Update sessionStorage with the new list
+
+        // Refresh the UI to reflect the deleted bike
+        displayBikes(bikes);
+    })
+    .catch(error => {
+        console.error("Error deleting bike:", error);
+        alert("Error deleting bike: " + error.message);
+    });
+}
+
+
 function sellBike(bikeId) {
     const modal = document.getElementById('sell-modal');
     if (!modal) {
@@ -433,6 +476,31 @@ function sellBike(bikeId) {
             modal.style.display = 'none';
         }
     };
+}
+function editBike(bikeId) {
+    // Fetch the list of bikes from sessionStorage
+    const bikesJson = sessionStorage.getItem("bikes");
+    
+    if (!bikesJson) {
+        alert("No bikes found in session. Please reload the page.");
+        return;
+    }
+
+    const bikes = JSON.parse(bikesJson);
+
+    // Find the selected bike by its ID
+    const selectedBike = bikes.find(bike => bike.id === bikeId);
+
+    if (!selectedBike) {
+        alert("Bike not found.");
+        return;
+    }
+
+    // Save the selected bike's details in sessionStorage for use in the edit page
+    sessionStorage.setItem("selectedBike", JSON.stringify(selectedBike));
+
+    // Redirect to the EditBike.html page
+    window.location.href = "EditBike.html";
 }
 </script>
 

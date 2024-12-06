@@ -1,7 +1,7 @@
 package Cart;
 
 import Bikes.*;
-import Annonces.Sale;
+import Annonces.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
@@ -12,7 +12,6 @@ import javax.ws.rs.*;
 public class CartController {
     private static final List<Cart> carts = new ArrayList<>(); // Track carts for different users
     private static final List<PaymentRecord> paymentHistory = new ArrayList<>(); // Store payment history
-    private static final int currentUserId = 1; // Static user ID for testing; replace with actual user logic
 
     // Get cart for the current user (or a specific user by ID)
     private Cart getCartForUser(int userId) {
@@ -75,11 +74,11 @@ public class CartController {
         for (Sale sale : cartItems) {
             Map<String, Object> itemData = new HashMap<>();
             itemData.put("id", sale.getId());
-            itemData.put("model", sale.getBike() != null ? sale.getBike().getModel() : "Unknown Model"); // Use inherited getBike()
+            itemData.put("model", sale.getBike() != null ? sale.getBike().getModel() : "Unknown Model");
             itemData.put("image", sale.getBike() != null && sale.getBike().getImages() != null && !sale.getBike().getImages().isEmpty()
                     ? sale.getBike().getImages().get(0)
                     : "default_image.jpg");
-            itemData.put("salePrice", sale.getSalePrice());  // Ensure salePrice is included
+            itemData.put("salePrice", sale.getSalePrice());
             responseItems.add(itemData);
         }
 
@@ -88,6 +87,7 @@ public class CartController {
         response.put("totalPrice", totalPrice);
         return Response.ok(response).build();
     }
+
 
 
     @DELETE
@@ -119,8 +119,6 @@ public class CartController {
         }
     }
     
-    
-
 
     @POST
     @Path("/checkout")
@@ -143,7 +141,9 @@ public class CartController {
         }
 
         try {
-            for (Sale sale : cart.getItems()) {
+            List<Sale> purchasedSales = cart.getItems();
+
+            for (Sale sale : purchasedSales) {
                 String image = sale.getBike().getImages().isEmpty() ? null : sale.getBike().getImages().get(0);
 
                 paymentHistory.add(new PaymentRecord(
@@ -156,6 +156,9 @@ public class CartController {
                 ));
             }
 
+            // Remove the purchased sales from the sales list
+            SaleController.removePurchasedSales(purchasedSales);
+
             cart.checkoutCart();
             return Response.ok(Map.of("clientSecret", clientSecret)).build();
         } catch (Exception e) {
@@ -164,7 +167,6 @@ public class CartController {
                            .build();
         }
     }
-
 
     @GET
     @Path("/history")

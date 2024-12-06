@@ -4,6 +4,7 @@ import Bikes.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +23,20 @@ import Annonces.SaleDB;
 @Path("/sales")
 public class SaleController {
 	
-	private List<Sale> sales = SaleDB.salesList;
+	private static List<Sale> sales = Collections.synchronizedList(SaleDB.salesList);
+
 	
+	public static void removePurchasedSales(List<Sale> purchasedSales) {
+	    synchronized (sales) {
+	        try {
+	            purchasedSales.forEach(purchased -> 
+	                sales.removeIf(sale -> sale.getId() == purchased.getId()));
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
 	
 	@POST
 	@Path("/addSale")
@@ -46,6 +59,7 @@ public class SaleController {
 	                .entity("The sale duration must be greater than zero.")
 	                .build();
 	    }
+	    
 	    // Fetch the bike using BikeService
 	    BikeService bikeService = new BikeService();
 	    Bike bikeForSale = bikeService.getBikeByIdDirect(bikeId);
@@ -54,7 +68,8 @@ public class SaleController {
 	                .entity("Bike with the given ID does not exist.")
 	                .build();
 	    }
-	   // Ensure the bike is not rented
+	    
+	    // Ensure the bike is not rented
 	    Optional<Rental> associatedRental = RentalController.getRentalList().stream()
 	            .filter(rental -> rental.getBike().getId() == bikeId)
 	            .findFirst();
@@ -68,13 +83,28 @@ public class SaleController {
 	                    .build();
 	        }
 	    }
+	    
 	    // Mark the bike as sold
 	    bikeForSale.setAvailable(false);
+	    
+	    // Set default or missing fields
+	    if (sale.getStartDate() == null) {
+	        sale.setStartDate(LocalDate.now()); // Set current date as default
+	    }
+	    if (sale.getTitle() == null || sale.getTitle().isEmpty()) {
+	        sale.setTitle("Default Sale Title"); // Provide a default title
+	    }
+	    if (sale.getDescription() == null || sale.getDescription().isEmpty()) {
+	        sale.setDescription("Default Sale Description"); // Provide a default description
+	    }
+	    
 	    // Associate the bike with the sale
 	    sale.setBike(bikeForSale);
 	    sale.setId(generateUniqueId()); // Generate a unique ID for the sale
+	    
 	    // Persist the bike update
 	    bikeService.updateBike(bikeForSale);
+	    
 	    // Save the sale (assuming `sales` is a shared list of Sale objects)
 	    synchronized (sales) {
 	        sales.add(sale);
@@ -85,11 +115,15 @@ public class SaleController {
 	            .build();
 	}
 
-
 	   // Helper method to generate a unique ID
 	 private int generateUniqueId() {
 	       return sales.size() + 1; // Or use a more robust ID generation logic
 	  }
+	 
+	 
+	
+
+	 
 	 
 	    /**
 	     * Retrieve all sales

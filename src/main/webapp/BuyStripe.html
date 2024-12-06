@@ -187,7 +187,7 @@
     <div class="card">
         <!-- Card Top -->
         <div class="card-top">
-            <a href="BuyIndex.html">&larr; Back to Shop</a>
+            <a href="Sales.html">&larr; Back to Shop</a>
             <span id="logo"></span>
         </div>
 
@@ -315,7 +315,7 @@
                     document.getElementById('payment-errors').textContent = error.message;
                 } else {
                     alert("Payment successful!");
-                    window.location.href = "BuyIndex.html";
+                    window.location.href = "Sales.html";
                 }
             } catch (error) {
                 console.error("Error processing payment:", error);
@@ -332,12 +332,12 @@
 
                 if (!data.cartItems || data.cartItems.length === 0) {
                     alert("Your cart is empty. Redirecting to the Shopping page.");
-                    window.location.href = 'BuyIndex.html';
+                    window.location.href = 'Sales.html';
                 }
             } catch (error) {
                 console.error("Error validating cart:", error);
                 alert("Failed to verify cart status. Redirecting to the cart page.");
-                window.location.href = 'BuyIndex.html';
+                window.location.href = 'Sales.html';
             }
         }
         
