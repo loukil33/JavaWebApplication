@@ -23,7 +23,7 @@ public class BikeService {
 	
 	
 
-	private static int currentId = 7; // Auto-increment ID counter
+	private static int currentId = 13; // Auto-increment ID counter
 
 	@POST
 	@Path("/add")

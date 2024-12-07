@@ -28,7 +28,7 @@ import static Annonces.AnnonceDB.annoncesList;
 @Path("/users")
 public class UserController {
 	
-	private static int idCounter = 4; // Initialize counter for id, starts from 1
+	private static int idCounter = 6; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
