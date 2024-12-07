@@ -110,6 +110,8 @@ public class UserController {
                        .build();
     }
 
+    
+    
     @GET
     @Path("/{id}/bikes")
     @Produces(MediaType.APPLICATION_JSON)

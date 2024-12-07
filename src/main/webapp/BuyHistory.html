@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #478ac9;
+            margin-bottom: 20px;
+        }
+
+        .history-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .history-table th,
+        .history-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #478ac9;
+            color: white;
+            font-weight: bold;
+        }
+
+        .history-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .history-table tr:hover {
+            background-color: #f1f9ff;
+        }
+
+        .history-table img {
+            width: 80px;
+            height: auto;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .empty-message {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1.5em;
+            color: gray;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #478ac9;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .back-button:hover {
+            background-color: #356da4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Payment History</h1>
+    <div class="history-container">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Bike Name</th>
+                    <th>Price</th>
+                    <th>Date</th>
+                    <th>Payment ID</th>
+                </tr>
+            </thead>
+            <tbody id="history-body">
+                <!-- Dynamic rows will be added here -->
+            </tbody>
+        </table>
+        <p id="empty-message" class="empty-message" style="display: none;">No payment history found for this user.</p>
+        <a href="Sales.html" class="back-button">&larr; Back to Shop</a>
+    </div>
+
+    <script>
+        const userId = 1; // Static user ID for testing; replace with actual user ID.
+
+        async function loadPaymentHistory() {
+            const historyBody = document.getElementById('history-body');
+            const emptyMessage = document.getElementById('empty-message');
+
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/history?userId=${userId}`);
+                if (response.ok) {
+                    const history = await response.json();
+                    historyBody.innerHTML = ""; // Clear existing rows
+
+                    history.forEach(record => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><img src="${record.bikeImage}" alt="${record.bikeName}"></td>
+                            <td>${record.bikeName}</td>
+                            <td>€${record.bikePrice.toFixed(2)}</td>
+                            <td>${new Date(record.paymentDate).toLocaleString()}</td>
+                            <td>${record.paymentId}</td>
+                        `;
+                        historyBody.appendChild(row);
+                    });
+
+                    emptyMessage.style.display = "none";
+                } else {
+                    throw new Error("No payment history found");
+                }
+            } catch (error) {
+                console.error("Error loading payment history:", error);
+                historyBody.innerHTML = "";
+                emptyMessage.style.display = "block";
+            }
+        }
+
+        // Load payment history on page load
+        loadPaymentHistory();
+    </script>
+</body>
+</html>

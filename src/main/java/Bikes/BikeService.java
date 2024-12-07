@@ -1,5 +1,6 @@
 package Bikes;
 
+import Annonces.*;
 
 import javax.servlet.http.Part;
 import javax.ws.rs.*;
@@ -7,7 +8,9 @@ import javax.ws.rs.core.*;
 import java.util.Base64;
 import java.io.*;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +20,8 @@ import Users.User;
 
 @Path("/bikes")
 public class BikeService {
-
+	
+	
 
 	private static int currentId = 4; // Auto-increment ID counter
 
@@ -42,7 +46,7 @@ public class BikeService {
 
 
 	            String fileName = "bike_" + currentId + ".jpg";
-	            String filePath = "C:/Users/Mohamed Aziz/Documents/GitHub/JavaWebApplication/src/main/webapp/css/images/" + fileName;
+	            String filePath = "E:\\github\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
 
 
 	            File outputFile = new File(filePath);
@@ -72,6 +76,26 @@ public class BikeService {
 	    return Response.status(Response.Status.CREATED).entity(bike).build();
 	}
 	
+
+	public void updateBike(Bike bike) {
+	    // Update the bike's availability in the database or data structure
+	    // Example for an in-memory list:
+	    for (int i = 0; i < bikes.size(); i++) {
+	        if (bikes.get(i).getId() == bike.getId()) {
+	            bikes.set(i, bike);
+	            break;
+	        }
+	    }
+	    // If using a database, add code to update the bike's status there
+	}
+
+	// Read (Get all bikes)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllBikes() {
+        return Response.ok(bikes).build();
+    }
+
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -107,7 +131,7 @@ public class BikeService {
 	            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
 
 	            String fileName = "bike_" + currentId + ".jpg";
-	            String filePath = "C:/Users/Mohamed Aziz/Documents/GitHub/JavaWebApplication/src/main/webapp/css/images/" + fileName;
+	            String filePath = "E:\\github\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
 
 	            File outputFile = new File(filePath);
 	            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
@@ -148,16 +172,6 @@ public class BikeService {
 
 
 
-
-    
-
-    // Read (Get all bikes)
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllBikes() {
-        return Response.ok(bikes).build();
-    }
-
     // Read (Get a bike by ID)
     @GET
     @Path("/{id}")
@@ -169,6 +183,14 @@ public class BikeService {
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity("Bike not found").build();
         }
+    }
+    
+    public Bike getBikeByIdDirect(int id) {
+        Bike bike = findBikeById(id);
+        if (bike != null) {
+            return bike; // Return the bike if found
+        }
+        return null; // Return null if the bike is not found
     }
     
     // Method to get the name (model) of a bike by ID

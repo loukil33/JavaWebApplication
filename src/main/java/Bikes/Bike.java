@@ -11,7 +11,14 @@ public class Bike {
 	    private String color;
 	    private boolean isAvailable;
 	    private List<String> images;
+	    private boolean rented;
 	    
+		public boolean isRented() {
+			return rented;
+		}
+		public void setRented(boolean rented) {
+			this.rented = rented;
+		}
 		public int getId() {
 			return id;
 		}
@@ -74,6 +81,19 @@ public class Bike {
 		}
 		
 		
+		public Bike(int id, int userid, String model, String brand, String condition, String color, boolean isAvailable,
+				List<String> images, boolean rented) {
+			this.id = id;
+			this.userid = userid;
+			this.model = model;
+			this.brand = brand;
+			this.condition = condition;
+			this.color = color;
+			this.isAvailable = isAvailable;
+			this.images = images;
+			this.rented = rented;
+		}
+		
 		public Bike(String model, String brand, String condition, String color, boolean isAvailable) {
 			this.model = model;
 			this.brand = brand;
@@ -82,6 +102,18 @@ public class Bike {
 			this.isAvailable = isAvailable;
 		}
 		
+
+	    // Constructor for easier initialization
+	    public Bike(int id, String model, String brand, String condition, String color, boolean isAvailable,
+	                List<String> images, double rentalPrice, boolean isForSale, double salePrice) {
+	        this.id = id;
+	        this.model = model;
+	        this.brand = brand;
+	        this.condition = condition;
+	        this.color = color;
+	        this.isAvailable = isAvailable;
+	        this.images = images;
+	    }
 		
 		public Bike() {
 		}
@@ -90,13 +122,5 @@ public class Bike {
 			return "Bike [id=" + id + ", userid=" + userid + ", model=" + model + ", brand=" + brand + ", condition="
 					+ condition + ", color=" + color + ", isAvailable=" + isAvailable + ", images=" + images + "]";
 		}
-		
-	    
-	    
-	    
-	
-	
-	    
-	    
 
 }

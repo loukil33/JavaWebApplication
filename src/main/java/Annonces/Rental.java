@@ -36,7 +36,6 @@ public class Rental extends Annonce{
 		this.waitingList = waitingList;
 		this.CurrentWinner = CurrentWinner;
 	}
-
 	public double getRentPrice() {
 		return rentPrice;
 	}
@@ -44,8 +43,6 @@ public class Rental extends Annonce{
 	public void setRentPrice(double rentPrice) {
 		this.rentPrice = rentPrice;
 	}
-
-	
 
 	public LocalTime getStart_time() {
 		return start_time;
@@ -82,7 +79,6 @@ public class Rental extends Annonce{
 	public void setCurrentWinner(User currentWinner) {
 		CurrentWinner = currentWinner;
 	}
-	
 	
 	@Override
 	public String toString() {

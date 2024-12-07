@@ -1,5 +1,5 @@
 package Annonces;
-import Currency.CurrencyConverter;
+import Bikes.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,12 +10,19 @@ public class Sale extends Annonce{
 
     private double salePrice; // Assumed to be in EUR by default
 
-	public Sale(int id,String title, String description, LocalDate startDate, int duration,int userid,Bike bike,List<Note> notes, double salePrice) {
-		super(id,title, description, startDate, duration,userid,bike,notes);
-		this.salePrice = salePrice;
-	}
+    
+    public Sale() {
+        
+    }
 
-    public double getSalePrice() {
+    public Sale(int id, String title, String description, LocalDate startDate, int duration, int userid, List<Note> notes, double salePrice, Bike bike) {
+        super(id, title, description, startDate, duration, userid, bike, notes);
+        this.salePrice = salePrice;
+    }
+
+    
+
+	public double getSalePrice() {
         return salePrice;
     }
 
@@ -23,17 +30,25 @@ public class Sale extends Annonce{
         this.salePrice = salePrice;
     }
 
-    public double getPriceInCurrency(String currencyCode) {
-        try {
-            return CurrencyConverter.convertCurrency(currencyCode, this.salePrice); // Convert from EUR to target currency
-        } catch (Exception e) {
-            System.err.println("Error converting currency: " + e.getMessage());
-            return -1; // Indicate failure
-        }
+    /*
+    public Bike getBike() {
+        return bike;
     }
+
+    public void setBike(Bike bike) {
+        this.bike = bike;
+    }*/
+
+  
 
     @Override
     public String toString() {
-        return "Sale [salePrice (EUR)=" + salePrice + "]";
+        return "Sale [salePrice=" + salePrice + ", " + super.toString() + "]";
     }
 }
+ 
+
+ 
+ 
+ 
+

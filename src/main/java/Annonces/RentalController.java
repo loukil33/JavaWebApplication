@@ -1,5 +1,6 @@
 package Annonces;
 
+import Bikes.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -42,6 +43,42 @@ public class RentalController {
                            .entity("User not found for ID: " + userId)
                            .build();
         }
+        
+        
+        // Use BikeService to fetch all bikes
+        BikeService bikeService = new BikeService();
+        Response bikeResponse = bikeService.getAllBikes();
+
+        if (bikeResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                           .entity("Error retrieving bikes")
+                           .build();
+        }
+
+        // Retrieve the bike list from the response
+        @SuppressWarnings("unchecked")
+        List<Bike> bikes = (List<Bike>) bikeResponse.getEntity();
+
+        // Find the bike by ID
+        Optional<Bike> bikeOptional = bikes.stream()
+                                           .filter(bike -> bike.getId() == rental.getBike().getId())
+                                           .findFirst();
+
+        if (bikeOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("Bike not found for ID: " + rental.getBike().getId())
+                           .build();
+        }
+
+        Bike bike = bikeOptional.get();
+        if (bike.isAvailable()) {
+            bike.setRented(true); // Mark the bike as rented
+          
+        } else {
+            return Response.status(Response.Status.CONFLICT)
+                           .entity("Bike is already rented.")
+                           .build();
+        }
 
         // Associate rental with the user
         User user = userOptional.get();
@@ -62,7 +99,9 @@ public class RentalController {
                        .entity("Rental added successfully for user: " + user.getFirst_name())
                        .build();
     }
-
+    
+    
+    
 
     // **2. Get All Rentals**
     @GET
@@ -174,6 +213,8 @@ public class RentalController {
         annoncesList.remove(existingRental.get());
         return Response.ok("Rental deleted successfully.").build();
     }
+
+   
 
     // **6. Add User to Waiting List**
     @POST
@@ -309,6 +350,9 @@ public class RentalController {
 
         return Response.ok("Current winner updated successfully.").build();
     }
-
+    
+    public static List<Rental> getRentalList() {
+        return rentalList;
+    }
 
 }

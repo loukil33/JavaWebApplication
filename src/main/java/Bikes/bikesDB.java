@@ -14,6 +14,10 @@ public class bikesDB {
         bikes.add(new Bike(1,1, "Mountain Bike", "Trek", "New", "Red", true, null));
         bikes.add(new Bike(2,1, "Road Bike", "Giant", "Used", "Blue", true, null));
         bikes.add(new Bike(3,1, "Hybrid Bike", "Specialized", "New", "Black", true, null));
+        
+        bikes.add(new Bike(4,1, "Sale1", "Trek", "New", "Red", true, null,true));
+        bikes.add(new Bike(5,1, "Sale2", "Giant", "Used", "Blue", true, null,true));
+        bikes.add(new Bike(6,1, "Sale3", "Specialized", "New", "Black", true, null,true));
     }
 
 
