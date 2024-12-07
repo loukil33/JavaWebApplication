@@ -96,79 +96,82 @@ public class BikeService {
         return Response.ok(bikes).build();
     }
 
-	
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response addBike(Bike bike, @QueryParam("userId") int userId) {
-	    // Validate bike details
-	    if (bike.getModel() == null || bike.getBrand() == null || bike.getCondition() == null || bike.getColor() == null) {
-	        return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
-	    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addBike(Bike bike, @QueryParam("userId") int userId) {
+        // Validate bike details
+        if (bike.getModel() == null || bike.getBrand() == null || bike.getCondition() == null || bike.getColor() == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
+        }
 
-	    // Find the user by userId
-	    Optional<User> userOptional = users.stream()
-	                                       .filter(user -> user.getId() == userId)
-	                                       .findFirst();
+        // Find the user by userId
+        Optional<User> userOptional = users.stream()
+                                           .filter(user -> user.getId() == userId)
+                                           .findFirst();
 
-	    if (userOptional.isEmpty()) {
-	        return Response.status(Response.Status.NOT_FOUND)
-	                       .entity("User not found for ID: " + userId)
-	                       .build();
-	    }
+        if (userOptional.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity("User not found for ID: " + userId)
+                           .build();
+        }
 
-	    User user = userOptional.get();
+        User user = userOptional.get();
 
-	    // Save the bike image if provided
-	    if (bike.getImages() != null && !bike.getImages().isEmpty()) {
-	        String imageBase64 = bike.getImages().get(0);
+        // Save the bike image if provided
+        if (bike.getImages() != null && !bike.getImages().isEmpty()) {
+            String imageBase64 = bike.getImages().get(0);
+            String originalFileName = bike.getImages().size() > 1 ? bike.getImages().get(1) : null; // Second element contains the file name
 
-	        if (imageBase64.startsWith("data:image")) {
-	            imageBase64 = imageBase64.split(",")[1]; // Remove the prefix
-	        }
+            if (imageBase64.startsWith("data:image")) {
+                imageBase64 = imageBase64.split(",")[1]; // Remove the prefix
+            }
 
-	        try {
-	            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
+            if (originalFileName == null || originalFileName.isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Original file name is required.").build();
+            }
 
-	            String fileName = "bike_" + currentId + ".jpg";
-	            String filePath = "E:\\github\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
+            try {
+                byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
 
-	            File outputFile = new File(filePath);
-	            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-	                fos.write(imageBytes);
-	                System.out.println("Image saved at: " + outputFile.getAbsolutePath());
-	            }
+                String filePath = "E:\\github\\JavaWebApplication\\src\\main\\webapp\\css\\images\\" + originalFileName;
 
-	            bike.setImages(List.of("http://localhost:8081/UserWebService/css/images/" + fileName));
-	        } catch (IllegalArgumentException e) {
-	            e.printStackTrace();
-	            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Base64 image data").build();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-	                           .entity("Failed to write image file: " + e.getMessage())
-	                           .build();
-	        }
-	    } else {
-	        bike.setImages(null);
-	    }
+                File outputFile = new File(filePath);
+                try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                    fos.write(imageBytes);
+                    System.out.println("Image saved at: " + outputFile.getAbsolutePath());
+                }
 
-	    // Set the bike ID and mark it as available
-	    bike.setId(currentId++);
-	    bike.setAvailable(true);
+                bike.setImages(List.of("http://localhost:8081/UserWebService/css/images/" + originalFileName));
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Base64 image data").build();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                               .entity("Failed to write image file: " + e.getMessage())
+                               .build();
+            }
+        } else {
+            bike.setImages(null);
+        }
 
-	    // Add the bike to the list of bikes and associate it with the user
-	    bikes.add(bike);
-	    if (user.getBikes() == null) {
-	        user.setBikes(new ArrayList<>());
-	    }
-	    user.getBikes().add(bike); // Add the bike to the user's bike list
+        // Set the bike ID and mark it as available
+        bike.setId(currentId++);
+        bike.setAvailable(true);
 
-	    System.out.println("Bike added for User ID: " + userId);
-	    System.out.println("User's Bike List: " + user.getBikes());
+        // Add the bike to the list of bikes and associate it with the user
+        bikes.add(bike);
+        if (user.getBikes() == null) {
+            user.setBikes(new ArrayList<>());
+        }
+        user.getBikes().add(bike); // Add the bike to the user's bike list
 
-	    return Response.status(Response.Status.CREATED).entity(bike).build();
-	}
+        System.out.println("Bike added for User ID: " + userId);
+        System.out.println("User's Bike List: " + user.getBikes());
+
+        return Response.status(Response.Status.CREATED).entity(bike).build();
+    }
 
 
 
