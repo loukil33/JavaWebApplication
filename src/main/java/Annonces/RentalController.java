@@ -181,6 +181,7 @@ public class RentalController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response addToWaitingList(@PathParam("id") int id, User user) {
+        // Step 1: Find the rental by ID
         Optional<Annonce> annonceOptional = annoncesList.stream()
                 .filter(annonce -> annonce.getId() == id)
                 .findFirst();
@@ -200,6 +201,22 @@ public class RentalController {
                     .build();
         }
 
+        // Step 2: Check if the user is the current winner
+        if (user.equals(rental.getCurrentWinner())) {
+            
+        	/*return Response.status(Response.Status.CONFLICT)
+                    .entity("You are already renting this bike as the current winner.")
+                    .build();*/
+        }
+
+        // Step 3: Check if the user is already in the waiting list
+        if (rental.getWaitingList() != null && rental.getWaitingList().stream().anyMatch(u -> u.getId() == user.getId())) {
+            /*return Response.status(Response.Status.CONFLICT)
+                    .entity("You are already in the waiting list for this bike.")
+                    .build();*/
+        }
+
+        // Step 4: Handle bike availability
         if (bike.isAvailable()) {
             // Rent the bike directly
             bike.setAvailable(false);
@@ -216,7 +233,7 @@ public class RentalController {
                     currentUser.setRentals(new ArrayList<>());
                 }
 
-                // Check if the rental is already in the user's list
+                // Add the rental to the user's list
                 if (!currentUser.getRentals().contains(rental)) {
                     currentUser.getRentals().add(rental);
                 }
@@ -224,14 +241,7 @@ public class RentalController {
 
             return Response.ok("You have successfully rented the bike!").build();
         } else {
-            // Check if the user is already in the waiting list
-            if (rental.getWaitingList() != null && rental.getWaitingList().stream().anyMatch(u -> u.getId() == user.getId())) {
-                return Response.status(Response.Status.CONFLICT)
-                        .entity("You are already in the waiting list for this bike.")
-                        .build();
-            }
-
-            // Add user to the waiting list
+            // Step 5: Add the user to the waiting list
             if (rental.getWaitingList() == null) {
                 rental.setWaitingList(new ArrayList<>());
             }
@@ -240,6 +250,7 @@ public class RentalController {
             return Response.ok("Bike is currently unavailable. You have been added to the waiting list.").build();
         }
     }
+
 
 
 

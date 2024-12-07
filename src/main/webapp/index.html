@@ -66,6 +66,51 @@
     margin-top: 45px;
 }
 
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.popup-content h3 {
+    margin-top: 0;
+}
+
+.popup-content ul {
+    text-align: left;
+    list-style: none;
+    padding: 0;
+}
+
+.popup-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-content button:hover {
+    background-color: #555;
+}
 
     </style>
     <script type="application/ld+json">{
@@ -202,16 +247,15 @@
     });
     function displayAnnoncesHome(annonces) {
         const container = document.getElementById('annonces-container-home');
-        let username = null;
         container.innerHTML = ''; // Clear existing content
 
         if (annonces.length === 0) {
             container.innerHTML = '<p>No posts found.</p>';
             return;
         }
-        
+
         annonces.forEach(annonce => {
-        	const userDataJson = sessionStorage.getItem("userData");
+            const userDataJson = sessionStorage.getItem("userData");
             let userData = null;
 
             try {
@@ -219,70 +263,125 @@
             } catch (error) {
                 console.error("Error parsing user data:", error);
             }
-        	if(userData){
-        		
-        		if (annonce.userid === userData.id) {
-            		//container.innerHTML = '<p>No posts found.</p>';
+
+            if (userData) {
+                if (annonce.userid === userData.id) {
                     return;
                 }
-        		let additionalInfo = "";
-                fetch(`http://localhost:8081/UserWebService/api/users/${annonce.userid}`
+                
+
+                let additionalInfo = "";
+                fetch(`http://localhost:8081/UserWebService/api/users/${annonce.userid}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch username.");
+                        }
+                        return response.json();
+                    })
+                    .then(user => {
+                        const username = user.last_name;
+
+                        if ("rentPrice" in annonce) {
+                            additionalInfo = `
+                                <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
+                                <p class="u-align-center u-text u-text-4"><strong>${annonce.bike.condition}</strong> ${annonce.bike.model} | ${annonce.bike.brand} | ${annonce.bike.color}</p>
+                                <p class="u-align-center u-text u-text-5">
+                                    <span class="u-file-icon u-icon u-icon-1">
+                                        <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px; margin-bottom: 8px">
+                                    </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
+                                </p>`;
+                        }
+
+                        const imageUrl = annonce.bike.images && annonce.bike.images.length > 0
+                            ? annonce.bike.images[0]
+                            : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
+
+                        const annonceHTML = `
+                            <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
+                                <div class="u-container-layout u-similar-container u-container-layout-1">
+                                    <img src="${imageUrl}" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
+                                    <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
+                                    <p class="u-align-center u-text u-text-4">${annonce.description}</p>
+                                    ${additionalInfo}
+                                    <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Posted By ${username} ends in ${annonce.duration} days</blockquote>
+                                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                                        <a href="#" onclick="RentBike(${annonce.id})" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Rent Bike</a>
+                                        <a href="#" onclick="viewNotes(${annonce.id})" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-left: 5px; padding: 10px 5px;">View Notes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        container.innerHTML += annonceHTML;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching username:", error);
+                    });
+            }
+        });
+    }
+
+    function viewNotes(annonceId) {
+        fetch( ` http://localhost:8081/UserWebService/api/annonces/${annonceId}/notes `
         		)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Failed to fetch username.");
+                    throw new Error("Failed to fetch notes.");
                 }
                 return response.json();
             })
-            .then(user => {
-                // Rebuild the user's annonces list from the API response
-            	const username = user.last_name;
-            	
-            	if ("rentPrice" in annonce) {
-                    additionalInfo = `
-                        <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">${annonce.rentPrice} €/h</h4>
-                        <p class="u-align-center u-text u-text-4"><strong>${annonce.bike.condition}</strong> ${annonce.bike.model} | ${annonce.bike.brand} | ${annonce.bike.color}</p>
-                        <p class="u-align-center u-text u-text-5">
-                            <span class="u-file-icon u-icon u-icon-1">
-                                <img src="css/images/1584892.png" alt="" style="width: 20px; height: 20px; margin-bottom: 8px">
-                            </span>&nbsp;Rent Time: ${annonce.start_time} - ${annonce.end_time}
-                        </p>`;
-                }
-            	const imageUrl = annonce.bike.images && annonce.bike.images.length > 0 
-                ? annonce.bike.images[0] 
-                : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
-                const annonceHTML = `
-                    <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1" style="padding: auto;  margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
-                        <div class="u-container-layout u-similar-container u-container-layout-1">
-                            <img src="${imageUrl}" alt="" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
-                            <h5 class="u-align-center u-text u-text-2">${annonce.title}</h5>
-                            <p class="u-align-center u-text u-text-4">${annonce.description}</p>
-                            ${additionalInfo}
-                            <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Posted By ${username} ends in ${annonce.duration} days</blockquote>
-                            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                            <a href="#" onclick="RentBike(${annonce.id})" class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" style="margin: 2px; margin-right: 5px padding: 10px 5px;" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Rent Bike</a>
-                                
+            .then(notes => {
+                let popupHTML = "";
+                if (!Array.isArray(notes)) {
+        	        notes = []; // Initialize as an empty array if undefined
+        	    }
+                // Check if notes list is empty
+                if (notes.length === 0) {
+                    popupHTML = `
+                        <div class="popup">
+                            <div class="popup-content">
+                                <h3>Post Comments</h3>
+                                <p>There are no comments on this post.</p>
+                                <button onclick="closePopup()">Close</button>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    // If notes exist, display them
+                    const notesList = notes.map(note => `
+                        <li>
+                            <strong>${note.username}:</strong> ${note.comment}<br>
+                        </li>
+                    `).join("");
 
-                container.innerHTML += annonceHTML;
+                    popupHTML = `
+                        <div class="popup">
+                            <div class="popup-content">
+                                <h3>Post Comments</h3>
+                                <ul>${notesList}</ul>
+                                <button onclick="closePopup()">Close</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                document.body.insertAdjacentHTML("beforeend", popupHTML);
             })
             .catch(error => {
-                console.error("Error fetching username:", error);
-               
+                console.error("Error fetching notes:", error);
+                alert("Error fetching notes.");
             });
-                
-        	}
-        	
-        	
-        	
-            // Check if the annonce has rental-specific properties
-            
-        });
     }
-    
+
+    // Close the popup
+    function closePopup() {
+        const popup = document.querySelector(".popup");
+        if (popup) {
+            popup.remove();  // Removes the popup from the DOM
+        }
+    }
+
+
     function RentBike(postId) {
         const userDataJson = sessionStorage.getItem("userData");
         if (!userDataJson) {
@@ -291,7 +390,10 @@
         }
 
         const userData = JSON.parse(userDataJson);
-
+        if (userData.rentals && userData.rentals.includes(postId)) {
+            showPopup("You have already rented this bike or are in the waiting list.");
+            return;
+        }
         fetch(`http://localhost:8081/UserWebService/api/rentals/${postId}/waiting-list`, 
         		{
             method: 'POST',
@@ -324,7 +426,26 @@
                 alert("Error: " + error.message);
             });
     }
+ // Function to display popup message
+    function showPopup(message) {
+        const popupHTML = `
+            <div class="popup">
+                <div class="popup-content">
+                    <h3>${message}</h3>
+                    <button onclick="closePopup2()">Close</button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML("beforeend", popupHTML);
+    }
 
+    // Function to close the popup
+    function closePopup2() {
+        const popup = document.querySelector('.popup');
+        if (popup) {
+            popup.remove();
+        }
+    }
     
 </script>
 

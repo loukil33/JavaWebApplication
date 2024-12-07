@@ -5,15 +5,22 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbTransient;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import Bikes.Bike;
 import Users.User;
+
 public class Rental extends Annonce{
 
 	private double rentPrice;
     private LocalTime start_time;
     private LocalTime end_time;
     private int rentDuration;
+    @JsonIgnore
     private List<User> waitingList;
+    @JsonIgnore
     private User CurrentWinner;
     
     public Rental() {
