@@ -222,46 +222,133 @@ public class RentalController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response addToWaitingList(@PathParam("id") int id, User user) {
-        Optional<Rental> rentalOptional = rentalList.stream()
-                .filter(rental -> rental.getId() == id)
+        // Step 1: Find the rental by ID
+        Optional<Annonce> annonceOptional = annoncesList.stream()
+                .filter(annonce -> annonce.getId() == id)
                 .findFirst();
 
-        if (rentalOptional.isEmpty()) {
+        if (annonceOptional.isEmpty() || !(annonceOptional.get() instanceof Rental)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Rental not found for ID: " + id)
                     .build();
         }
 
-        Rental rental = rentalOptional.get();
-        List<User> waitingList = rental.getWaitingList();
-        if (waitingList == null) {
-            waitingList = new ArrayList<>();
-            rental.setWaitingList(waitingList);
+        Rental rental = (Rental) annonceOptional.get();
+        Bike bike = rental.getBike();
+
+        if (bike == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Bike not associated with this rental.")
+                    .build();
         }
 
-        waitingList.add(user);
-        return Response.ok("User added to waiting list.").build();
+        // Step 2: Check if the user is the current winner
+        if (user.equals(rental.getCurrentWinner())) {
+            
+        	/*return Response.status(Response.Status.CONFLICT)
+                    .entity("You are already renting this bike as the current winner.")
+                    .build();*/
+        }
+
+        // Step 3: Check if the user is already in the waiting list
+        if (rental.getWaitingList() != null && rental.getWaitingList().stream().anyMatch(u -> u.getId() == user.getId())) {
+            /*return Response.status(Response.Status.CONFLICT)
+                    .entity("You are already in the waiting list for this bike.")
+                    .build();*/
+        }
+
+        // Step 4: Handle bike availability
+        if (bike.isAvailable()) {
+            // Rent the bike directly
+            bike.setAvailable(false);
+            rental.setCurrentWinner(user);
+
+            // Add the rental to the user's list
+            Optional<User> userOptional = users.stream()
+                    .filter(u -> u.getId() == user.getId())
+                    .findFirst();
+
+            if (userOptional.isPresent()) {
+                User currentUser = userOptional.get();
+                if (currentUser.getRentals() == null) {
+                    currentUser.setRentals(new ArrayList<>());
+                }
+
+                // Add the rental to the user's list
+                if (!currentUser.getRentals().contains(rental)) {
+                    currentUser.getRentals().add(rental);
+                }
+            }
+
+            return Response.ok("You have successfully rented the bike!").build();
+        } else {
+            // Step 5: Add the user to the waiting list
+            if (rental.getWaitingList() == null) {
+                rental.setWaitingList(new ArrayList<>());
+            }
+
+            rental.getWaitingList().add(user);
+            return Response.ok("Bike is currently unavailable. You have been added to the waiting list.").build();
+        }
     }
+
+
+
 
     // **7. Set Current Winner**
     @PUT
     @Path("/{id}/winner")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response setCurrentWinner(@PathParam("id") int id, User winner) {
-        Optional<Rental> rentalOptional = rentalList.stream()
-                .filter(rental -> rental.getId() == id)
+    public Response setCurrentWinner(@PathParam("id") int id) {
+        Optional<Annonce> annonceOptional = annoncesList.stream()
+                .filter(annonce -> annonce.getId() == id)
                 .findFirst();
 
-        if (rentalOptional.isEmpty()) {
+        if (annonceOptional.isEmpty() || !(annonceOptional.get() instanceof Rental)) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Rental not found for ID: " + id)
                     .build();
         }
 
-        Rental rental = rentalOptional.get();
-        rental.setCurrentWinner(winner);
-        return Response.ok("Current winner set successfully.").build();
+        Rental rental = (Rental) annonceOptional.get();
+        Bike bike = rental.getBike();
+
+        if (bike == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Bike not associated with this rental.")
+                    .build();
+        }
+
+        List<User> waitingList = rental.getWaitingList();
+        if (waitingList == null || waitingList.isEmpty()) {
+            // No users in the waiting list, make the bike available
+            bike.setAvailable(true);
+            rental.setCurrentWinner(null);
+            return Response.ok("No users in the waiting list. Bike is now available.").build();
+        }
+
+        // Assign the next user in the waiting list as the current winner
+        User nextWinner = waitingList.remove(0);
+        rental.setCurrentWinner(nextWinner);
+
+        // Add the rental to the next user's list
+        Optional<User> userOptional = users.stream()
+                .filter(u -> u.getId() == nextWinner.getId())
+                .findFirst();
+
+        if (userOptional.isPresent()) {
+            User currentUser = userOptional.get();
+            if (currentUser.getRentals() == null) {
+                currentUser.setRentals(new ArrayList<>());
+            }
+
+            // Check if the rental is already in the user's list
+            if (!currentUser.getRentals().contains(rental)) {
+                currentUser.getRentals().add(rental);
+            }
+        }
+
+        return Response.ok("Current winner updated successfully.").build();
     }
     
     public static List<Rental> getRentalList() {

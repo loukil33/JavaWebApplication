@@ -2,24 +2,24 @@ package Annonces;
 
 public class Note {
 
-	private int id_note;
+	
 	private int id_user;
 	private String comment;
+	private String username;
 	
-	public Note(int id_note, int id_user, String comment) {
+	public Note() {
 		
-		this.id_note = id_note;
+	}
+	
+	public Note(int id_user, String comment,String username) {
+		
+		
 		this.id_user = id_user;
 		this.comment = comment;
+		this.username = username;
 	}
 
-	public int getId_note() {
-		return id_note;
-	}
-
-	public void setId_note(int id_note) {
-		this.id_note = id_note;
-	}
+	
 
 	public int getId_user() {
 		return id_user;
@@ -37,10 +37,19 @@ public class Note {
 		this.comment = comment;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	public String toString() {
-		return "Note [id_note=" + id_note + ", id_user=" + id_user + ", comment=" + comment + "]";
+		return "Note [id_user=" + id_user + ", comment=" + comment + ", username=" + username + "]";
 	}
+
 	
 	
 }

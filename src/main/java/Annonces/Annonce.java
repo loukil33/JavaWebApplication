@@ -1,6 +1,7 @@
 package Annonces;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import Bikes.Bike;
@@ -18,7 +19,7 @@ public class Annonce {
     private List<Note> notes;
     
     public Annonce() {
-       
+    	this.notes = new ArrayList<>();
     }
 
 	public Annonce(int id, String title, String description, LocalDate startDate, int duration,int userid,Bike bike, List<Note> notes) {

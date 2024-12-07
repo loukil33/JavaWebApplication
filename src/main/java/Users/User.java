@@ -7,6 +7,7 @@ import java.util.List;
 
 import Annonces.Annonce;
 import Annonces.Note;
+import Annonces.Rental;
 import Bikes.Bike;
 
 public class User implements Serializable{
@@ -26,6 +27,7 @@ public class User implements Serializable{
 	private List<Annonce> annonces;
 	private List<Note> notes;
 	private List<Bike> bikes;
+	private List<Rental> rentals;
 	
 	public User() {
 	
@@ -33,7 +35,7 @@ public class User implements Serializable{
 	}
 	
 	public User(int id, int cin, String first_name, String last_name, String email, String password, String address,
-			LocalDate birth_date, String image_profile, RoleType role, int phoneNumber, List<Annonce> annonces,List<Note> notes,List<Bike> bikes) {
+			LocalDate birth_date, String image_profile, RoleType role, int phoneNumber, List<Annonce> annonces,List<Note> notes,List<Bike> bikes,List<Rental> rentals) {
 		
 		this.id = id;
 		this.cin = cin;
@@ -49,6 +51,7 @@ public class User implements Serializable{
 		this.annonces = annonces;
 		this.notes = notes;
 		this.bikes = bikes;
+		this.rentals = rentals;
 	}
 
 	public int getId() {
@@ -142,13 +145,23 @@ public class User implements Serializable{
 		this.bikes = bikes;
 	}
 
+	public List<Rental> getRentals() {
+		return rentals;
+	}
+
+	public void setRentals(List<Rental> rentals) {
+		this.rentals = rentals;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", cin=" + cin + ", first_name=" + first_name + ", last_name=" + last_name
 				+ ", email=" + email + ", password=" + password + ", address=" + address + ", birth_date=" + birth_date
 				+ ", image_profile=" + image_profile + ", role=" + role + ", PhoneNumber=" + PhoneNumber + ", annonces="
-				+ annonces + ", notes=" + notes + ", bikes=" + bikes + "]";
+				+ annonces + ", notes=" + notes + ", bikes=" + bikes + ", rentals=" + rentals + "]";
 	}
+
+	
 
 	
 
