@@ -361,40 +361,60 @@ function deleteBike(bikeId) {
         return; // Exit if user cancels the delete action
     }
 
+    // Retrieve user data from sessionStorage
+    const userDataJson = sessionStorage.getItem("userData");
+    let userData = null;
+
+    try {
+        userData = JSON.parse(userDataJson); // Parse user data
+    } catch (error) {
+        console.error("Error parsing user data:", error);
+        alert("User is not logged in. Please log in first.");
+        return;
+    }
+
+    if (!userData || !userData.id) {
+        alert("User is not logged in. Please log in first.");
+        return;
+    }
+
+    const userId = userData.id;
+
     // Send DELETE request to the server to remove the bike
-    fetch(`http://localhost:8081/UserWebService/api/bikes/${bikeId}`
-    		, 
+    fetch(`http://localhost:8081/UserWebService/api/users/${userId}/bikes/${bikeId}`, 
     		{
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        // If the response is not ok (e.g., not 200 status), throw an error
-        if (!response.ok) {
-            throw new Error("Bike deleted");
-        }
+        .then(response => {
+            // Check if the response is successful
+            if (!response.ok) {
+                return response.text().then(errorMessage => {
+                    throw new Error(errorMessage);
+                });
+            }
+            return response.text(); // Expect a plain text response
+        })
+        .then(message => {
+            alert(message); // Display the server's response
 
-        // Try to parse the response as JSON, if it fails, treat it as text
-        return response.text();  // Since we expect a plain text response
-    })
-    .then(message => {
-        alert(message);  // Show the message returned by the server
+            // Remove the bike from the user's sessionStorage data
+            if (userData.bikes) {
+                userData.bikes = userData.bikes.filter(bike => bike.id !== bikeId);
+                sessionStorage.setItem("userData", JSON.stringify(userData)); // Update sessionStorage
+            }
 
-        // Update bikes in sessionStorage after deletion
-        let bikes = JSON.parse(sessionStorage.getItem("bikes"));
-        bikes = bikes.filter(bike => bike.id !== bikeId);  // Remove the deleted bike
-        sessionStorage.setItem("bikes", JSON.stringify(bikes));  // Update sessionStorage with the new list
-
-        // Refresh the UI to reflect the deleted bike
-        displayBikes(bikes);
-    })
-    .catch(error => {
-        console.error("Error deleting bike:", error);
-        alert("Error deleting bike: " + error.message);
-    });
+            // Refresh the UI to reflect the deleted bike
+            displayBikes(userData.bikes || []);
+        })
+        .catch(error => {
+            console.error("Error deleting bike:", error);
+            alert("Error deleting bike: " + error.message);
+        });
 }
+
 
 
 function sellBike(bikeId) {

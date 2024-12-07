@@ -43,7 +43,7 @@ public class UserDatabase {
 		            123456789, // Phone Number
 		            new ArrayList<Annonce>(), // Annonces
 		            new ArrayList<Note>(),
-		            bikes,
+		            new ArrayList<Bike>(),
 		            new ArrayList<Rental>()
 		        );
 	        User User2 = new User(
@@ -60,7 +60,7 @@ public class UserDatabase {
 		            123456789, // Phone Number
 		            new ArrayList<Annonce>(), // Annonces
 		            new ArrayList<Note>(),
-		            bikes,
+		            new ArrayList<Bike>(),
 		            new ArrayList<Rental>()
 		        );
 	        users.add(defaultUser);

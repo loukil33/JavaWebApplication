@@ -71,120 +71,123 @@
 
     <script>
         // Validate form inputs
-        function validateForm(event) {
-            const model = document.getElementById("model").value.trim();
-            const brand = document.getElementById("brand").value.trim();
-            const condition = document.getElementById("condition").value;
-            const color = document.getElementById("color").value.trim();
-            const image = document.getElementById("image").files[0];
+       document.getElementById('add-bike-form').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Prevent default form submission
 
-            // Check model
-            if (model.length < 3) {
-                alert("Model must be at least 3 characters long.");
-                return false;
+    console.log("Submit button clicked.");
+    const userDataJson = sessionStorage.getItem("userData");
+    let userData = null;
+
+    try {
+        userData = JSON.parse(userDataJson); // Parse user data from session
+    } catch (error) {
+        console.error("Error parsing user data:", error);
+        alert("User is not logged in. Please log in first.");
+        return;
+    }
+
+    if (!userData || !userData.id) {
+        alert("User is not logged in. Please log in first.");
+        return;
+    }
+
+    const userId = userData.id;
+
+    // Collect form data
+    const form = document.getElementById('add-bike-form');
+    const formData = new FormData(form);
+
+    // Validate form inputs
+    const model = formData.get('model').trim();
+    const brand = formData.get('brand').trim();
+    const condition = formData.get('condition');
+    const color = formData.get('color').trim();
+    const imageFile = document.getElementById('image').files[0];
+
+    if (model.length < 3) {
+        alert("Model must be at least 3 characters long.");
+        return;
+    }
+
+    if (brand.length < 3) {
+        alert("Brand must be at least 3 characters long.");
+        return;
+    }
+
+    if (!condition) {
+        alert("Please select a condition for the bike.");
+        return;
+    }
+
+    if (!color.match(/^[a-zA-Z\s]+$/)) {
+        alert("Color must only contain letters and spaces.");
+        return;
+    }
+
+    if (imageFile && imageFile.size > 10 * 1024 * 1024) { // 10MB limit
+        alert("Image file size must be less than 10MB.");
+        return;
+    }
+
+    // Convert image file to Base64 (if uploaded)
+    let base64Image = null;
+    if (imageFile) {
+        base64Image = await convertFileToBase64(imageFile);
+    }
+    
+    // Prepare JSON payload
+    const bikeData = {
+        model,
+        userid: userId, // Associate bike with the current user
+        brand,
+        condition,
+        color,
+        images: base64Image ? [base64Image,imageFile.name] : [], // Send Base64 image if available
+        rented: false // Default rented status
+    };
+
+    console.log("Bike Data to Send:", bikeData);
+    
+    // Send data to the server
+    fetch(`http://localhost:8081/UserWebService/api/bikes?userId=${userId}`, 
+    		{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bikeData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to register bike.");
             }
+            return response.json();
+        })
+        .then(addedBike => {
+    alert("Bike added successfully!");
 
-            // Check brand
-            if (brand.length < 3) {
-                alert("Brand must be at least 3 characters long.");
-                return false;
-            }
+    // Ensure 'bikes' is initialized and is an array
+    if (!Array.isArray(userData.bikes)) {
+        userData.bikes = []; // Initialize as an empty array if undefined
+    }
 
-            // Check condition
-            if (!condition) {
-                alert("Please select a condition for the bike.");
-                return false;
-            }
+    // Add the newly added bike to the current user's bike list
+    userData.bikes.push(addedBike);
 
-            // Check color
-            if (!color.match(/^[a-zA-Z\s]+$/)) {
-                alert("Color must only contain letters and spaces.");
-                return false;
-            }
+    // Update session storage for the current user
+    sessionStorage.setItem("userData", JSON.stringify(userData));
 
-            // Check image file size (if provided)
-            if (image && image.size > 10 * 1024 * 1024) { // 10MB limit
-                alert("Image file size must be less than 10MB.");
-                return false;
-            }
+    form.reset(); // Reset the form
+    window.location.href = "MyBikes.html"; // Redirect to MyBikes page
+})
 
-            // If validation passes, proceed to handle submission
-            handleSubmit(event);
-            return false; // Prevent default form submission
-        }
 
-        async function handleSubmit(event) {
-            event.preventDefault(); // Prevent default form submission
+        .catch(error => {
+            console.error("Error during fetch:", error);
+            alert("Error: " + error.message);
+        });
+});
 
-            console.log("Submit button clicked.");
-            const userDataJson = sessionStorage.getItem("userData");
-            let userData = null;
-
-            try {
-                userData = JSON.parse(userDataJson); // Parse user data from session
-            } catch (error) {
-                console.error("Error parsing user data:", error);
-                return;
-            }
-            // Collect form data
-            const form = document.getElementById('add-bike-form');
-            const formData = new FormData(form);
-
-            // Convert image file to Base64 (if uploaded)
-            const imageInput = document.getElementById('image');
-            const file = imageInput.files[0];
-
-            let base64Image = null;
-            if (file) {
-                base64Image = await convertFileToBase64(file);
-            }
-
-            // Prepare JSON payload
-            const data = {
-                model: formData.get('model'),
-                userid: userData.id,
-                brand: formData.get('brand'),
-                condition: formData.get('condition'),
-                color: formData.get('color'),
-                images: base64Image ? [base64Image] : [],
-                rented: false
-                // Send Base64 image if available
-            };
-
-            console.log("Data to send:", data);
-
-            // Send data to the server
-            fetch("http://localhost:8081/UserWebService/api/bikes/add", 
-            		{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                console.log("Fetch response:", response);
-                if (!response.ok) {
-                    throw new Error("Failed to register bike.");
-                }
-                return response.json();
-            })
-            .then(message => {
-                console.log("Success message:", message);
-                alert('Bike added successfully!');
-                if (!Array.isArray(userData.bikes)) {
-        	        userData.bikes = []; // Initialize as an empty array if undefined
-        	    } 
-                userData.bikes.push(data); 
-        	    sessionStorage.setItem("userData", JSON.stringify(userData));
-                form.reset();
-                window.location.href = "MyBikes.html";
-            })
-            .catch(error => {
-                console.error("Error during fetch:", error);
-                alert('Error: ' + error.message);
-            });
-        }
 
 
 
