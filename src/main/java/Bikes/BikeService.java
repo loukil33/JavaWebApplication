@@ -46,7 +46,7 @@ public class BikeService {
 
 
 	            String fileName = "bike_" + currentId + ".jpg";
-	            String filePath = "E:\\github\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
+	            String filePath = "C:\\Users\\Mohamed Aziz\\Documents\\GitHub\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
 
 
 	            File outputFile = new File(filePath);
@@ -131,7 +131,7 @@ public class BikeService {
 	            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
 
 	            String fileName = "bike_" + currentId + ".jpg";
-	            String filePath = "E:\\github\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
+	            String filePath = "C:\\Users\\Mohamed Aziz\\Documents\\GitHub\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
 
 	            File outputFile = new File(filePath);
 	            try (FileOutputStream fos = new FileOutputStream(outputFile)) {

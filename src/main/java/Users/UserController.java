@@ -28,7 +28,7 @@ import static Annonces.AnnonceDB.annoncesList;
 @Path("/users")
 public class UserController {
 	
-	private static int idCounter = 2; // Initialize counter for id, starts from 1
+	private static int idCounter = 4; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -253,6 +253,7 @@ public class UserController {
         Optional<User> userOptional = users.stream()
                 .filter(user -> user.getId() == userId)
                 .findFirst();
+        
 
         if (userOptional.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -282,6 +283,13 @@ public class UserController {
 
         Rental rentalToRemove = rentalOptional.get();
         
+        Optional<Bike> bikeOptional = bikes.stream()
+                .filter(bike -> bike.getId() == rentalToRemove.getBike().getId())
+                .findFirst();
+        Bike bike_sell = bikeOptional.get();
+        bike_sell.setRented(true);
+        
+        
      // Check if the user is the current winner
         /*if (!rentalToRemove.getCurrentWinner().equals(user)) {
             return Response.status(Response.Status.FORBIDDEN)
@@ -297,6 +305,8 @@ public class UserController {
             Bike bike = rental.getBike();
             if (bike != null) {
                 bike.setAvailable(true); // Mark the bike as available
+                bike.setRented(true);
+                bike_sell.setRented(true);
             }
         }
      // Handle the waiting list and set the next user as the current winner
@@ -323,14 +333,22 @@ public class UserController {
             sendEmailNotification(nextWinner.getEmail(), rentalToRemove);
             // Update the rental's waiting list
             rentalToRemove.setWaitingList(waitingList);
+            Rental rental = (Rental) rentalToRemove;
+            Bike bike = rental.getBike();
+            bike.setRented(true);
+            bike_sell.setRented(true);
             return Response.ok("Rental returned successfully. The next user is now the current winner.").build();
         } else {
             // No users in the waiting list, make the bike available again
         	rentalToRemove.getBike().setAvailable(true);
+        	Rental rental = (Rental) rentalToRemove;
+            Bike bike = rental.getBike();
+        	bike.setRented(true);
+        	bike_sell.setRented(true);
         	rentalToRemove.setCurrentWinner(null);
             return Response.ok("Rental returned successfully. The bike is now available for rent.").build();
         }
-       
+        
         //return Response.ok("Rental removed successfully from the user's list.").build();
 
         

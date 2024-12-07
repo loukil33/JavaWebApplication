@@ -87,9 +87,19 @@
         })
         .then(userData => {
             console.log("Login successful. User data:", userData);
+            console.log("User role:", userData.role);
+
             sessionStorage.setItem("userData", JSON.stringify(userData)); // Store user data in sessionStorage
             console.log("User data saved to sessionStorage:", sessionStorage.getItem("userData"));
-            window.location.href = "index.html"; // Redirect to the index page
+            
+            if (userData.role === "CLIENT") {
+                console.log("Redirecting to Sales.html for CLIENT role");
+                window.location.href = "Sales.html";
+            } else {
+                console.log("Redirecting to index.html for non-CLIENT role");
+                window.location.href = "index.html";
+            }
+             // Redirect to the index page
         })
         .catch(error => {
             console.error("Error during fetch:", error);

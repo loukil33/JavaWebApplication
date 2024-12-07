@@ -70,15 +70,7 @@ public class RentalController {
                            .build();
         }
 
-        Bike bike = bikeOptional.get();
-        if (bike.isAvailable()) {
-            bike.setRented(true); // Mark the bike as rented
-          
-        } else {
-            return Response.status(Response.Status.CONFLICT)
-                           .entity("Bike is already rented.")
-                           .build();
-        }
+        
 
         // Associate rental with the user
         User user = userOptional.get();

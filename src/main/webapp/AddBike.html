@@ -146,7 +146,9 @@
                 brand: formData.get('brand'),
                 condition: formData.get('condition'),
                 color: formData.get('color'),
-                images: base64Image ? [base64Image] : [] // Send Base64 image if available
+                images: base64Image ? [base64Image] : [],
+                rented: false
+                // Send Base64 image if available
             };
 
             console.log("Data to send:", data);

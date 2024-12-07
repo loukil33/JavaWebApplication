@@ -115,12 +115,15 @@ public class Bike {
 	        this.images = images;
 	    }
 		
+		
 		public Bike() {
 		}
 		@Override
 		public String toString() {
 			return "Bike [id=" + id + ", userid=" + userid + ", model=" + model + ", brand=" + brand + ", condition="
-					+ condition + ", color=" + color + ", isAvailable=" + isAvailable + ", images=" + images + "]";
+					+ condition + ", color=" + color + ", isAvailable=" + isAvailable + ", images=" + images
+					+ ", rented=" + rented + "]";
 		}
+		
 
 }

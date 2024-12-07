@@ -310,6 +310,8 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         })
         .then(response => {
             if (response.ok) {
+            	
+            	
                 alert("Annonce deleted successfully.");
 
                 // Optionally refresh the page or update the UI dynamically
@@ -330,61 +332,98 @@ c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></sv
         })
         .catch(error => {
             console.error("Error deleting annonce:", error);
-            alert("An error occurred while trying to delete the annonce.");
+            alert("An error occurred while trying to delete the post.");
         });
     }
     function deleteAnnonce(annonceId) {
-        // Confirm with the user before deletion
-        if (!confirm("Are you sure you want to delete this annonce?")) {
-            return;
-        }
+        // Fetch the annonce details to check the current winner
+        fetch(`http://localhost:8081/UserWebService/api/rentals/${annonceId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch annonce details.");
+                }
+                return response.json();
+            })
+            .then(annonce => {
+                // Check if the current winner is not empty
+                if (annonce.CurrentWinner) {
+                    const popupHTML = `
+                        <div class="popup">
+                            <div class="popup-content">
+                                <h3>Unable to Delete</h3>
+                                <p>You cannot delete this post because it currently has a winner.</p>
+                                <button onclick="closePopup()">Close</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.insertAdjacentHTML("beforeend", popupHTML);
+                    return; // Exit the function to prevent deletion
+                }
 
-        // Send DELETE request to the server
-        fetch(`http://localhost:8081/UserWebService/api/rentals/${annonceId}`, 
-        		{
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                // Successfully deleted, refresh the list or remove the element
-                alert("Annonce deleted successfully.");
-                /*const element = document.getElementById(`annonce-${annonceId}`);
-                if (element) {
-                    element.remove();  // Remove the element
-                } else {
-                    console.error(`Annonce with ID ${annonceId} not found in the DOM.`);
-                }*/
-                const userDataJson = sessionStorage.getItem("userData");
-                let userData = null;
-
-                try {
-                    userData = JSON.parse(userDataJson);
-                } catch (error) {
-                    console.error("Error parsing user data:", error);
-                    alert("User is not logged in. Please log in first.");
+                // Confirm with the user before deletion
+                if (!confirm("Are you sure you want to delete this post?")) {
                     return;
                 }
 
-                if (!userData || !userData.id) {
-                    alert("User is not logged in. Please log in first.");
-                    return;
-                }
-                deleteUserAnnonce(userData.id,annonceId);
+                // Proceed with deletion
+                fetch(`http://localhost:8081/UserWebService/api/rentals/${annonceId}`, 
+                		{
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (response.ok) {
+                        	// Successfully deleted, refresh the list or remove the element
+                            alert("Annonce deleted successfully.");
+                            /*const element = document.getElementById(annonce-${annonceId});
+                            if (element) {
+                                element.remove();  // Remove the element
+                            } else {
+                                console.error(Annonce with ID ${annonceId} not found in the DOM.);
+                            }*/
+                            const userDataJson = sessionStorage.getItem("userData");
+                            let userData = null;
 
-                // Optionally refresh or redirect to update the UI
-                window.location.href = "Annonces.html";
-            } else {
-                // Handle errors
-                return response.text().then(errorMessage => {
-                    alert(`Failed to delete: ${errorMessage}`);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error deleting annonce:', error);
-            alert("An error occurred while trying to delete the annonce.");
-        });
+                            try {
+                                userData = JSON.parse(userDataJson);
+                            } catch (error) {
+                                console.error("Error parsing user data:", error);
+                                alert("User is not logged in. Please log in first.");
+                                return;
+                            }
+
+                            if (!userData || !userData.id) {
+                                alert("User is not logged in. Please log in first.");
+                                return;
+                            }
+                            deleteUserAnnonce(userData.id,annonceId);
+
+                            // Optionally refresh or redirect to update the UI
+                            window.location.href = "Annonces.html";
+                        } else {
+                            return response.text().then(errorMessage => {
+                                alert(`Failed to delete: ${errorMessage}`);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting annonce:', error);
+                        alert("An error occurred while trying to delete the annonce.");
+                    });
+            })
+            .catch(error => {
+                console.error("Error fetching annonce details:", error);
+                alert("Unable to retrieve annonce details. Please try again later.");
+            });
     }
+
+    // Function to close the popup
+    function closePopup() {
+        const popup = document.querySelector('.popup');
+        if (popup) {
+            popup.remove();
+        }
+    }
+
     </script>
     <script>
    

@@ -186,22 +186,33 @@
 
         if (userData) {
             console.log("User data found in session:", userData);
-
-            // Safely access and update DOM elements
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-link');
             const profileLink = document.getElementById('profile-link');
             const postsLink = document.getElementById('posts-link');
             const bikesLink = document.getElementById('Bikes-link');
             const rentalsLink = document.getElementById('rentals-link');
+            const homeLink = document.getElementById('home-link');
             const welcomeMessage = document.getElementById('welcome-message');
 
             if (loginBtn) loginBtn.style.display = 'none';
             if (logoutBtn) logoutBtn.style.display = 'block';
+
+            // Safely access and update DOM elements
+            if (userData.role === "CLIENT") {
+            if (homeLink) homeLink.style.display = 'block';
+            if (profileLink) profileLink.style.display = 'none';
+            if (postsLink) postsLink.style.display = 'none';
+            if (bikesLink) bikesLink.style.display = 'none';
+            if (rentalsLink) rentalsLink.style.display = 'none';
+        } else {
+            // For other roles, show all links
+            if (homeLink) homeLink.style.display = 'block';
             if (profileLink) profileLink.style.display = 'block';
             if (postsLink) postsLink.style.display = 'block';
             if (bikesLink) bikesLink.style.display = 'block';
             if (rentalsLink) rentalsLink.style.display = 'block';
+        }
             if (welcomeMessage) welcomeMessage.textContent = `Welcome, ${userData.first_name}`;
             
             fetch( `http://localhost:8081/UserWebService/api/annonces/` 
