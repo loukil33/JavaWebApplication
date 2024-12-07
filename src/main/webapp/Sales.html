@@ -14,130 +14,59 @@
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=ADLaM+Display:400">
     
-      <style>
-        /* Sales page specific styling */
-        #sales-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .sale-card {
-            width: 30%;
-            max-width: 300px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            text-align: center;
-            padding: 15px;
-        }
-
-        .sale-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .sale-card h3 {
-            font-size: 1.2em;
-            margin: 10px 0;
-        }
-
-        .sale-card p {
-            margin: 5px 0;
-            font-size: 0.9em;
-            color: #555;
-        }
-
-        .sale-card button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            margin-top: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .sale-card button:hover {
-            background-color: #45a049;
-        }
-
-        /* Styling for cart button and badge */
-        .cart-button-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .cart-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 25px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .cart-button:hover {
-            background-color: #45a049;
-        }
-
-        .badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            font-size: 14px;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            border: 2px solid white;
-        }
-
-        .badge.hidden {
-            display: none;
-        }
-        .u-nav {
+<style>
+/* General Layout Styles */
+#sales-container {
     display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
     justify-content: center;
-    align-items: center;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.u-nav-item {
-    margin: 0 10px;
-}
-.u-nav-link {
-    text-decoration: none;
-    padding: 10px 20px;
-    color: black;
-}
-.u-nav-link:hover {
-    color: blue;
-}
-.hidden {
-    display: none;
 }
 
-h2.u-text-1 {
-    margin-bottom: 0;
+.sale-card {
+    width: 30%;
+    max-width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+    padding: 15px;
 }
 
-form#rental-post-update-form {
-    margin-top: 0;
-    
+.sale-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
 }
+
+.sale-card h3 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.sale-card p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.sale-card button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.sale-card button:hover {
+    background-color: #45a049;
+}
+
+/* Navbar and Logo Styles */
 .navbar {
     display: flex;
     justify-content: space-between; /* Space between logo and navigation links */
@@ -145,26 +74,100 @@ form#rental-post-update-form {
     padding: 10px 20px;
 }
 
-/* Adjust the logo if necessary */
 .u-logo {
     margin-right: 20px; /* Adjust space between the logo and the nav */
     margin-left: -10px; /* Move the logo slightly to the left */
 }
+
+.u-logo-image {
+    max-height: 100px; /* Adjust the height for better scaling */
+    object-fit: contain; /* Fit the image within its container */
+    margin-top: 45px;
+}
+
 .u-nav {
     display: flex; /* Keep the nav links in a row */
+    justify-content: center;
+    align-items: center;
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-/* Ensure the logo image does not collapse */
-.u-logo-image {
-    max-height: 100px; /* Adjust the height for better scaling */
-    max-width: auto; /* Ensure the aspect ratio is maintained */
-    object-fit: contain; /* Fit the image within its container */
-    margin-top: 45px;
+.u-nav-item {
+    margin: 0 10px;
 }
-    </style>
+
+.u-nav-link {
+    text-decoration: none;
+    padding: 10px 20px;
+    color: black;
+}
+
+.u-nav-link:hover {
+    color: blue;
+}
+
+/* Hidden Elements */
+.hidden {
+    display: none;
+}
+
+/* Check Cart Button and Badge Styles */
+.cart-button-container {
+    position: relative;
+    display: inline-block;
+}
+
+.cart-button {
+    background-color: #FFA726; /* Light orange */
+    color: #FFFFFF; /* White text */
+    border: 2px solid transparent; /* Initially no visible border */
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative; /* To position badge correctly */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, border-color 0.3s ease; /* Smooth hover effects */
+}
+
+.cart-button:hover {
+    background-color: #FFFFFF; /* White background */
+    color: #1E88E5; /* Blue text */
+    border-color: #1E88E5; /* Blue border */
+    transform: scale(1.05); /* Slight enlargement */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow */
+}
+
+/* Badge styles for cart button */
+.badge {
+    display: inline-block;
+    background-color: #FF3D00; /* Red for badge */
+    color: #FFFFFF; /* White text */
+    border-radius: 50%;
+    font-size: 12px;
+    padding: 4px 8px;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    border: 2px solid white; /* Border to make badge distinct */
+    font-weight: bold; /* Bold text */
+}
+
+.badge.hidden {
+    display: none; /* Hide the badge when no items in the cart */
+}
+
+/* Additional Form Adjustments */
+form#rental-post-update-form {
+    margin-top: 0;
+}
+
+h2.u-text-1 {
+    margin-bottom: 0;
+}
+</style>
+
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
 		"@type": "Organization",
@@ -214,11 +217,13 @@ form#rental-post-update-form {
 
     <section class="u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-xl u-container-align-center-xs u-palette-1-light-3 u-section-2" id="sales-section">
     <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px;">
-    <button class="cart-button" style="margin: 2px; margin-right: 5px;" onclick="checkCartBeforeNavigation()">
-                🛒 Check Cart
+    <button class="cart-button u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1" style="margin: 2px; margin-right: 5px;" onclick="checkCartBeforeNavigation()">
+                Check Cart 
                 <div id="cart-badge" class="badge hidden">0</div>
-            </button>
-           <a href="BuyHistory.html" class="cart-button" style="margin: 2px; margin-right: 5px;">Buy History</a>
+      </button>
+            
+     
+           <a href="BuyHistory.html" class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1" style="margin: 2px; margin-right: 5px;">Buy History</a>
            <label for="currency">Select Currency:</label>
         <select id="currency" onchange="convertPrices()">
             <!-- Currencies will be populated dynamically -->
@@ -272,18 +277,24 @@ form#rental-post-update-form {
                         : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
 
                     const saleHTML = `
-                        <div class="sale-card" style="padding: auto;  margin-bottom:auto;">
+                        <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1 sale-card" style="padding: auto; margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
                         <div class="u-container-layout u-similar-container u-container-layout-1">
-                            <img src="${imageUrl}" alt="Bike Image">
-                            <h3>${sale.title || 'Unknown Sale'}</h3>
-                            <p>${sale.description || 'No description available'}</p>
-                            <p><strong>Price:</strong> <span data-price="${sale.salePrice || 0}" class="price">€${(sale.salePrice || 0).toFixed(2)}</span></p>
-                            <p><strong>Start Date:</strong> ${sale.startDate || 'N/A'}</p>
-                            <p><strong>Duration:</strong> ${sale.duration || 0} days</p>
-                            <p><strong>Bike:</strong> ${bike.model || 'Unknown Model'} (${bike.brand || 'Unknown Brand'}, ${bike.color || 'Unknown Color'})</p>
-                            <button onclick="addToCart(${sale.id}, '${bike.model || 'Unknown Model'}', ${sale.salePrice || 0}, '${imageUrl}')">Add to Cart</button>
+                            <img src="${imageUrl}" alt="Bike Image" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
+                            <h5 class="u-align-center u-text u-text-2">${sale.title || 'Unknown Sale'}</h5>
+                            <p class="u-align-center u-text u-text-4">${sale.description || 'No description available'}</p>
+                            <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">€${(sale.salePrice || 0).toFixed(2)}</h4>
+                            <p class="u-align-center u-text u-text-5"><strong>${bike.condition || 'Unknown Condition'}</strong> ${bike.model || 'Unknown Model'} | ${bike.brand || 'Unknown Brand'} | ${bike.color || 'Unknown Color'}</p>
+                            <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Sale ends in ${sale.duration || 0} days</blockquote>
+                            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                            <button onclick="addToCart(${sale.id}, '${bike.model || 'Unknown Model'}', ${sale.salePrice || 0}, '${imageUrl}')" 
+                                class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" 
+                                style="margin: 2px; margin-right: 5px; padding: 10px 5px;">
+                                Add to Cart
+                            </button>
+
+                            </div>
                         </div>
-                        </div>`;
+                    </div>`;
                     container.innerHTML += saleHTML;
                 } catch (error) {
                     console.error(`Error rendering sale at index ${index}:`, error);
