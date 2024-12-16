@@ -62,8 +62,22 @@ public class Cart implements Serializable {
         totalPrice = 0.0;
     }
 
-    @Override
-    public String toString() {
-        return "Cart [userId=" + userId + ", items=" + items + ", totalPrice=" + totalPrice + "]";
-    }
+    public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public void setItems(List<Sale> items) {
+		this.items = items;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	@Override
+	public String toString() {
+		return "Cart [userId=" + userId + ", items=" + items + ", totalPrice=" + totalPrice + "]";
+	}
+
+	
 }

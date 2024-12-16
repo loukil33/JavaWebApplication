@@ -17,7 +17,6 @@ public class Rental extends Annonce{
 	private double rentPrice;
     private LocalTime start_time;
     private LocalTime end_time;
-    private int rentDuration;
     @JsonIgnore
     private List<User> waitingList;
     @JsonIgnore
@@ -27,12 +26,11 @@ public class Rental extends Annonce{
     	
     }
 	public Rental(int id,String title, String description, LocalDate startDate, int duration,int userid,Bike bike,List<Note> notes, double rentPrice,
-			LocalTime start_time,LocalTime end_time, int rentDuration,List<User> waitingList,User CurrentWinner) {
+			LocalTime start_time,LocalTime end_time,List<User> waitingList,User CurrentWinner) {
 		super(id,title, description, startDate, duration,userid,bike,notes);
 		this.rentPrice = rentPrice;
 		this.start_time = start_time;
 		this.end_time = end_time;
-		this.rentDuration = rentDuration;
 		this.waitingList = waitingList;
 		this.CurrentWinner = CurrentWinner;
 	}
@@ -56,13 +54,7 @@ public class Rental extends Annonce{
 	public void setEnd_time(LocalTime end_time) {
 		this.end_time = end_time;
 	}
-	public int getRentDuration() {
-		return rentDuration;
-	}
-
-	public void setRentDuration(int rentDuration) {
-		this.rentDuration = rentDuration;
-	}
+	
 
 	public List<User> getWaitingList() {
 		return waitingList;
@@ -79,14 +71,13 @@ public class Rental extends Annonce{
 	public void setCurrentWinner(User currentWinner) {
 		CurrentWinner = currentWinner;
 	}
-	
 	@Override
 	public String toString() {
-		return super.toString() +"Rental [rentPrice=" + rentPrice + ", start_time=" + start_time + ", end_time=" + end_time
-				+ ", rentDuration=" + rentDuration + ", waitingList=" + waitingList + ", CurrentWinner=" + CurrentWinner
-				+ "]";
+		return "Rental [rentPrice=" + rentPrice + ", start_time=" + start_time + ", end_time=" + end_time
+				+ ", waitingList=" + waitingList + ", CurrentWinner=" + CurrentWinner + "]";
 	}
-
+	
+	
 	
 
 	

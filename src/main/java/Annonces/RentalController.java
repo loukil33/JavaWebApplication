@@ -160,9 +160,7 @@ public class RentalController {
         if (updatedRental.getEnd_time() != null) {
             rental.setEnd_time(updatedRental.getEnd_time());
         }
-        if (updatedRental.getRentDuration() > 0) {
-            rental.setRentDuration(updatedRental.getRentDuration());
-        }
+        
         if (updatedRental.getWaitingList() != null) {
             rental.setWaitingList(updatedRental.getWaitingList());
         }
