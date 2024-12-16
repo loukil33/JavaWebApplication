@@ -166,17 +166,7 @@
 
     <script>
     
-    const userDataJson = sessionStorage.getItem("userData");
-    let userData = null;
-
-    try {
-        userData = JSON.parse(userDataJson);
-    } catch (error) {
-        console.error("Error parsing user data:", error);
-    }
-    
-    
-    const userId = userData.id; // Static user ID for testing; Replace with actual user ID.
+        const userId = 1; // Static user ID for testing; Replace with actual user ID.
         let cartItems = []; // Global cart items array.
 
         async function loadCart(data = null) {
@@ -270,8 +260,5 @@
         // Load cart items on page load.
         loadCart();
     </script>
-    <footer class="u-align-center u-clearfix u-container-align-center u-custom-color-1 u-footer u-footer" id="sec-5467"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1">© Developed By Eiffel Corp.</p>
-      </div></footer>
 </body>
 </html>

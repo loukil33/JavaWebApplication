@@ -23,7 +23,7 @@ public class BikeService {
 	
 	
 
-	private static int currentId = 13; // Auto-increment ID counter
+	private static int currentId = 4; // Auto-increment ID counter
 
 	@POST
 	@Path("/add")
@@ -106,11 +106,6 @@ public class BikeService {
 	        return Response.status(Response.Status.BAD_REQUEST).entity("All fields are required").build();
 	    }
 
-	    if (bike.getUserid() != userId) {
-	        return Response.status(Response.Status.BAD_REQUEST)
-	                .entity("The userId in the bike does not match the logged-in user's ID.")
-	                .build();
-	    }
 	    // Find the user by userId
 	    Optional<User> userOptional = users.stream()
 	                                       .filter(user -> user.getId() == userId)
@@ -127,19 +122,16 @@ public class BikeService {
 	    // Save the bike image if provided
 	    if (bike.getImages() != null && !bike.getImages().isEmpty()) {
 	        String imageBase64 = bike.getImages().get(0);
-	        String originalFileName = bike.getImages().size() > 1 ? bike.getImages().get(1) : null; // Second element contains the file name
-	        
+
 	        if (imageBase64.startsWith("data:image")) {
 	            imageBase64 = imageBase64.split(",")[1]; // Remove the prefix
 	        }
-	        if (originalFileName == null || originalFileName.isEmpty()) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Original file name is required.").build();
-            }
+
 	        try {
 	            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
 
 	            String fileName = "bike_" + currentId + ".jpg";
-	            String filePath = "C:\\Users\\Mohamed Aziz\\Documents\\GitHub\\JavaWebApplication\\src\\main\\webapp\\css\\images\\" + originalFileName;
+	            String filePath = "C:\\Users\\Mohamed Aziz\\Documents\\GitHub\\JavaWebApplication\\src\\main\\webapp\\css\\images" + fileName;
 
 	            File outputFile = new File(filePath);
 	            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
@@ -147,7 +139,7 @@ public class BikeService {
 	                System.out.println("Image saved at: " + outputFile.getAbsolutePath());
 	            }
 
-	            bike.setImages(List.of("http://localhost:8081/UserWebService/css/images/" + originalFileName));
+	            bike.setImages(List.of("http://localhost:8081/UserWebService/css/images/" + fileName));
 	        } catch (IllegalArgumentException e) {
 	            e.printStackTrace();
 	            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Base64 image data").build();
@@ -170,8 +162,6 @@ public class BikeService {
 	    if (user.getBikes() == null) {
 	        user.setBikes(new ArrayList<>());
 	    }
-	    
-	    
 	    user.getBikes().add(bike); // Add the bike to the user's bike list
 
 	    System.out.println("Bike added for User ID: " + userId);

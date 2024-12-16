@@ -15,7 +15,6 @@ public class CartController {
 
     // Get cart for the current user (or a specific user by ID)
     private Cart getCartForUser(int userId) {
-    	System.out.println(carts.stream().filter(cart -> cart.getUserId() == userId).findFirst().orElse(null));
         return carts.stream().filter(cart -> cart.getUserId() == userId).findFirst().orElse(null);
     }
 
@@ -41,7 +40,6 @@ public class CartController {
         }
 
         try {
-        	cart.setUserId(userId);
             // Add item to cart
             cart.addItemToCart(sale);
             return Response.ok("Item added to cart.").build();
@@ -87,7 +85,6 @@ public class CartController {
         Map<String, Object> response = new HashMap<>();
         response.put("cartItems", responseItems);
         response.put("totalPrice", totalPrice);
-        response.put("userid", userId);
         return Response.ok(response).build();
     }
 

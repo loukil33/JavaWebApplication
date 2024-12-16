@@ -178,34 +178,23 @@ h2.u-text-1 {
     <meta property="og:title" content="Home">
     <meta property="og:type" content="website">
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-<body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="en">
+<body class="u-body u-xl-mode" data-lang="en">
     <!-- Header Section from index.html -->
     <header class="u-clearfix u-grey-5 u-header u-header" id="sec-4073">
   <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
            
- <nav class="navbar">
-     <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
+            <nav class="navbar">
+   <a href="#" class="u-image u-logo u-image-1" data-image-width="300" data-image-height="150">
     <img src="css/images/universite-gustave-eiffel.png" class="u-logo-image u-logo-image-1" alt="Université Gustave Eiffel Logo" style="width: auto; height: auto;">
 </a>
     <ul class="u-nav u-unstyled u-nav-1">
-        <li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
+        <li class="u-nav-item" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="index.html" style="padding: 10px 20px; margin-left: 80px;">Home</a></li>
         <li class="u-nav-item" id="profile-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Sales.html" style="padding: 10px 20px;">Sales</a></li>
         <li class="u-nav-item" id="Bikes-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyBikes.html" style="padding: 10px 20px;">My Bikes</a></li>
         <li class="u-nav-item" id="posts-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="Annonces.html" style="padding: 10px 20px;">My Posts</a></li>
         <li class="u-nav-item" id="rentals-link" style="display: none;"><a class="u-button-style u-nav-link u-text-active-grey-75 u-text-hover-palette-2-base" href="MyRentals.html" style="padding: 10px 20px;">My Rentals</a></li>
         <li class="u-nav-item" id="logout-link" style="display: none;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-        
-        <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
-            Logout
-        </button>
-        <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
-            Login
-        </button>
-        <h5 id="welcome-message" class="u-text u-text-default u-text-1" style="margin: auto; font-size: 20px;"></h5>
-    </div>
-    
-            <!--  <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
+            <button id="logout-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
                 Logout
             </button>
         </li>
@@ -213,11 +202,11 @@ h2.u-text-1 {
         <button id="login-btn" class="u-border-none u-btn u-btn-round u-button-style u-hover-custom-color-1 u-palette-1-light-1 u-radius u-btn-1">
              Login
             </button>
-            </li>-->
+            </li>
     </ul>
-    <!--<div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
+    <div id="user-info" style="display: none; margin-left: 20px; display: flex; align-items: center;">
     <h5 class="u-text u-text-default u-text-1" id="welcome-message"></h5>
-    </div>-->
+    </div>
 </nav>
            
         </div>
@@ -252,69 +241,48 @@ h2.u-text-1 {
     
 
     <script>
-    const BASE_CURRENCY = "EUR";
-    const userDataJson = sessionStorage.getItem("userData");
-    let userData = null;
+	    const BASE_CURRENCY = "EUR";
+	    const userId = 1; // Example user ID
+	    let conversionRates = {};
+	    let salesData = [];
 
-    try {
-        userData = JSON.parse(userDataJson);
-    } catch (error) {
-        console.error("Error parsing user data:", error);
-    }
-    
-    
-    const userId = userData.id; // Example user ID
-    let conversionRates = {};
-    let salesData = [];
+        async function fetchAndDisplaySales() {
+            try {
+                const response = await fetch("http://localhost:8081/UserWebService/api/sales");
+                if (!response.ok) throw new Error("Failed to fetch sales data.");
 
-    async function fetchAndDisplaySales() {
-    	
-            fetch(`http://localhost:8081/UserWebService/api/sales`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch sales data.");
-                }
-                return response.json();
-            })
-            //if (!response.ok) throw new Error("Failed to fetch sales data.");
-            .then(salesData => {
-            	//salesData = await response.json();
+                salesData = await response.json();
                 displaySales(salesData);
                 fetchCurrencyRates();
-            })
-            .catch(error => {
-                    console.error("Error fetching annonces:", error);
-                    document.getElementById('annonces-container').innerHTML = `
-                        <p style="color: red;">Unable to load sales. Please try again later.</p>`;
-                });
-        
-           
-        
-    }
-
-    function displaySales(sales) {
-        const container = document.getElementById("sales-container");
-        container.innerHTML = "";
-
-        if (!sales || sales.length === 0) {
-            container.innerHTML = `<p>No sales available at the moment.</p>`;
-            return;
+            } catch (error) {
+                console.error("Error fetching sales:", error);
+                document.getElementById("sales-container").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
         }
 
-        sales.forEach((sale, index) => {
-            try {
-                const bike = sale.bike || {}; // Ensure bike object exists
-                const imageUrl = bike.images && bike.images.length > 0 
-                    ? bike.images[0] 
-                    : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
+        function displaySales(sales) {
+            const container = document.getElementById("sales-container");
+            container.innerHTML = "";
 
-                const saleHTML = `
-                    <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1 sale-card" style="padding: auto; margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
+            if (!sales || sales.length === 0) {
+                container.innerHTML = `<p>No sales available at the moment.</p>`;
+                return;
+            }
+
+            sales.forEach((sale, index) => {
+                try {
+                    const bike = sale.bike || {}; // Ensure bike object exists
+                    const imageUrl = bike.images && bike.images.length > 0 
+                        ? bike.images[0] 
+                        : 'http://localhost:8081/UserWebService/css/images/imagevelo.jpg';
+
+                    const saleHTML = `
+                        <div class="u-list-item u-radius u-repeater-item u-shape-round u-white u-list-item-1 sale-card" style="padding: auto; margin-bottom:auto;" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="200">
                         <div class="u-container-layout u-similar-container u-container-layout-1">
                             <img src="${imageUrl}" alt="Bike Image" class="u-expanded-width u-image u-image-round u-radius u-image-1" data-image-width="1067" data-image-height="800">
                             <h5 class="u-align-center u-text u-text-2">${sale.title || 'Unknown Sale'}</h5>
                             <p class="u-align-center u-text u-text-4">${sale.description || 'No description available'}</p>
-                            <h4 class="u-align-center u-text u-text-palette-1-base u-text-3 price" data-price="${sale.salePrice || 0}">€${(sale.salePrice || 0).toFixed(2)}</h4>
+                            <h4 class="u-align-center u-text u-text-palette-1-base u-text-3">€${(sale.salePrice || 0).toFixed(2)}</h4>
                             <p class="u-align-center u-text u-text-5"><strong>${bike.condition || 'Unknown Condition'}</strong> ${bike.model || 'Unknown Model'} | ${bike.brand || 'Unknown Brand'} | ${bike.color || 'Unknown Color'}</p>
                             <blockquote class="u-align-center u-indent-9 u-text u-text-6" style="font-size: 12px; margin-bottom: 10px; color: #888;">Sale ends in ${sale.duration || 0} days</blockquote>
                             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
@@ -322,119 +290,114 @@ h2.u-text-1 {
                                 class="u-active-white u-align-center u-border-2 u-border-active-palette-1-base u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-white u-palette-1-base u-radius u-text-active-black u-text-body-alt-color u-text-hover-black u-btn-1" 
                                 style="margin: 2px; margin-right: 5px; padding: 10px 5px;">
                                 Add to Cart
-                        </button>
-
+                            </button>
 
                             </div>
                         </div>
                     </div>`;
-                container.innerHTML += saleHTML;
-            } catch (error) {
-                console.error(`Error rendering sale at index ${index}:`, error);
-            }
-        });
-    }
-
-    async function addToCart(saleId, model, price, image) {
-        try {
-            const sale = { id: saleId, model, salePrice: price, bike: { model, images: [image] } };
-            const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(sale),
+                    container.innerHTML += saleHTML;
+                } catch (error) {
+                    console.error(`Error rendering sale at index ${index}:`, error);
+                }
             });
-            if (response.ok) {
-                alert("Item added to cart successfully!");
-                updateCartBadge();
-            } else if (response.status === 400) {
-                const errorText = await response.text();
-                if (errorText.includes("already in cart")) alert("This item is already in your cart.");
-            } else {
-                throw new Error("Failed to add item.");
+        }
+
+        
+        async function addToCart(saleId, model, price, image) {
+            try {
+                const sale = { id: saleId, model, salePrice: price, bike: { model, images: [image] } };
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/add?userId=${userId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(sale),
+                });
+                if (response.ok) {
+                    alert("Item added to cart successfully!");
+                    updateCartBadge();
+                } else if (response.status === 400) {
+                    const errorText = await response.text();
+                    if (errorText.includes("already in cart")) alert("This item is already in your cart.");
+                } else {
+                    throw new Error("Failed to add item.");
+                }
+            } catch (error) {
+                console.error("Error adding to cart:", error);
             }
-        } catch (error) {
-            console.error("Error adding to cart:", error);
         }
-    }
 
-    async function checkCartBeforeNavigation() {
-        try {
-            const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
-            const data = await response.json();
-            if (data.cartItems.length === 0) {
-                alert("Your cart is empty.");
-            } else {
-                window.location.href = "BuyCart.html";
+        async function checkCartBeforeNavigation() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+                if (data.cartItems.length === 0) {
+                    alert("Your cart is empty.");
+                } else {
+                    window.location.href = "BuyCart.html";
+                }
+            } catch (error) {
+                console.error("Error checking cart:", error);
             }
-        } catch (error) {
-            console.error("Error checking cart:", error);
         }
-    }
 
-    async function updateCartBadge() {
-        try {
-            const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
-            const data = await response.json();
-            const badge = document.getElementById("cart-badge");
-            if (data.cartItems.length > 0) {
-                badge.textContent = data.cartItems.length;
-                badge.classList.remove("hidden");
-            } else {
-                badge.classList.add("hidden");
+        async function updateCartBadge() {
+            try {
+                const response = await fetch(`http://localhost:8081/UserWebService/api/cart/items?userId=${userId}`);
+                const data = await response.json();
+                const badge = document.getElementById("cart-badge");
+                if (data.cartItems.length > 0) {
+                    badge.textContent = data.cartItems.length;
+                    badge.classList.remove("hidden");
+                } else {
+                    badge.classList.add("hidden");
+                }
+            } catch (error) {
+                console.error("Error updating badge:", error);
             }
-        } catch (error) {
-            console.error("Error updating badge:", error);
         }
-    }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        fetchAndDisplaySales();
-        updateCartBadge();
-    });
-
-    // Fetch currency rates on page load
-    async function fetchCurrencyRates() {
-        try {
-            const response = await fetch("https://v6.exchangerate-api.com/v6/b799283f68d4ffc21668f606/latest/EUR");
-            if (!response.ok) throw new Error("Failed to fetch currency rates.");
-
-            const data = await response.json();
-            conversionRates = data.conversion_rates;
-
-            populateCurrencyDropdown(Object.keys(conversionRates));
-        } catch (error) {
-            console.error("Error fetching currency rates:", error);
-        }
-    }
-
-    function populateCurrencyDropdown(currencies) {
-        const dropdown = document.getElementById("currency");
-        dropdown.innerHTML = "";
-
-        currencies.forEach(currency => {
-            const option = document.createElement("option");
-            option.value = currency;
-            option.textContent = currency;
-            dropdown.appendChild(option);
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchAndDisplaySales();
+            updateCartBadge();
         });
+        
+        async function fetchCurrencyRates() {
+            try {
+                const response = await fetch("https://v6.exchangerate-api.com/v6/b799283f68d4ffc21668f606/latest/EUR");
+                if (!response.ok) throw new Error("Failed to fetch currency rates.");
 
-        dropdown.value = BASE_CURRENCY;
+                const data = await response.json();
+                conversionRates = data.conversion_rates;
 
-        // Add event listener for currency change
-        dropdown.addEventListener('change', convertPrices);
-    }
+                populateCurrencyDropdown(Object.keys(conversionRates));
+            } catch (error) {
+                console.error("Error fetching currency rates:", error);
+            }
+        }
 
-    function convertPrices() {
-        const selectedCurrency = document.getElementById("currency").value;
-        const prices = document.querySelectorAll(".price");
+        function populateCurrencyDropdown(currencies) {
+            const dropdown = document.getElementById("currency");
+            dropdown.innerHTML = "";
 
-        prices.forEach(priceElement => {
-            const basePrice = parseFloat(priceElement.getAttribute("data-price"));
-            const convertedPrice = (basePrice * conversionRates[selectedCurrency]).toFixed(2);
-            priceElement.textContent = `${selectedCurrency} ${convertedPrice}`;
-        });
-    }
+            currencies.forEach(currency => {
+                const option = document.createElement("option");
+                option.value = currency;
+                option.textContent = currency;
+                dropdown.appendChild(option);
+            });
 
+            dropdown.value = BASE_CURRENCY;
+        }
+
+        function convertPrices() {
+            const selectedCurrency = document.getElementById("currency").value;
+            const prices = document.querySelectorAll(".price");
+
+            prices.forEach(priceElement => {
+                const basePrice = parseFloat(priceElement.getAttribute("data-price"));
+                const convertedPrice = (basePrice * conversionRates[selectedCurrency]).toFixed(2);
+                priceElement.textContent = `${selectedCurrency} ${convertedPrice}`;
+            });
+        }
 
    
         document.addEventListener('DOMContentLoaded', () => {
@@ -600,8 +563,10 @@ h2.u-text-1 {
             });
         }
     </script>
-     <footer class="u-align-center u-clearfix u-container-align-center u-custom-color-1 u-footer u-footer" id="sec-5467"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1">© Developed By Eiffel Corp.</p>
-      </div></footer>
+    <footer class="u-align-center u-clearfix u-footer" id="footer">
+    <div class="u-clearfix u-sheet u-sheet-1">
+        <p>Eiffel Corp &copy; 2024. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

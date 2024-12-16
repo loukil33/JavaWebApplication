@@ -28,7 +28,7 @@ import static Annonces.AnnonceDB.annoncesList;
 @Path("/users")
 public class UserController {
 	
-	private static int idCounter = 6; // Initialize counter for id, starts from 1
+	private static int idCounter = 4; // Initialize counter for id, starts from 1
     // Add a new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -403,57 +403,13 @@ public class UserController {
                            .entity("Annonce not found for ID: " + annonceId)
                            .build();
         }
-        
 
         user.getAnnonces().remove(annonceOptional.get());
 
         return Response.ok("Annonce deleted successfully for user ID: " + userId).build();
     }
 
-    @DELETE
-    @Path("/{userId}/bikes/{bikeId}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteUserBike(@PathParam("userId") int userId, @PathParam("bikeId") int bikeId) {
-        // Find the user by userId
-        Optional<User> userOptional = users.stream()
-                                           .filter(user -> user.getId() == userId)
-                                           .findFirst();
-
-        if (userOptional.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                           .entity("User not found for ID: " + userId)
-                           .build();
-        }
-
-        User user = userOptional.get();
-
-        // Check if the user has a bike list and if it's empty
-        if (user.getBikes() == null || user.getBikes().isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                           .entity("No bikes found for user ID: " + userId)
-                           .build();
-        }
-
-        // Find and remove the bike
-        Optional<Bike> bikeOptional = user.getBikes().stream()
-                                          .filter(bike -> bike.getId() == bikeId)
-                                          .findFirst();
-
-        if (bikeOptional.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                           .entity("Bike not found for ID: " + bikeId)
-                           .build();
-        }
-
-        // Remove the bike from the user's list
-        user.getBikes().remove(bikeOptional.get());
-
-        // Optionally, remove the bike from the global bikes list
-        bikes.removeIf(bike -> bike.getId() == bikeId);
-
-        return Response.ok("Bike deleted successfully for user ID: " + userId).build();
-    }
-
+   
 
     
     @PUT
