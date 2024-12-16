@@ -265,7 +265,7 @@ public class BikeService {
                 if (imageFile.exists()) {
                     boolean imageDeleted = imageFile.delete();  // Delete the image file
                     if (!imageDeleted) {
-                        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to delete the image file").build();
+                        //return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to delete the image file").build();
                     }
                 }
             }

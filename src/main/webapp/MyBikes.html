@@ -244,13 +244,13 @@ form#rental-post-update-form {
         <span class="close-btn">&times;</span>
         <h3>Enter Sale Details</h3>
 
-        <!-- Sale Title -->
+        <!-- Sale Title 
         <label for="sale-title">Title</label>
         <input type="text" id="sale-title" placeholder="Enter sale title" required>
 
-        <!-- Sale Description -->
+        <!-- Sale Description 
         <label for="sale-description">Description</label>
-        <textarea id="sale-description" placeholder="Enter sale description" required></textarea>
+        <textarea id="sale-description" placeholder="Enter sale description" required></textarea>-->
 
         <!-- Sale Start Date (hidden and set by script) -->
         <input type="hidden" id="sale-start-date">
@@ -425,7 +425,7 @@ function deleteBike(bikeId) {
         })
         .catch(error => {
             console.error("Error deleting bike:", error);
-            alert("Error deleting bike: " + error.message);
+            //alert("Error deleting bike: " + error.message);
         });
 }
 
@@ -440,7 +440,23 @@ function sellBike(bikeId) {
 
     const confirmButton = document.getElementById('confirm-sell-btn');
     const closeButton = document.getElementsByClassName('close-btn')[0];
+    const userDataJson = sessionStorage.getItem("userData");
+    let userData = null;
 
+    try {
+        userData = JSON.parse(userDataJson);
+    } catch (error) {
+        console.error("Error parsing user data:", error);
+        alert("User is not logged in. Please log in first.");
+        return;
+    }
+
+    if (!userData || !userData.id) {
+        alert("User is not logged in. Please log in first.");
+        return;
+    }
+
+    const userId = userData.id;
     // Automatically set the sale start date to the current date
     const saleStartDateField = document.getElementById('sale-start-date');
     const currentDate = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
@@ -456,47 +472,57 @@ function sellBike(bikeId) {
     // Confirm sale functionality
     confirmButton.onclick = async () => {
         // Get form inputs
-        const saleTitle = document.getElementById('sale-title').value.trim();
-        const saleDescription = document.getElementById('sale-description').value.trim();
+        //const saleTitle = document.getElementById('sale-title').value.trim();
+        //const saleDescription = document.getElementById('sale-description').value.trim();
         const saleDuration = document.getElementById('sale-duration').value.trim();
         const salePrice = document.getElementById('sell-price').value.trim();
 
         // Validate inputs
-        if (!saleTitle || !saleDescription || !saleDuration || !salePrice) {
+        if (!saleDuration || !salePrice) {
             alert("All fields are required. Please fill them out.");
             return;
         }
 
         const sale = {
-            saleTitle,
-            saleDescription,
             saleStartDate: saleStartDateField.value, // Use the system date
             duration: parseInt(saleDuration, 10), // Ensure proper data type
+            userid: userId,
+            notes: [],
             salePrice: parseFloat(salePrice)     // Ensure proper data type
         };
 
-        try {
-        	const response = await fetch(`http://localhost:8081/UserWebService/api/sales/addSale?bikeId=${bikeId}`, {
-        	    method: 'POST',
-        	    headers: {
-        	        'Content-Type': 'application/json'
-        	    },
-        	    body: JSON.stringify(sale)
-        	});
+        
+        //console.log('Title Input:', saleTitle);
+        //console.log('Description Input:', saleDescription);
+        	fetch(`http://localhost:8081/UserWebService/api/sales/addSale?bikeId=${bikeId}`, 
+            		{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(sale)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                    	const errorText = response.text(); // Fetch server error message
+                        throw new Error(errorText || `Failed to add the sale. Status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(message => {
+                	alert('Bike sold successfully!');
+                    modal.style.display = 'none';
+                    location.reload(); // Reload page to reflect changes
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error: " + error.message);
+                });
+        	
+           
 
-
-            if (!response.ok) {
-                const errorText = await response.text(); // Fetch server error message
-                throw new Error(errorText || `Failed to add the sale. Status: ${response.status}`);
-            }
-
-            alert('Bike sold successfully!');
-            modal.style.display = 'none';
-            location.reload(); // Reload page to reflect changes
-        } catch (error) {
-            console.error("Error selling bike:", error);
-            alert(`Error selling bike: ${error.message}`);
-        }
+            
+        
     };
 
     // Close modal on clicking outside

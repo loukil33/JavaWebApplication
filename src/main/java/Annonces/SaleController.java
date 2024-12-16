@@ -86,20 +86,20 @@ public class SaleController {
 	    
 	    // Mark the bike as sold
 	    bikeForSale.setAvailable(false);
-	    
+	    sale.setBike(bikeForSale);
 	    // Set default or missing fields
 	    if (sale.getStartDate() == null) {
 	        sale.setStartDate(LocalDate.now()); // Set current date as default
 	    }
 	    if (sale.getTitle() == null || sale.getTitle().isEmpty()) {
-	        sale.setTitle("Default Sale Title"); // Provide a default title
+	        sale.setTitle(sale.getBike().getModel()+" SALE"); // Provide a default title
 	    }
 	    if (sale.getDescription() == null || sale.getDescription().isEmpty()) {
-	        sale.setDescription("Default Sale Description"); // Provide a default description
+	        sale.setDescription("Bike for sale , color: "+sale.getBike().getColor()+", Brand: "+sale.getBike().getBrand()); // Provide a default description
 	    }
 	    
 	    // Associate the bike with the sale
-	    sale.setBike(bikeForSale);
+	    
 	    sale.setId(generateUniqueId()); // Generate a unique ID for the sale
 	    
 	    // Persist the bike update

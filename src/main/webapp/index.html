@@ -486,7 +486,7 @@
 
             // Safely access and update DOM elements
             if (userData.role === "CLIENT") {
-            if (homeLink) homeLink.style.display = 'block';
+            if (homeLink) homeLink.style.display = 'none';
             if (profileLink) profileLink.style.display = 'none';
             if (postsLink) postsLink.style.display = 'none';
             if (bikesLink) bikesLink.style.display = 'none';
@@ -690,17 +690,20 @@
         }
 
         const userData = JSON.parse(userDataJson);
+
+        // Check if the user has already rented the bike or is in their rentals list in session storage
         if (userData.rentals && userData.rentals.includes(postId)) {
             showPopup("You have already rented this bike or are in the waiting list.");
             return;
         }
 
+        // Send a POST request to add the user to the waiting list or rent the bike
         fetch(`http://localhost:8081/UserWebService/api/rentals/${postId}/waiting-list`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(userData),
         })
             .then(response => {
                 if (!response.ok) {
@@ -712,11 +715,13 @@
                 console.log(message);
                 alert(message);
 
-                if (message.includes("successfully rented")) {
-                    // Update sessionStorage to reflect the rental
+                // Update rentals list if the bike was successfully rented or the user was added to the waiting list
+                if (message.includes("successfully rented") || message.includes("added to the waiting list")) {
                     if (!Array.isArray(userData.rentals)) {
                         userData.rentals = [];
                     }
+
+                    // Add the bike ID to the user's rentals list in sessionStorage
                     userData.rentals.push(postId);
                     sessionStorage.setItem("userData", JSON.stringify(userData));
                 }
@@ -726,6 +731,7 @@
                 alert("Error: " + error.message);
             });
     }
+
 
  // Function to display popup message
     function showPopup(message) {

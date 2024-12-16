@@ -10,8 +10,8 @@ import Users.User;
 public class Annonce {
 	
 	private int id;
-	private String title;
-	private String description;
+	protected String title;
+	protected String description;
 	private LocalDate startDate;
     private int duration;
     private int userid;
