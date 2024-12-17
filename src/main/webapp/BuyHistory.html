@@ -96,7 +96,7 @@
                     <th>Bike Name</th>
                     <th>Price</th>
                     <th>Date</th>
-                    <th>Payment ID</th>
+                    
                 </tr>
             </thead>
             <tbody id="history-body">
@@ -137,7 +137,7 @@
                             <td>${record.bikeName}</td>
                             <td>€${record.bikePrice.toFixed(2)}</td>
                             <td>${new Date(record.paymentDate).toLocaleString()}</td>
-                            <td>${record.paymentId}</td>
+                            
                         `;
                         historyBody.appendChild(row);
                     });
