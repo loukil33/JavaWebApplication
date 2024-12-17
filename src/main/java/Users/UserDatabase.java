@@ -50,9 +50,9 @@ public class UserDatabase {
 	        User User2 = new User(
 		            3, // id
 		            87614621, // CIN
-		            "mohamed", // First Name
-		            "loukil", // Last Name
-		            "azouzloukil@gmail.com", // Email
+		            "amine", // First Name
+		            "tlili", // Last Name
+		            "aminemehdi999@gmail.com", // Email
 		            "123", // Password
 		            "123 Main St", // Address
 		            LocalDate.of(1990, 1, 1), // Birth Date
@@ -67,9 +67,9 @@ public class UserDatabase {
 	        User User3 = new User(
 		            4, // id
 		            87614621, // CIN
-		            "amine", // First Name
-		            "Tlili", // Last Name
-		            "aminemehdi999@gmail.com", // Email
+		            "Mohamed", // First Name
+		            "Aziz", // Last Name
+		            "azouzloukil@gmail.com", // Email
 		            "123", // Password
 		            "123 Main St", // Address
 		            LocalDate.of(1990, 1, 1), // Birth Date
