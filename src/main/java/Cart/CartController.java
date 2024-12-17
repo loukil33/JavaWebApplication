@@ -126,7 +126,7 @@ public class CartController {
     @POST
     @Path("/checkout")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkout(@QueryParam("userId") int userId) {
+    public Response checkout(@QueryParam("userId") int userId, @QueryParam("paymentStatus") String paymentStatus) {
         Cart cart = getCartForUser(userId);
         if (cart == null || cart.getTotalPrice() <= 0) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -134,42 +134,56 @@ public class CartController {
                            .build();
         }
 
-        BankService bankService = new BankService();
-        String clientSecret = bankService.createPaymentIntent(cart.getTotalPrice());
+        if (paymentStatus == null || paymentStatus.isEmpty()) {
+            // Generate payment intent for the frontend
+            BankService bankService = new BankService();
+            String clientSecret = bankService.createPaymentIntent(cart.getTotalPrice());
 
-        if (clientSecret == null) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                           .entity("Failed to create payment intent.")
-                           .build();
-        }
-
-        try {
-            List<Sale> purchasedSales = cart.getItems();
-
-            for (Sale sale : purchasedSales) {
-                String image = sale.getBike().getImages().isEmpty() ? null : sale.getBike().getImages().get(0);
-
-                paymentHistory.add(new PaymentRecord(
-                    sale.getBike().getModel(),
-                    sale.getSalePrice(),
-                    LocalDateTime.now(),
-                    clientSecret,
-                    userId,
-                    image
-                ));
+            if (clientSecret == null) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                               .entity("Failed to create payment intent.")
+                               .build();
             }
 
-            // Remove the purchased sales from the sales list
-            SaleController.removePurchasedSales(purchasedSales);
-
-            cart.checkoutCart();
             return Response.ok(Map.of("clientSecret", clientSecret)).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                           .entity("Error during checkout: " + e.getMessage())
-                           .build();
         }
+
+        if ("success".equals(paymentStatus)) {
+            // Process successful payment
+            try {
+                List<Sale> purchasedSales = cart.getItems();
+
+                for (Sale sale : purchasedSales) {
+                    String image = sale.getBike().getImages().isEmpty() ? null : sale.getBike().getImages().get(0);
+
+                    paymentHistory.add(new PaymentRecord(
+                        sale.getBike().getModel(),
+                        sale.getSalePrice(),
+                        LocalDateTime.now(),
+                        null,  // Client secret is irrelevant here
+                        userId,
+                        image
+                    ));
+                }
+
+                SaleController.removePurchasedSales(purchasedSales);
+                cart.checkoutCart();
+
+                return Response.ok("Payment confirmed and cart processed.").build();
+            } catch (Exception e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                               .entity("Error finalizing purchase: " + e.getMessage())
+                               .build();
+            }
+        } else if ("failed".equals(paymentStatus)) {
+            return Response.ok("Payment failed. Transaction canceled.").build();
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST)
+                       .entity("Invalid payment status provided.")
+                       .build();
     }
+
 
     @GET
     @Path("/history")
