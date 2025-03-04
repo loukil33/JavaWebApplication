@@ -7,7 +7,7 @@ public class EmailUtility {
 	private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
     private static final String SMTP_USER = "corpeiffel@gmail.com";
-    private static final String SMTP_PASSWORD = "pihb vkor zjsu tqcy";
+    private static final String SMTP_PASSWORD = " ****** ";
 
     public static void sendEmail(String to, String subject, String body) throws MessagingException {
         Properties props = new Properties();
